@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: bot-state
-  cancel-in-progress: false
+  group: bot-wait
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -17,6 +17,7 @@ permissions:
 jobs:
   send:
     runs-on: ubuntu-latest
+    timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -27,3 +28,8 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           GH_TOKEN: ${{ github.token }}
         run: python3 bot/send_draft.py
+      - name: Ожидание нажатия кнопки (до 60 минут)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 bot/poll.py --wait 3600

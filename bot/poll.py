@@ -9,6 +9,7 @@ import html
 import json
 import shutil
 import sys
+import time
 
 import common
 import tg
@@ -113,21 +114,48 @@ def handle(query, owner):
             f"{html.escape(type(exc).__name__)}. Проверьте журнал запуска в GitHub Actions.")
 
 
+def process(owner, updates):
+    for update in updates:
+        if "callback_query" in update:
+            handle(update["callback_query"], owner)
+
+
 def main():
+    """Без аргументов: одна проверка. С параметром --wait N: ждет нажатий до N секунд,
+    пока на согласовании есть черновики (долгий опрос Telegram)."""
+    wait = 0
+    if "--wait" in sys.argv:
+        wait = int(sys.argv[sys.argv.index("--wait") + 1])
     if not pending():
         print("Черновиков на согласовании нет")
         return 0
     owner = common.owner_id()
-    updates = tg.call("getUpdates", timeout=0, allowed_updates=["callback_query"])
-    if not updates:
-        print("Новых нажатий нет")
-        return 0
-    last = max(u["update_id"] for u in updates)
-    tg.call("getUpdates", offset=last + 1, timeout=0, allowed_updates=["callback_query"])
-    for update in updates:
-        if "callback_query" in update:
-            handle(update["callback_query"], owner)
-    return 0
+    try:
+        info = tg.call("getWebhookInfo")
+        print("webhook:", "задан" if info.get("url") else "нет", "| ожидающих обновлений:", info.get("pending_update_count"))
+    except tg.TgError as exc:
+        print("getWebhookInfo:", exc)
+    deadline = time.time() + wait
+    offset = None
+    while True:
+        params = {"timeout": 25 if wait else 0, "allowed_updates": ["callback_query"]}
+        if offset is not None:
+            params["offset"] = offset
+        try:
+            updates = tg.call("getUpdates", **params)
+        except tg.TgError as exc:
+            print("getUpdates:", exc)
+            updates = []
+            time.sleep(5)
+        if updates:
+            offset = max(u["update_id"] for u in updates) + 1
+            tg.call("getUpdates", offset=offset, timeout=0, allowed_updates=["callback_query"])
+            print(f"получено обновлений: {len(updates)}")
+            process(owner, updates)
+        elif not wait:
+            print("Новых нажатий нет")
+        if not wait or time.time() >= deadline or not pending():
+            return 0
 
 
 if __name__ == "__main__":
