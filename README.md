@@ -23,8 +23,9 @@
     python3 generate.py --include-drafts
     # открыть dist/index.html в браузере
 
-## Подключение домена
+## Публикация и адрес
 
-1. Создать репозиторий на GitHub, загрузить эти файлы, в настройках включить Pages с источником GitHub Actions.
-2. В DNS домена derm-atlas.ru добавить запись CNAME: news указывает на <логин GitHub>.github.io.
-3. В меню Tilda добавить пункт "Новости" со ссылкой https://news.derm-atlas.ru.
+1. Репозиторий на GitHub, в настройках Pages источник GitHub Actions. Каждое изменение в main публикуется автоматически.
+2. Раздел доступен по адресу https://doctoryankel-eng.github.io/derm-atlas-news/ (он задан в config.json как site_url).
+3. В меню Tilda пункт "Новости" ведет на этот адрес.
+4. Свой поддомен вида news.derm-atlas.ru потребует DNS, где можно добавить запись CNAME. В панели DNS Tilda есть только записи TXT и MX, поэтому для поддомена домен нужно переносить на другой DNS-сервис.
