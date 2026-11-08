@@ -28,6 +28,7 @@ from email.utils import format_datetime
 ROOT = pathlib.Path(__file__).parent
 CARDS_DIR = ROOT / "cards"
 DIST = ROOT / "dist"
+TILDA_OUT = ROOT / "tilda_out"
 
 MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля",
           "августа", "сентября", "октября", "ноября", "декабря"]
@@ -82,6 +83,9 @@ def check_card(card, path):
         errors.append("date должна быть в формате ГГГГ-ММ-ДД")
     if not str(card["url"]).startswith("https://"):
         errors.append("url должен начинаться с https://")
+    tilda_url = card.get("tilda_url")
+    if tilda_url and not re.match(r"https?://derm-atlas\.ru/", str(tilda_url)):
+        errors.append("tilda_url должен начинаться с https://derm-atlas.ru/")
     for key in ("design", "population", "endpoint"):
         if not card["method"].get(key):
             errors.append(f"в method нет поля {key}")
@@ -262,7 +266,7 @@ def ul(items):
     return "<ul>" + "".join(f"<li>{esc(i)}</li>" for i in items) + "</ul>"
 
 
-def render_card(config, c):
+def card_inner(c, back_url):
     m = c["method"]
     a = c["our_analysis"]
     labels = [
@@ -288,7 +292,7 @@ def render_card(config, c):
     tags = " ".join(f'<span class="badge">{esc(t)}</span>' for t in c.get("tags", []))
     draft = ('<p class="warn">Черновик. Карточка не опубликована.</p>'
              if c.get("status", "published") != "published" else "")
-    body = f"""{draft}
+    return f"""{draft}
 <p class="meta"><span class="badge">{esc(c['doc_type'])}</span>{esc(ru_date(c['date']))} - {esc(c['journal'])}</p>
 <h1>{esc(c['title'])}</h1>
 <p><a class="btn" href="{esc(c['url'])}" rel="noopener">Читать оригинал</a>{doi}</p>
@@ -311,10 +315,58 @@ def render_card(config, c):
 {related}
 <p style="margin-top:24px">{tags}</p>
 <p class="disclaimer">{esc(DISCLAIMER)}</p>
-<p><a href="../">Все новости</a></p>"""
+<p><a href="{esc(back_url)}">Все новости</a></p>"""
+
+
+def render_card(config, c):
+    body = card_inner(c, "../")
     description = c["authors_conclusion"][:180]
-    canonical = config["site_url"].rstrip("/") + "/" + c["slug"] + "/"
+    own = config["site_url"].rstrip("/") + "/" + c["slug"] + "/"
+    # если есть страница на derm-atlas.ru, она основная для поисковиков
+    canonical = c.get("tilda_url") or own
     return shell(config, c["title"] + " - Кожный атлас", description, canonical, body)
+
+
+NW_CSS = """
+.nw{max-width:860px;margin:0 auto;padding:24px 16px;color:#1d2326;font:17px/1.6 inherit}
+.nw h1{font-size:30px;line-height:1.25;margin:8px 0 12px}
+.nw h2{font-size:21px;margin:30px 0 10px}
+.nw h3{font-size:17px;margin:16px 0 6px}
+.nw a{color:#0f6b6b}
+.nw .meta{font-size:14px;color:#5d696e;margin:0}
+.nw .badge{display:inline-block;background:#e3f0ef;color:#0f6b6b;font-size:13px;padding:2px 10px;border-radius:999px;margin-right:6px}
+.nw .btn{display:inline-block;background:#0f6b6b;color:#fff;text-decoration:none;padding:9px 18px;border-radius:10px;font-weight:600}
+.nw dl.method{display:grid;grid-template-columns:170px 1fr;gap:8px 16px;margin:0}
+.nw dl.method dt{color:#5d696e}
+.nw dl.method dd{margin:0}
+.nw .box{background:#fff;border:1px solid #e2e0da;border-radius:12px;padding:6px 20px 14px}
+.nw .warn{background:#fff4dc;color:#8a5a00;border-radius:10px;padding:10px 14px;font-size:15px}
+.nw .disclaimer{margin:36px 0 0;padding-top:14px;border-top:1px solid #e2e0da;color:#5d696e;font-size:14px}
+.nw .item{display:block;background:#fff;border:1px solid #e2e0da;border-radius:14px;padding:18px 20px;margin:0 0 14px;text-decoration:none;color:#1d2326}
+.nw .item h3{margin:4px 0 8px;font-size:19px;line-height:1.35}
+@media(max-width:600px){.nw dl.method{grid-template-columns:1fr}.nw h1{font-size:25px}}
+"""
+
+
+def render_tilda_card(config, c):
+    """Фрагмент для блока HTML (T123) на странице Tilda."""
+    back = config.get("tilda_news_url", config["site_url"].rstrip("/") + "/")
+    return f'<style>{NW_CSS}</style>\n<div class="nw">\n{card_inner(c, back)}\n</div>\n'
+
+
+def render_tilda_list(config, cards):
+    items = []
+    for c in cards:
+        url = c.get("tilda_url") or (config["site_url"].rstrip("/") + "/" + c["slug"] + "/")
+        items.append(
+            f'<a class="item" href="{esc(url)}">'
+            f'<p class="meta"><span class="badge">{esc(c["doc_type"])}</span>'
+            f'{esc(ru_date(c["date"]))} - {esc(c["journal"])}</p>'
+            f'<h3>{esc(c["title"])}</h3>'
+            f'<p class="meta">Уровень доказательности: {esc(c["evidence_level"])}</p></a>'
+        )
+    return (f'<style>{NW_CSS}</style>\n<div class="nw">\n<h1>Новости дерматологии</h1>\n'
+            + ("\n".join(items) if items else "<p>Карточек пока нет.</p>") + "\n</div>\n")
 
 
 def render_feed(config, cards):
@@ -369,6 +421,19 @@ def main():
     (DIST / "feed.xml").write_text(render_feed(config, cards), encoding="utf-8")
     (DIST / "sitemap.xml").write_text(render_sitemap(config, cards), encoding="utf-8")
     (DIST / "cards.json").write_text(json.dumps(cards, ensure_ascii=False, indent=2), encoding="utf-8")
+    if TILDA_OUT.exists():
+        shutil.rmtree(TILDA_OUT)
+    TILDA_OUT.mkdir(parents=True)
+    for c in cards:
+        (TILDA_OUT / f"{c['slug']}.html").write_text(render_tilda_card(config, c), encoding="utf-8")
+        seo = {
+            "page_address": "/news-" + c["slug"],
+            "seo_title": c["title"] + " - Кожный атлас",
+            "seo_description": c["authors_conclusion"][:160],
+        }
+        (TILDA_OUT / f"{c['slug']}.seo.json").write_text(
+            json.dumps(seo, ensure_ascii=False, indent=2), encoding="utf-8")
+    (TILDA_OUT / "news-list.html").write_text(render_tilda_list(config, cards), encoding="utf-8")
     site = config["site_url"].rstrip("/")
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {site}/sitemap.xml\n", encoding="utf-8")
     if config.get("cname"):
