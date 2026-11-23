@@ -100,6 +100,14 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 .slot.act{box-shadow:0 0 0 3px #ffd25a,0 0 18px rgba(255,210,90,.7)}
 .slot.bepb{border-color:rgba(111,207,142,.6)}
 .slot.empty{opacity:.35;border-style:dashed}
+#buffs{position:absolute;right:18px;bottom:268px;display:flex;flex-direction:column;align-items:center;gap:5px;pointer-events:none}
+#bpager{pointer-events:auto;display:flex;flex-direction:row;align-items:center;background:rgba(18,12,15,.88);border:1px solid var(--line);border-radius:14px;padding:1px 2px}
+#bpager button{background:none;border:none;color:#9fe8ff;font-size:11px;width:22px;height:22px;cursor:pointer;touch-action:none}
+#bpager span{font-size:11px;color:var(--txt)}
+.slot.bf{position:relative;width:50px;height:50px;left:auto;top:auto;flex:none}
+.slot.bf .nm{font-size:7.5px;margin-bottom:6px}
+.slot .tm{position:absolute;left:0;right:0;top:40%;text-align:center;font-size:13px;font-weight:700;color:#fff;text-shadow:0 1px 3px #000;z-index:3}
+.lhead{grid-column:1/-1;font-family:Georgia,serif;color:var(--gold);font-size:14px;margin-top:6px}
 .lcell.empty{opacity:.5;border-style:dashed;color:var(--muted)}
 #pager{position:absolute;pointer-events:auto;display:flex;align-items:center;background:rgba(18,12,15,.88);border:1px solid var(--line);border-radius:18px;padding:2px 4px;box-shadow:0 3px 12px rgba(0,0,0,.5)}
 #pager button{background:none;border:none;color:var(--gold);font-size:14px;width:30px;height:30px;cursor:pointer;touch-action:none}
@@ -156,6 +164,8 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  #bossbar{top:118px;width:72vw}
  #joy{bottom:22px;left:14px;width:116px;height:116px}
  #cluster{transform:scale(.78)}
+ #buffs{right:8px;bottom:226px;gap:4px}
+ .slot.bf{width:44px;height:44px}.slot.bf .nm{display:none}
  #lgrid{grid-template-columns:44px repeat(4,1fr);gap:4px}.lcell{height:62px;font-size:8.5px}.lcell canvas{width:30px;height:30px}
  #toasts{top:225px}.toast{font-size:12px}
  #bar{bottom:8px;gap:3px;padding:4px;width:calc(100vw - 12px);flex-wrap:wrap;justify-content:center}
@@ -195,6 +205,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  </div>
  <div id="toasts"></div>
  <div id="cluster"></div>
+ <div id="buffs"></div>
  <div id="helpbtn" class="panel serif">?</div>
  <div id="joy"><div id="knob"></div></div>
 </div>
@@ -232,7 +243,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <li>Движение: джойстик слева внизу (пальцем или мышкой), левый стик геймпада или WASD</li>
    <li>Тап или клик по высыпанию: лечить выбранным препаратом (золотая рамка), если оно в зоне досягаемости</li>
    <li>Тап или клик по коже: нанести выбранный препарат в эту точку. Удобно для Скинорена по пятнам</li>
-   <li>Заклинания справа внизу: четыре быстрых слота (клавиши 1-4), стрелки или Tab, Q, E листают пять панелей, ✎ открывает настройку: две ячейки меняются местами, в пустые ячейки можно переносить</li>
+   <li>Заклинания справа внизу: четыре быстрых слота (клавиши 1-4), стрелки или Tab, Q, E листают четыре панели. Баффы в колонке справа: клавиши 5-8, Z и X листают страницы. ✎ открывает настройку: две ячейки меняются местами, в том числе между заклинаниями и баффами</li>
    <li>Пробел: рывок, F: Бепантен</li>
   </ul>
   <h3>Навыки врача</h3>
@@ -247,7 +258,8 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <ul>
    <li>Левый стик: движение. Правый стик: прицел</li>
    <li>✕ □ △ ○: четыре слота текущей панели, препараты бьют очередью при удержании</li>
-   <li>L1 / R1 или крестовина влево и вправо: сменить панель</li>
+   <li>L1 / R1: сменить панель заклинаний</li>
+   <li>Крестовина ↑ → ↓ ←: четыре баффа из колонки справа, нажатие левого стика: страница баффов</li>
    <li>R2: рывок, L2: Бепантен, Options: справка и пауза</li>
    <li>Вопросы допуска: крестовина вверх и вниз, ✕ выбрать</li>
   </ul>
@@ -301,7 +313,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 <div id="layout" class="ov">
  <div class="card panel">
   <h3 class="serif" style="color:var(--gold);font-size:20px;margin-bottom:6px">Панели заклинаний</h3>
-  <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px;line-height:1.4">На экране видна одна панель из четырёх слотов, остальные четыре листаются стрелками. Нажмите на одну ячейку, затем на другую: они поменяются местами. Первая ячейка панели самая крупная кнопка.</div>
+  <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px;line-height:1.4">Заклинания: веер справа внизу, четыре панели. Баффы: колонка справа, две страницы. Нажмите на одну ячейку, затем на другую: они поменяются местами, в том числе между заклинаниями и баффами. Первая ячейка панели заклинаний самая крупная кнопка.</div>
   <div id="lgrid"></div>
   <button class="big sec" id="lreset">Вернуть как было</button>
   <button class="big" id="lclose" style="margin-top:8px">Готово</button>
@@ -481,7 +493,7 @@ function startGame(){
  $('pname').textContent=name;
  buildCluster();drawPortrait();
  $('joy').classList.add('on');
- toast('Ходите джойстиком слева внизу. Заклинания справа внизу: четыре быстрых слота, стрелки листают пять панелей, ✎ меняет ячейки местами','hint');
+ toast('Ходите джойстиком слева внизу. Заклинания справа внизу: четыре быстрых слота, стрелки листают панели, баффы в колонке справа, ✎ меняет ячейки местами','hint');
  setTimeout(()=>toast('Базирон бьёт точечно, Дифферин и Скинорен накрывают группу. Ищите комбо'),2400);
 }
 
@@ -753,10 +765,10 @@ function onLevel(){
  const p=S.p;recalcHP(true);burst(p.x,p.y,'#e9c17a',34,200);rumble(0.3,250);
  S.fx.push({k:'ring',x:p.x,y:p.y,r:120,t:0,max:.6,col:'#e9c17a'});S.fx.push({k:'pillar',x:p.x,y:p.y,t:0,max:1.1,col:'#ffe7a8'});
  toast('Уровень '+p.lvl+': '+rankTitle(p.lvl)+(LOOK[p.lvl]?'. Новый облик: '+LOOK[p.lvl]:''),'good');
- for(const a of ABIL) if(a.lvl===p.lvl) setTimeout(()=>{const pi=Math.floor(LAYOUT.indexOf(a.id)/4)+1;toast('Новый навык: '+a.name+(a.id==='dash'?'':' (панель '+pi+')')+'. '+a.desc,'good');},900);
+ for(const a of ABIL) if(a.lvl===p.lvl) setTimeout(()=>{toast('Новый навык: '+a.name+(a.id==='dash'?'':' ('+locOf(a.id)+')')+'. '+a.desc,'good');},900);
  for(const sk of SKILLS) if(sk.lvl===p.lvl&&!p.un[sk.id]){
   if(sk.quiz) S.quizQ.push(sk.quiz);
-  else{p.un[sk.id]=true;toast('Открыт препарат: '+sk.name+' ('+sk.inn+'), панель '+(Math.floor(LAYOUT.indexOf(sk.id)/4)+1),'good');}
+  else{p.un[sk.id]=true;toast('Открыт препарат: '+sk.name+' ('+sk.inn+'), '+locOf(sk.id),'good');}
  }
  if(S.quizQ.length&&!quizOpen) setTimeout(openNextQuiz,700);
  drawPortrait();
@@ -805,7 +817,7 @@ function openQuiz(id){
 }
 $('qc').onclick=()=>{
  const q=QUIZ[quizOpen];S.p.un[q.skill]=true;
- toast('Открыт препарат: '+SK[q.skill].name,'good');
+ toast('Открыт препарат: '+SK[q.skill].name+', '+locOf(q.skill),'good');
  if(q.skill==='mtx'&&canEnter()) toast('Барьер на Локтях снят. Босс ждёт','boss');
  $('quiz').classList.remove('on');quizOpen=null;S.paused=false;
  if(S.quizQ.length) setTimeout(openNextQuiz,500);
@@ -1478,12 +1490,14 @@ function updateAbil(){
   b.classList.toggle('act',(S.buff[a.id]||0)>0);b.classList.toggle('sel',S.selAb===a.id&&pad.active);}
 }
 /* ---------- панели заклинаний: 4 панели по 4 слота ---------- */
-const DEF_LAYOUT=['bpo','ada','aza','eff','clin','doxy','akn','extr','metr','akr','spf','scope','mtx','efl','motiv','vlaser','flaser',null,null,null];
-const NP=5;
-const LAYOUT_KEY='dq_layout_v2';
+const DEF_LAYOUT=['bpo','ada','aza','eff','clin','metr','akr','extr','mtx','efl','scope','vlaser','flaser',null,null,null,
+ 'doxy','akn','spf','motiv',null,null,null,null];
+const NP=4,NBP=2,BOFF=NP*4;
+const LAYOUT_KEY='dq_layout_v3';
+let BPAGE=0;
 let LAYOUT=DEF_LAYOUT.slice(),PAGE=0,pickCell=-1;
 (function(){try{const l=JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null');
- const ids=DEF_LAYOUT.filter(Boolean);if(Array.isArray(l)&&l.length===NP*4){const got=l.filter(Boolean);if(got.length===ids.length&&new Set(got).size===got.length&&ids.every(id=>got.includes(id))) LAYOUT=l;}}catch(_){}})();
+ const ids=DEF_LAYOUT.filter(Boolean);if(Array.isArray(l)&&l.length===DEF_LAYOUT.length){const got=l.filter(Boolean);if(got.length===ids.length&&new Set(got).size===got.length&&ids.every(id=>got.includes(id))) LAYOUT=l;}}catch(_){}})();
 function saveLayout(){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(LAYOUT));}catch(_){}}
 function actInfo(id){
  if(!id) return {kind:'empty',name:'Пусто',lvl:0,desc:'Свободная ячейка'};
@@ -1496,6 +1510,10 @@ function useSlot(i){
  if(SK[id]) onSkill(id);else useAbility(id);
 }
 function setPage(n){PAGE=(n+NP)%NP;buildSlots();if(S){S.hudT=0;}}
+function setBPage(n){BPAGE=(n+NBP)%NBP;buildSlots();if(S){S.hudT=0;}}
+function useBuffSlot(i){if(!S||S.paused) return;const id=LAYOUT[BOFF+BPAGE*4+i];if(!id) return;if(SK[id]) onSkill(id);else useAbility(id);}
+function locOf(id){const i=LAYOUT.indexOf(id);if(i<0) return '';return i<BOFF?'панель '+(Math.floor(i/4)+1):'баффы справа, страница '+(Math.floor((i-BOFF)/4)+1);}
+const BUFF_GLYPH=['↑','→','↓','←'];
 const CL={c:[230,230],r:108,big:84,small:62,fix:50};
 function polar(r,deg){const a=deg*Math.PI/180;return [CL.c[0]+Math.cos(a)*r,CL.c[1]+Math.sin(a)*r];}
 const SLOT_POS=[CL.c,polar(CL.r,180),polar(CL.r,225),polar(CL.r,270)];
@@ -1516,9 +1534,22 @@ function buildCluster(){
  pg.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();setPage(PAGE+(+b.dataset.d));}));
  pg.querySelector('#pged').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openLayout();});
  box.appendChild(pg);
+ const bx=$('buffs');bx.innerHTML='';
+ const bp=document.createElement('div');bp.id='bpager';
+ bp.innerHTML='<button data-d="-1">▲</button><span id="bpgn">1/'+NBP+'</span><button data-d="1">▼</button>';
+ bp.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();setBPage(BPAGE+(+b.dataset.d));}));
+ bx.appendChild(bp);
+ for(let i=0;i<4;i++){const b=document.createElement('div');b.className='slot bf';b.id='bslot'+i;
+  b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useBuffSlot(i);});bx.appendChild(b);}
  buildSlots();
 }
+function fillSlot(b,id,extra){const inf=actInfo(id);
+  b.className='slot'+extra+(inf.kind==='ab'?' ab':'')+(inf.kind==='empty'?' empty':'');b.dataset.id=id||'';b.title=inf.name+': '+inf.desc;
+  b.innerHTML='<span class="ky"></span><span class="nm">'+inf.name+'</span><span class="cdv"></span><span class="tm"></span><span class="lk"></span>';
+  const ic=actIcon(id);ic.className='ic';b.insertBefore(ic,b.firstChild);}
 function buildSlots(){
+ for(let i=0;i<4;i++){const b=$('bslot'+i);if(b) fillSlot(b,LAYOUT[BOFF+BPAGE*4+i],' bf');}
+ const bn=$('bpgn');if(bn) bn.textContent=(BPAGE+1)+'/'+NBP;
  for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];const inf=actInfo(id);
   b.className='slot'+(i===0?' s0':'')+(inf.kind==='ab'?' ab':'')+(inf.kind==='empty'?' empty':'');b.dataset.id=id;b.title=inf.name+': '+inf.desc;
   b.innerHTML='<span class="ky"></span><span class="nm">'+inf.name+'</span><span class="cdv"></span><span class="lk"></span>';
@@ -1526,8 +1557,20 @@ function buildSlots(){
  const n=$('pgn');if(n) n.textContent=(PAGE+1)+'/'+NP;
  updateCluster();
 }
+function updSlot(b,id,key){
+  const p=S.p;let un,ready=false,cdr=0,act=false,lk='';
+  if(!id){un=true;}
+  else if(SK[id]){const sk=SK[id];un=!!p.un[id];ready=!un&&p.lvl>=sk.lvl;cdr=(p.cd[id]||0)/sk.cd;act=(S.buff[id]||0)>0;if(id==='mtx'&&p.deb.transam) cdr=1;lk=ready?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;}
+  else{const a=AB[id];un=p.lvl>=a.lvl;cdr=(S.acd[id]||0)/a.cd;act=(S.buff[id]||0)>0;lk='🔒<br>ур. '+a.lvl;}
+  b.classList.toggle('locked',!un);b.classList.toggle('ready',ready);b.classList.toggle('primary',!!id&&un&&S.primary===id);b.classList.toggle('act',act);
+  const l=b.querySelector('.lk');if(l&&l.innerHTML!==lk) l.innerHTML=lk;
+  const c=b.querySelector('.cdv');if(c) c.style.height=(Math.min(1,cdr)*100)+'%';
+  const tm=b.querySelector('.tm');if(tm) tm.textContent=act?Math.ceil(S.buff[id])+'с':'';
+  const k=b.querySelector('.ky');if(k) k.textContent=key;
+}
 function updateCluster(){
  if(!S) return;const p=S.p;
+ for(let i=0;i<4;i++){const b=$('bslot'+i);if(b) updSlot(b,LAYOUT[BOFF+BPAGE*4+i],pad.active?BUFF_GLYPH[i]:String(i+5));}
  for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];
   let un,ready=false,cdr=0,act=false,lk='';
   if(!id){un=true;}
@@ -1547,10 +1590,13 @@ function openLayout(){
 function closeLayout(){$('layout').classList.remove('on');pickCell=-1;if(S&&!quizOpen) S.paused=false;buildSlots();}
 function renderLayout(){
  const gbox=$('lgrid');gbox.innerHTML='';
- for(let r=0;r<NP;r++){
-  const lab=document.createElement('div');lab.className='lrow'+(r===PAGE?' cur':'');lab.textContent='Панель '+(r+1);gbox.appendChild(lab);
-  for(let c=0;c<4;c++){const idx=r*4+c,id=LAYOUT[idx],inf=actInfo(id);
-   const cell=document.createElement('div');cell.className='lcell'+(inf.kind==='ab'?' ab':'')+(inf.kind==='empty'?' empty':'')+(idx===pickCell?' pick':'')+(r===PAGE?' cur':'');
+ const rows=[];for(let r=0;r<NP;r++) rows.push({label:'Панель '+(r+1),base:r*4,cur:r===PAGE,head:r===0?'Заклинания: веер справа внизу':null});
+ for(let r=0;r<NBP;r++) rows.push({label:'Баффы '+(r+1),base:BOFF+r*4,cur:r===BPAGE,head:r===0?'Баффы: колонка справа':null});
+ for(const row of rows){
+  if(row.head){const h=document.createElement('div');h.className='lhead';h.textContent=row.head;gbox.appendChild(h);}
+  const lab=document.createElement('div');lab.className='lrow'+(row.cur?' cur':'');lab.textContent=row.label;gbox.appendChild(lab);
+  for(let c=0;c<4;c++){const idx=row.base+c,id=LAYOUT[idx],inf=actInfo(id);
+   const cell=document.createElement('div');cell.className='lcell'+(inf.kind==='ab'?' ab':'')+(inf.kind==='empty'?' empty':'')+(idx===pickCell?' pick':'')+(row.cur?' cur':'');
    const locked=!id?false:S?(SK[id]?!S.p.un[id]:S.p.lvl<inf.lvl):false;
    cell.innerHTML='<span>'+inf.name+(locked?' 🔒':'')+'</span>';const ic=actIcon(id);cell.insertBefore(ic,cell.firstChild);
    cell.addEventListener('click',()=>{
@@ -1660,6 +1706,9 @@ window.addEventListener('keydown',e=>{
  if(k==='escape'){if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
  if(S.paused) return;
  if(k>='1'&&k<='4'){useSlot(+k-1);e.preventDefault();}
+ if(k>='5'&&k<='8'){useBuffSlot(+k-5);e.preventDefault();}
+ if(k==='z'||k==='я') setBPage(BPAGE-1);
+ if(k==='x'||k==='ч') setBPage(BPAGE+1);
  if(k==='tab'){setPage(PAGE+(e.shiftKey?-1:1));e.preventDefault();}
  if(k==='q'||k==='й') setPage(PAGE-1);
  if(k==='e'||k==='у') setPage(PAGE+1);
@@ -1730,7 +1779,7 @@ function pollPad(dt){
  pad.lx=dz(g.axes[0]);pad.ly=dz(g.axes[1]);pad.rx=dz(g.axes[2]);pad.ry=dz(g.axes[3]);
  const any=g.buttons.some(x=>x&&x.pressed)||pad.lx||pad.ly||pad.rx||pad.ry;
  if(any){pad.active=true;pointer.has=false;
-  if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: четыре быстрых слота, L1/R1: сменить панель, R2: рывок, L2: Бепантен','good');S.hudT=0;}}
+  if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: заклинания, L1/R1: панель заклинаний, крестовина: баффы, нажатие левого стика: страница баффов, R2: рывок, L2: Бепантен','good');S.hudT=0;}}
  pad.navT-=dt;
  const navY=(B(12)||pad.ly<-0.6)?-1:((B(13)||pad.ly>0.6)?1:0);
  if($('start').classList.contains('on')){
@@ -1750,8 +1799,10 @@ function pollPad(dt){
  }else if(S){
   if(P(9)) toggleHelp();
   else if(!S.paused&&S.p.dead<=0){
-   if(P(4)||P(14)) setPage(PAGE-1);
-   if(P(5)||P(15)) setPage(PAGE+1);
+   if(P(4)) setPage(PAGE-1);
+   if(P(5)) setPage(PAGE+1);
+   [12,15,13,14].forEach((btn,i)=>{if(P(btn)) useBuffSlot(i);});
+   if(P(10)) setBPage(BPAGE+1);
    [0,2,3,1].forEach((btn,i)=>{const id=LAYOUT[PAGE*4+i];if(!id) return;if(SK[id]){if(B(btn)&&(S.p.un[id]||P(btn))) padCast(id,false);}else if(P(btn)) useAbility(id);});
    if(P(7)) useAbility('dash');
    if(P(6)) useBep();
