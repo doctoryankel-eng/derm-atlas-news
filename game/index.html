@@ -87,8 +87,9 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 .slot{position:absolute;border-radius:50%;pointer-events:auto;cursor:pointer;overflow:hidden;background:radial-gradient(circle at 50% 32%,#3c2a31,#130d10);border:2px solid rgba(233,193,122,.5);box-shadow:0 4px 16px rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;touch-action:none;user-select:none}
 .slot.ab{border-color:rgba(159,232,255,.55);background:radial-gradient(circle at 50% 32%,#24363e,#0f171b)}
 .slot .ic{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:64%;height:64%}
-.slot .nm{position:relative;z-index:3;font-size:9px;line-height:1;margin-bottom:8px;text-shadow:0 1px 2px #000;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
-.slot.s0 .nm{font-size:10.5px;margin-bottom:11px}
+.slot .nm{position:relative;z-index:3;font-size:7.5px;line-height:1.02;margin-bottom:5px;text-shadow:0 1px 2px #000;white-space:normal;text-align:center;max-width:80%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow-wrap:break-word}
+.slot.s0 .nm{font-size:9px;margin-bottom:8px;max-width:76%}
+.slot.ab .nm{display:-webkit-box;position:relative;right:auto;top:auto;transform:none;background:none;padding:0;border-radius:0;font-size:7.5px;white-space:normal}
 .slot .ky{position:absolute;top:5px;left:0;right:0;text-align:center;font-size:10px;color:var(--muted);z-index:3}
 .slot.fixed .ky{font-size:8px;top:3px}
 .slot .ct{position:absolute;right:6px;bottom:5px;font-size:12px;font-weight:700;z-index:3;text-shadow:0 1px 2px #000}
@@ -120,6 +121,17 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 .lcell canvas{width:36px;height:36px;position:absolute;top:5px;left:50%;transform:translateX(-50%)}
 .lcell.cur{box-shadow:0 0 0 1px rgba(233,193,122,.35)}
 .lcell.pick{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset;background:#3a2a1c}
+#sndbtn{position:absolute;right:282px;top:12px;width:42px;height:42px;border-radius:50%;pointer-events:auto;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center}
+#tut{position:absolute;left:50%;top:70px;transform:translateX(-50%);width:min(560px,92vw);padding:12px 14px;display:none;pointer-events:auto;border-color:rgba(255,224,122,.6)}
+#tutstep{font-size:11px;color:var(--gold);letter-spacing:.3px;margin-bottom:4px}
+#tuttxt{font-size:14px;line-height:1.4}
+.tutb{display:flex;gap:8px;margin-top:9px;justify-content:flex-end}
+.tutb button{background:#261b20;border:1px solid rgba(233,193,122,.45);color:var(--txt);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
+#tutnext{border-color:var(--gold);color:#ffe9bf}
+#hud.tutOn #toasts{top:200px}
+.tuthl{animation:tutpulse 1s infinite}
+#buffs.tuthl{border-radius:16px}
+@keyframes tutpulse{50%{box-shadow:0 0 0 5px rgba(255,224,122,.85),0 0 26px rgba(255,224,122,.9)}}
 #helpbtn{position:absolute;right:232px;top:12px;width:42px;height:42px;border-radius:50%;pointer-events:auto;cursor:pointer;font-size:19px;color:var(--gold);display:flex;align-items:center;justify-content:center}
 .ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,5,7,.74);z-index:20;padding:calc(16px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left))}
 .ov.on{display:flex}
@@ -164,6 +176,9 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  #bossbar{top:118px;width:72vw}
  #joy{bottom:22px;left:14px;width:116px;height:116px}
  #cluster{transform:scale(.78)}
+ #sndbtn{left:8px;right:auto;top:auto;bottom:196px;width:34px;height:34px;font-size:14px}
+ #tut{top:222px;padding:9px 11px}#tuttxt{font-size:12.5px}
+ #hud.tutOn #toasts{top:360px}
  #buffs{right:8px;bottom:226px;gap:4px}
  .slot.bf{width:44px;height:44px}.slot.bf .nm{display:none}
  #lgrid{grid-template-columns:44px repeat(4,1fr);gap:4px}.lcell{height:62px;font-size:8.5px}.lcell canvas{width:30px;height:30px}
@@ -207,6 +222,8 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  <div id="cluster"></div>
  <div id="buffs"></div>
  <div id="helpbtn" class="panel serif">?</div>
+ <div id="sndbtn" class="panel">🔊</div>
+ <div id="tut" class="panel"><div id="tutstep"></div><div id="tuttxt"></div><div class="tutb"><button id="tutnext">Дальше ›</button><button id="tutskip">Пропустить обучение</button></div></div>
  <div id="joy"><div id="knob"></div></div>
 </div>
 
@@ -242,9 +259,9 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <ul>
    <li>Движение: джойстик слева внизу (пальцем или мышкой), левый стик геймпада или WASD</li>
    <li>Тап или клик по высыпанию: лечить выбранным препаратом (золотая рамка), если оно в зоне досягаемости</li>
-   <li>Тап или клик по коже: нанести выбранный препарат в эту точку. Удобно для Скинорена по пятнам</li>
+   <li>Тап или клик по коже: нанести выбранный препарат в эту точку. Удобно для азелаиновой кислоты по пятнам</li>
    <li>Заклинания справа внизу: четыре быстрых слота (клавиши 1-4), стрелки или Tab, Q, E листают четыре панели. Баффы в колонке справа: клавиши 5-8, Z и X листают страницы. ✎ открывает настройку: две ячейки меняются местами, в том числе между заклинаниями и баффами</li>
-   <li>Пробел: рывок, F: Бепантен</li>
+   <li>Пробел: рывок, F: декспантенол</li>
   </ul>
   <h3>Навыки врача</h3>
   <ul>
@@ -260,22 +277,22 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <li>✕ □ △ ○: четыре слота текущей панели, препараты бьют очередью при удержании</li>
    <li>L1 / R1: сменить панель заклинаний</li>
    <li>Крестовина ↑ → ↓ ←: четыре баффа из колонки справа, нажатие левого стика: страница баффов</li>
-   <li>R2: рывок, L2: Бепантен, Options: справка и пауза</li>
+   <li>R2: рывок, L2: декспантенол, Options: справка и пауза</li>
    <li>Вопросы допуска: крестовина вверх и вниз, ✕ выбрать</li>
   </ul>
   <h3>Телефон</h3>
   <ul><li>Джойстик слева внизу: движение. Кнопки препаратов бьют в сторону, куда наклонён джойстик</li></ul>
   <h3>Как действуют препараты</h3>
   <ul>
-   <li>Точечно, быстро: Базирон АС, Зеркалин, Розамет, Акридерм</li>
-   <li>По площади, накрывают группу: Дифферин, Скинорен, Эффезел</li>
+   <li>Точечно, быстро: бензоилпероксид, клиндамицин, метронидазол, бетаметазон</li>
+   <li>По площади, накрывают группу: адапален, азелаиновая кислота, адапален + бензоилпероксид</li>
    <li><b style="color:#ffe07a">Золотые</b> цифры: препарат выбора. Белые: работает. <b style="color:#9a9a9a">Серые</b>: слабо</li>
    <li><b style="color:#ff6b7a">«Ухудшение»</b>: препарат усиливает воспаление. Высыпание растёт, стреляет чаще и оставляет след тяжелее</li>
   </ul>
   <h3>Системные баффы</h3>
   <ul>
-   <li>Юнидокс Солютаб (доксициклин, таблетки): аура вокруг врача на 12 секунд. Гасит воспаление, бьёт по папулам, пустулам и розацеа. Фоточувствительность: урон по врачу +25%, если нет солнцезащитного крема. Растит резистентность C. acnes, и чем длиннее суммарный курс, тем быстрее. При высокой резистентности доксициклин и Зеркалин слабеют. Бензоилпероксид и перерыв снижают резистентность</li>
-   <li>Роаккутан: мощная аура на 14 секунд, бьёт по всем формам акне и сужает поры. Хейлит на время курса. Копит сухость кожи, и чем длиннее суммарный курс, тем быстрее: сухая кожа хуже восстанавливается и сильнее получает урон. Бепантен снимает 30% сухости, без Роаккутана она постепенно уходит</li>
+   <li>Доксициклин (таблетки): аура вокруг врача на 12 секунд. Гасит воспаление, бьёт по папулам, пустулам и розацеа. Фоточувствительность: урон по врачу +25%, если нет солнцезащитного крема. Растит резистентность C. acnes, и чем длиннее суммарный курс, тем быстрее. При высокой резистентности доксициклин и клиндамицин слабеют. Бензоилпероксид и перерыв снижают резистентность</li>
+   <li>Изотретиноин: мощная аура на 14 секунд, бьёт по всем формам акне и сужает поры. Хейлит на время курса. Копит сухость кожи, и чем длиннее суммарный курс, тем быстрее: сухая кожа хуже восстанавливается и сильнее получает урон. Декспантенол снимает 30% сухости, без изотретиноина она постепенно уходит</li>
    <li>Высыпания внутри ауры теряют воспаление и стреляют реже</li>
   </ul>
   <h3>Комбо</h3>
@@ -288,7 +305,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <ul>
    <li>Не атакуют, но вокруг них блестящий себум: скорость падает на 30%</li>
    <li>Пора периодически закупоривается и даёт новые комедоны рядом</li>
-   <li>Сужают ретиноиды (Дифферин, Эффезел) и сильнее всего изотретиноин. Азелаиновая кислота умеренно, стероид расширяет</li>
+   <li>Сужают ретиноиды (адапален и его комбинация с бензоилпероксидом) и сильнее всего изотретиноин. Азелаиновая кислота умеренно, стероид расширяет</li>
    <li>Без лечения пора снова расширяется, поэтому терапию не бросаем</li>
   </ul>
   <h3>Следы на коже</h3>
@@ -296,17 +313,18 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <li>Комедон следа не оставляет. Папула: красное пятно. Пустула: красное или коричневое пятно</li>
    <li>Узел и раздражённые высыпания оставляют рубец. Рубцы навсегда</li>
    <li>Розацеа оставляет расширенные сосуды</li>
-   <li>Скинорен осветляет постакне: коричневое пятно уходит за 3 нанесения, красное за 2. Если рядом нет высыпаний, Скинорен сам летит в ближайшее пятно. Сосуды и рубцы ему не поддаются</li>
+   <li>Азелаиновая кислота осветляет постакне: коричневое пятно уходит за 3 нанесения, красное за 2. Если рядом нет высыпаний, она сама летит в ближайшее пятно. Сосуды и рубцы ей не поддаются</li>
    <li>Пятна снижают чистоту кожи, пока не побледнеют</li>
   </ul>
   <h3>Дебаффы</h3>
   <ul>
    <li>Ретиноидный дерматит: ретиноиды слишком часто подряд, скорость падает</li>
-   <li>Хейлит: после изотретиноина нет регенерации. Снимается Бепантеном</li>
+   <li>Хейлит: после изотретиноина нет регенерации. Снимается декспантенолом</li>
    <li>Печень: метотрексат копит нагрузку, на 100% препарат на паузе. Фолиевая кислота из лута снижает нагрузку</li>
    <li>Стероид на розацеа превращает её в стероидный дерматит</li>
   </ul>
-  <button class="big" id="helpclose" style="margin-top:14px">Понятно</button>
+  <button class="big sec" id="tutagain">Пройти обучение заново</button>
+  <button class="big" id="helpclose" style="margin-top:8px">Понятно</button>
  </div>
 </div>
 
@@ -355,17 +373,17 @@ const inElbows=(x,y)=>x>=MID&&y>=MID;
    type 'proj' : точечно, снаряд летит в цель
    type 'area' : по площади, капля падает в точку и накрывает группу */
 const SKILLS=[
- {id:'bpo',key:'1',name:'Базирон АС',inn:'бензоилпероксид 5%: точечно и быстро',lvl:1,cd:0.35,dmg:11,range:430,type:'proj',speed:820,col:'#ffffff',r:7,tags:['bpo']},
- {id:'ada',key:'2',name:'Дифферин',inn:'адапален 0,1%: по площади',lvl:1,cd:2.0,dmg:15,range:420,type:'area',rad:120,col:'#c7a6ff',retinoid:true,tags:['ada']},
- {id:'aza',key:'3',name:'Скинорен',inn:'азелаиновая кислота 20%: по площади, осветляет пятна',lvl:1,cd:1.6,dmg:11,range:420,type:'area',rad:95,col:'#f2e3a0',tags:['aza']},
- {id:'clin',key:'4',name:'Зеркалин',inn:'клиндамицин 1%: точечно. В монотерапии растит резистентность',lvl:2,cd:0.5,dmg:12,range:430,type:'proj',speed:720,col:'#7fe0ff',r:7,tags:['clin']},
- {id:'metr',key:'5',name:'Розамет',inn:'метронидазол 1%: точечно, препарат для розацеа',lvl:2,cd:0.5,dmg:12,range:430,type:'proj',speed:700,col:'#ff9fc0',r:7},
- {id:'akr',key:'6',name:'Акридерм',inn:'бетаметазон, топический стероид: точечно',lvl:2,cd:0.8,dmg:14,range:400,type:'proj',speed:560,col:'#9fd3ff',r:8},
- {id:'eff',key:'7',name:'Эффезел',inn:'адапален + бензоилпероксид: по площади',lvl:3,cd:1.8,dmg:22,range:440,type:'area',rad:130,col:'#e8e0ff',retinoid:true,tags:['bpo','ada']},
- {id:'doxy',key:'',name:'Юнидокс Солютаб',inn:'доксициклин, таблетки: системная аура вокруг врача, гасит воспаление',lvl:3,cd:30,dur:12,auraR:170,dps:11,type:'aura',col:'#7fe0a0',range:0},
- {id:'akn',key:'8',name:'Роаккутан',inn:'изотретиноин: мощная системная аура, бьёт по всем формам акне и порам',lvl:4,cd:36,dur:14,auraR:235,dps:17,type:'aura',col:'#ff9f43',range:0,quiz:'akn'},
- {id:'mtx',key:'9',name:'Методжект',inn:'метотрексат подкожно',lvl:5,cd:1.8,dmg:46,range:460,type:'proj',speed:760,col:'#ffd23f',r:9,syringe:true,quiz:'mtx'},
- {id:'efl',key:'0',name:'Эфлейра',inn:'нетакимаб, генно-инженерный биопрепарат, ингибитор интерлейкина-17',lvl:6,cd:18,dmg:170,range:520,type:'proj',speed:480,col:'#8f7bff',r:20,splash:120,quiz:'efl'},
+ {id:'bpo',key:'1',name:'Бензоил­пероксид',inn:'5%, гель: точечно и быстро',lvl:1,cd:0.35,dmg:11,range:430,type:'proj',speed:820,col:'#ffffff',r:7,tags:['bpo']},
+ {id:'ada',key:'2',name:'Адапален',inn:'0,1%, гель: по площади',lvl:1,cd:2.0,dmg:15,range:420,type:'area',rad:120,col:'#c7a6ff',retinoid:true,tags:['ada']},
+ {id:'aza',key:'3',name:'Азелаи­новая кислота',inn:'20%, крем: по площади, осветляет пятна',lvl:1,cd:1.6,dmg:11,range:420,type:'area',rad:95,col:'#f2e3a0',tags:['aza']},
+ {id:'clin',key:'4',name:'Клинда­мицин',inn:'1%, раствор: точечно. В монотерапии растит резистентность',lvl:2,cd:0.5,dmg:12,range:430,type:'proj',speed:720,col:'#7fe0ff',r:7,tags:['clin']},
+ {id:'metr',key:'5',name:'Метро­нидазол',inn:'1%, крем: точечно, препарат для розацеа',lvl:2,cd:0.5,dmg:12,range:430,type:'proj',speed:700,col:'#ff9fc0',r:7},
+ {id:'akr',key:'6',name:'Бетаме­тазон',inn:'топический стероид: точечно',lvl:2,cd:0.8,dmg:14,range:400,type:'proj',speed:560,col:'#9fd3ff',r:8},
+ {id:'eff',key:'7',name:'Адапален + бензоил­пероксид',inn:'фиксированная комбинация: по площади',lvl:3,cd:1.8,dmg:22,range:440,type:'area',rad:130,col:'#e8e0ff',retinoid:true,tags:['bpo','ada']},
+ {id:'doxy',key:'',name:'Доксици­клин',inn:'таблетки: системная аура вокруг врача, гасит воспаление',lvl:3,cd:30,dur:12,auraR:170,dps:11,type:'aura',col:'#7fe0a0',range:0},
+ {id:'akn',key:'8',name:'Изотре­тиноин',inn:'системно: мощная аура, бьёт по всем формам акне и порам',lvl:4,cd:36,dur:14,auraR:235,dps:17,type:'aura',col:'#ff9f43',range:0,quiz:'akn'},
+ {id:'mtx',key:'9',name:'Метотре­ксат',inn:'подкожно',lvl:5,cd:1.8,dmg:46,range:460,type:'proj',speed:760,col:'#ffd23f',r:9,syringe:true,quiz:'mtx'},
+ {id:'efl',key:'0',name:'Нетаки­маб',inn:'генно-инженерный биопрепарат, ингибитор интерлейкина-17',lvl:6,cd:18,dmg:170,range:520,type:'proj',speed:480,col:'#8f7bff',r:20,splash:120,quiz:'efl'},
 ];
 const SK={};SKILLS.forEach(s=>SK[s.id]=s);
 
@@ -378,8 +396,8 @@ const MOB={
  rosacea:{name:'Розацеа',hp:60,xp:25,r:20,aura:{r:135,dps:5},shot:{range:260,cd:3.2,dmg:5,speed:260,col:'#ff8fa0',sz:5}},
  steroid:{name:'Стероидный дерматит',hp:130,xp:40,r:23,elite:true,aura:{r:150,dps:8},shot:{range:300,cd:1.8,dmg:8,speed:300,col:'#ff4060',sz:6}},
  pore:{name:'Расширенная пора',hp:120,xp:35,r:17,pore:true,seb:110,regen:3},
- plaque:{name:'Бляшка',hp:85,xp:30,r:22,shot:{range:280,cd:2.6,dmg:9,speed:260,col:'#eef0f8',sz:6}},
- boss:{name:'Бляшечный псориаз, PASI 24',hp:2400,spd:58,dmg:22,xp:600,r:72,boss:true},
+ plaque:{name:'Бляшка',hp:85,xp:30,r:22,shot:{range:280,cd:2.8,dmg:6,speed:260,col:'#eef0f8',sz:6}},
+ boss:{name:'Бляшечный псориаз, PASI 24',hp:2400,spd:38,dmg:14,xp:600,r:72,boss:true},
 };
 const POP={forehead:{comedo:12,papule:8,pustule:5,pore:6},chin:{pustule:6,papule:5,nodule:4,pore:3},cheeks:{rosacea:11},elbows:{plaque:5}};
 
@@ -398,10 +416,10 @@ const EFF={
 const ACNE={metr:'Метронидазол при акне почти не работает. Это препарат для розацеа',akr:'Стероид провоцирует стероидные акне',mtx:'Метотрексат при акне не показан',efl:'Биопрепарат при акне не показан'};
 const NOD='Узловое акне: наружной терапии мало, нужен изотретиноин';
 const HINTS={
- comedo:Object.assign({},ACNE,{clin:'Клиндамицин на комедоны не действует: нужен ретиноид',bpo:'На комедоны лучше ретиноид: Дифферин или Эффезел'}),
+ comedo:Object.assign({},ACNE,{clin:'Клиндамицин на комедоны не действует: нужен ретиноид',bpo:'На комедоны лучше ретиноид: адапален или его комбинация с бензоилпероксидом'}),
  papule:ACNE,pustule:ACNE,
  nodule:Object.assign({},ACNE,{bpo:NOD,ada:NOD,aza:NOD,clin:NOD,eff:NOD}),
- rosacea:{bpo:'Бензоилпероксид раздражает кожу при розацеа: покраснение усиливается',ada:'Ретиноид при розацеа усиливает покраснение и жжение',eff:'Адапален и бензоилпероксид при розацеа ухудшают течение',clin:'Клиндамицин при розацеа слабый. Лучше Розамет или Скинорен',mtx:'Метотрексат при розацеа не показан',efl:'Биопрепарат при розацеа не показан'},
+ rosacea:{bpo:'Бензоилпероксид раздражает кожу при розацеа: покраснение усиливается',ada:'Ретиноид при розацеа усиливает покраснение и жжение',eff:'Адапален и бензоилпероксид при розацеа ухудшают течение',clin:'Клиндамицин при розацеа слабый. Лучше метронидазол или азелаиновая кислота',mtx:'Метотрексат при розацеа не показан',efl:'Биопрепарат при розацеа не показан'},
  steroid:{akr:'Стероид поддерживает стероидный дерматит. Отменяйте его',bpo:'Раздражающие средства усиливают дерматит',ada:'Ретиноиды усиливают раздражение',eff:'Ретиноиды усиливают раздражение'},
  plaque:{bpo:'Бензоилпероксид при псориазе бесполезен',ada:'Ретиноид раздражает бляшку',eff:'Ретиноид раздражает бляшку',aza:'Азелаиновая кислота при псориазе слабая',clin:'Антибиотик при псориазе не нужен',metr:'Метронидазол при псориазе не нужен',akn:'Изотретиноин при псориазе малоэффективен'},
  pore:{bpo:'Бензоилпероксид поры не сужает. Нужен ретиноид',aza:'Азелаиновая кислота сужает поры умеренно. Сильнее ретиноиды и изотретиноин',clin:'Антибиотик на поры не действует',metr:'Метронидазол на поры не действует',akr:'Стероид истончает кожу: поры выглядят крупнее',mtx:'Метотрексат на поры не действует',efl:'Биопрепарат на поры не действует'},
@@ -428,13 +446,13 @@ const DEBUFF={
  photo:{name:'Фоточувствительность',col:'#ffe07a'},
 };
 const QUIZ={
- akn:{skill:'akn',title:'Допуск к изотретиноину',q:'Пациентке 19 лет планируете Роаккутан. Что обязательно до старта терапии?',
+ akn:{skill:'akn',title:'Допуск к изотретиноину',q:'Пациентке 19 лет планируете изотретиноин. Что обязательно до старта терапии?',
   opts:[['Тест на беременность и надёжная контрацепция',1],['УЗИ щитовидной железы',0],['Отмена всех средств ухода',0]],
-  exp:'В игре Роаккутан работает системно: аура вокруг врача гасит воспаление и бьёт по всем формам акне. Изотретиноин тератогенен. Контрацепция за месяц до старта, весь курс и месяц после окончания, тест на беременность до начала и ежемесячно на фоне терапии. Побочный эффект в игре: хейлит, держите Бепантен под рукой. Изотретиноин вовремя снижает риск рубцов от узлов.'},
- mtx:{skill:'mtx',title:'Допуск к метотрексату',q:'Назначаете Методжект при тяжёлом псориазе. Что добавляете для снижения токсичности?',
+  exp:'В игре изотретиноин работает системно: аура вокруг врача гасит воспаление и бьёт по всем формам акне. Изотретиноин тератогенен. Контрацепция за месяц до старта, весь курс и месяц после окончания, тест на беременность до начала и ежемесячно на фоне терапии. Побочный эффект в игре: хейлит, держите декспантенол под рукой. Изотретиноин вовремя снижает риск рубцов от узлов.'},
+ mtx:{skill:'mtx',title:'Допуск к метотрексату',q:'Назначаете метотрексат подкожно при тяжёлом псориазе. Что добавляете для снижения токсичности?',
   opts:[['Фолиевую кислоту',1],['Высокие дозы витамина D',0],['Омепразол ежедневно',0]],
   exp:'Фолиевая кислота снижает частоту желудочно-кишечных побочек и повышения трансаминаз. Контроль: общий анализ крови, печёночные пробы, креатинин. В игре следите за шкалой печени. Путь к Локтям открыт.'},
- efl:{skill:'efl',title:'Допуск к генно-инженерной биологической терапии',q:'Перед стартом Эфлейры что обязательно исключаете?',
+ efl:{skill:'efl',title:'Допуск к генно-инженерной биологической терапии',q:'Перед стартом нетакимаба что обязательно исключаете?',
   opts:[['Латентный туберкулёз',1],['Дефицит железа',0],['Себорейный дерматит',0]],
   exp:'Скрининг на туберкулёз перед стартом обязателен: Диаскинтест или квантифероновый тест, рентген или компьютерная томография органов грудной клетки. Также гепатиты B, C и ВИЧ.'},
 };
@@ -481,9 +499,10 @@ function zoneClean(zid){return S.zc[zid]||0;}
 function totalClean(){return (S.zc.forehead+S.zc.chin+S.zc.cheeks+S.zc.elbows)/4;}
 
 function startGame(){
+ audioInit();
  const name=($('nm').value||'').trim().slice(0,16)||'Доктор';
  S={t:0,mobs:[],proj:[],eproj:[],fx:[],parts:[],texts:[],drops:[],tele:[],marks:[],boss:null,bossRespawn:0,bossKills:0,kills:0,paused:false,spawnT:2,cleanT:0,hintCD:{},quizQ:[],primary:'bpo',attack:null,attackHold:false,hurt:0,banner:0,lastZone:'',hudT:0,blockT:0,hover:null,
-  acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
+  tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
   p:{x:300,y:300,tx:null,ty:null,name,gender:sel.g,age:sel.a,hp:0,maxhp:0,lvl:1,xp:0,dir:1,walk:0,moving:false,ang:0.8,cd:{},un:{bpo:true,ada:true,aza:true},deb:{},liver:0,ret:[],bep:2,dead:0}};
  recalcHP(true);
  for(const zid in POP) for(const type in POP[zid]) for(let i=0;i<POP[zid][type];i++) spawnMob(type,zid,true);
@@ -493,8 +512,10 @@ function startGame(){
  $('pname').textContent=name;
  buildCluster();drawPortrait();
  $('joy').classList.add('on');
- toast('Ходите джойстиком слева внизу. Заклинания справа внизу: четыре быстрых слота, стрелки листают панели, баффы в колонке справа, ✎ меняет ячейки местами','hint');
- setTimeout(()=>toast('Базирон бьёт точечно, Дифферин и Скинорен накрывают группу. Ищите комбо'),2400);
+ let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
+ if(!tutDone) tutStart();
+ else{toast('Ходите джойстиком слева внизу. Заклинания справа внизу, баффы в колонке справа, ✎ меняет ячейки местами','hint');
+  setTimeout(()=>toast('Бензоилпероксид бьёт точечно, адапален и азелаиновая кислота накрывают группу. Ищите комбо'),2400);}
 }
 
 function findSpot(type,zid,initial){
@@ -523,6 +544,80 @@ function spawnMob(type,zid,initial,x,y,extra){
  S.mobs.push(m);return m;
 }
 function spawnBoss(){S.boss=spawnMob('boss','elbows',true,1960,1960,{slamT:3,kobT:7,engaged:false,enraged:false});}
+
+/* ---------- звук: синтез через Web Audio, без файлов ---------- */
+const SND={ctx:null,on:true,last:{},next:0,step:0};
+try{SND.on=localStorage.getItem('dq_sound')!=='off';}catch(_){}
+function audioInit(){
+ if(SND.ctx){if(SND.ctx.state==='suspended'){try{SND.ctx.resume();}catch(_){}}return;}
+ const AC=window.AudioContext||window.webkitAudioContext;if(!AC) return;
+ try{if(typeof navigator!=='undefined'&&navigator.audioSession) navigator.audioSession.type='playback';}catch(_){}
+ try{
+  const c=new AC();SND.ctx=c;
+  SND.master=c.createGain();SND.master.gain.value=SND.on?0.8:0;SND.master.connect(c.destination);
+  SND.sfx=c.createGain();SND.sfx.gain.value=0.9;SND.sfx.connect(SND.master);
+  SND.mus=c.createGain();SND.mus.gain.value=0.2;SND.mus.connect(SND.master);
+  const nb=c.createBuffer(1,c.sampleRate,c.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;SND.noise=nb;
+  SND.next=c.currentTime+0.3;
+ }catch(_){SND.ctx=null;}
+}
+function setSound(on){SND.on=on;try{localStorage.setItem('dq_sound',on?'on':'off');}catch(_){}
+ if(SND.master) SND.master.gain.setTargetAtTime(on?0.8:0,SND.ctx.currentTime,0.05);
+ const b=$('sndbtn');if(b) b.textContent=on?'🔊':'🔇';}
+function tone(freq,dur,type,vol,slideTo,delay,dest){
+ const c=SND.ctx;if(!c||!SND.on) return;const t=c.currentTime+(delay||0);
+ const o=c.createOscillator(),gn=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(freq,t);
+ if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo,t+dur);
+ gn.gain.setValueAtTime(0.0001,t);gn.gain.exponentialRampToValueAtTime(vol||0.2,t+0.012);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+ o.connect(gn);gn.connect(dest||SND.sfx);o.start(t);o.stop(t+dur+0.05);
+}
+function noise(dur,vol,freq,q,delay,ftype){
+ const c=SND.ctx;if(!c||!SND.on) return;const t=c.currentTime+(delay||0);
+ const src=c.createBufferSource();src.buffer=SND.noise;const f=c.createBiquadFilter();f.type=ftype||'bandpass';f.frequency.value=freq||1200;f.Q.value=q||1;
+ const gn=c.createGain();gn.gain.setValueAtTime(vol||0.2,t);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+ src.connect(f);f.connect(gn);gn.connect(SND.sfx);src.start(t);src.stop(t+dur+0.05);
+}
+function sfx(name){
+ if(!SND.ctx||!SND.on) return;const now=performance.now();
+ const gap={hit:45,kill:55,eshot:90,hurt:120,proj:40}[name]||30;if(SND.last[name]&&now-SND.last[name]<gap) return;SND.last[name]=now;
+ switch(name){
+  case 'proj':tone(820,0.11,'triangle',0.1,1500);break;
+  case 'lob':tone(380,0.16,'sine',0.08,720);break;
+  case 'area':noise(0.28,0.16,650,0.8);tone(230,0.22,'sine',0.14,110);break;
+  case 'aura':[392,494,587,784].forEach((f,i)=>tone(f,0.8,'sine',0.06,null,i*0.07));noise(0.7,0.04,3200,0.5,0,'highpass');break;
+  case 'hit':tone(300+Math.random()*90,0.07,'square',0.035,170);break;
+  case 'kill':tone(660,0.09,'triangle',0.08,990);tone(990,0.13,'sine',0.05,1320,0.05);break;
+  case 'combo':[523,659,784,1047].forEach((f,i)=>tone(f,0.2,'triangle',0.09,null,i*0.05));break;
+  case 'hurt':tone(150,0.18,'sawtooth',0.09,70);noise(0.12,0.06,420,1);break;
+  case 'level':[392,523,659,784,1047].forEach((f,i)=>tone(f,0.4,'triangle',0.1,null,i*0.09));break;
+  case 'slam':tone(70,0.6,'sine',0.32,35);noise(0.5,0.22,220,0.7,0,'lowpass');break;
+  case 'warn':tone(440,0.3,'sawtooth',0.05,300);break;
+  case 'eshot':tone(520,0.08,'sine',0.03,300);break;
+  case 'good':tone(660,0.12,'sine',0.08);tone(880,0.2,'sine',0.08,null,0.1);break;
+  case 'bad':tone(300,0.2,'square',0.05,190);break;
+  case 'dash':noise(0.2,0.1,2600,0.7,0,'highpass');break;
+  case 'pickup':tone(1200,0.08,'sine',0.07,1700);break;
+  case 'laser':tone(1500,0.35,'sawtooth',0.05,700);noise(0.3,0.05,5000,2);break;
+  case 'boss':tone(55,1.3,'sawtooth',0.1,45);tone(82,1.3,'sawtooth',0.07,61);break;
+  case 'click':tone(950,0.04,'sine',0.04);break;
+ }
+}
+// фоновая музыка: медленные аккорды, в бою с боссом добавляется пульс
+const CHORDS=[[110,130.8,164.8],[87.3,110,130.8],[65.4,98,130.8],[98,123.5,146.8]];
+function musicTick(){
+ const c=SND.ctx;if(!c||!SND.on||!SND.mus) return;
+ if(c.currentTime<SND.next-0.15) return;
+ const t=SND.next,dur=4.2,ch=CHORDS[SND.step%CHORDS.length];SND.step++;SND.next=t+4;
+ const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=900;lp.connect(SND.mus);
+ for(const f of ch) for(const dt of [-3,3]){const o=c.createOscillator(),gn=c.createGain();o.type='sawtooth';o.frequency.value=f*2;o.detune.value=dt;
+  gn.gain.setValueAtTime(0.0001,t);gn.gain.exponentialRampToValueAtTime(0.05,t+1.4);gn.gain.setValueAtTime(0.05,t+dur-1.4);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(gn);gn.connect(lp);o.start(t);o.stop(t+dur+0.1);}
+ const boss=S&&S.boss&&S.boss.engaged;
+ if(boss) for(let i=0;i<8;i++){const o=c.createOscillator(),gn=c.createGain();o.type='sine';o.frequency.value=ch[0]/2;const tt=t+i*0.5;
+  gn.gain.setValueAtTime(0.0001,tt);gn.gain.exponentialRampToValueAtTime(0.18,tt+0.02);gn.gain.exponentialRampToValueAtTime(0.0001,tt+0.35);o.connect(gn);gn.connect(SND.mus);o.start(tt);o.stop(tt+0.4);}
+}
+window.addEventListener('pointerdown',()=>{if(S) audioInit();},true);
+window.addEventListener('keydown',()=>{if(S) audioInit();},true);
 
 /* ---------- сообщения ---------- */
 const recent={};
@@ -563,7 +658,7 @@ function useAbility(id){
  if((S.acd[id]||0)>0) return;
  S.acd[id]=a.cd;
  switch(id){
-  case 'dash':p.dashA=p.moving?S.moveAng:p.ang;p.dashT=0.17;p.inv=0.3;burst(p.x,p.y,'#fff1d6',12,140,true);rumble(0.25,80);break;
+  case 'dash':sfx('dash');p.dashA=p.moving?S.moveAng:p.ang;p.dashT=0.17;p.inv=0.3;burst(p.x,p.y,'#fff1d6',12,140,true);rumble(0.25,80);break;
   case 'scope':S.buff.scope=a.dur;warnOnce('scope','Дерматоскопия: над высыпаниями видно препарат выбора');burst(p.x,p.y,'#96f0ff',14,120,true);break;
   case 'extr':{
    const R=115;let n=0,bad=0;
@@ -571,12 +666,12 @@ function useAbility(id){
     if(m.type==='comedo'){killMob(m);n++;}
     else if(m.type==='pore'){m.hp-=m.maxhp*0.25;m.lastHitT=S.t;m.flash=0.15;if(m.hp<=0) killMob(m);n++;}
     else if(ACNE_TYPES[m.type]||m.type==='rosacea'||m.type==='steroid'){m.infl=8;m.hp=Math.min(m.maxhp,m.hp+10);ftext(m.x,m.y,'Не давить!','#ff6b7a',true);bad++;}}
-   S.fx.push({k:'ring',x:p.x,y:p.y,r:R,t:0,max:.4,col:'#ffffff'});
+   S.fx.push({k:'ring',x:p.x,y:p.y,r:R,t:0,max:.4,col:'#ffffff'});noise(0.15,0.1,1800,1.5);
    if(n) ftext(p.x,p.y,'Чистка: '+n,'#ffffff');
    if(bad) warnOnce('extr','Воспалённые элементы не выдавливают: они воспаляются сильнее и чаще оставляют рубцы','bad');
    break;}
-  case 'spf':S.buff.spf=a.dur;warnOnce('spf','Солнцезащитный крем: урон по врачу вдвое меньше, новые пятна не темнеют','good');break;
-  case 'motiv':S.buff.motiv=a.dur;warnOnce('motiv','Комплаенс: пациент мазать не бросает, все препараты бьют на 35% сильнее','good');burst(p.x,p.y,'#ffd25a',18,160,true);break;
+  case 'spf':sfx('good');S.buff.spf=a.dur;warnOnce('spf','Солнцезащитный крем: урон по врачу вдвое меньше, новые пятна не темнеют','good');break;
+  case 'motiv':sfx('good');S.buff.motiv=a.dur;warnOnce('motiv','Комплаенс: пациент мазать не бросает, все препараты бьют на 35% сильнее','good');burst(p.x,p.y,'#ffd25a',18,160,true);break;
   case 'vlaser':{
    const ang=aimAngle(560);p.ang=ang;const L=560,Wd=46;const x2=p.x+Math.cos(ang)*L,y2=p.y+Math.sin(ang)*L;
    let hit=0,cleared=0;
@@ -584,7 +679,7 @@ function useAbility(id){
     const vasc=m.type==='rosacea'||m.type==='steroid';const dmg=(vasc?75:m.type==='boss'?20:14)*dmgScale();
     m.hp-=dmg;m.flash=0.15;m.lastHitT=S.t;ftext(m.x,m.y,Math.round(dmg),vasc?'#ffe07a':'#ffffff',vasc);hit++;if(m.hp<=0) killMob(m);}
    for(const k of S.marks){if((k.k==='tel'||k.k==='red')&&segDist(k.x,k.y,p.x,p.y,x2,y2)<Wd+k.r){k.life=0;cleared++;burst(k.x,k.y,'#ffb43a',6,80,true);}}
-   S.fx.push({k:'beam',x:p.x,y:p.y,x2,y2,t:0,max:.35,col:'#ffb43a'});
+   sfx('laser');S.fx.push({k:'beam',x:p.x,y:p.y,x2,y2,t:0,max:.35,col:'#ffb43a'});
    if(cleared) ftext(p.x,p.y,'Сосуды и пятна убраны: '+cleared,'#ffd28a');
    warnOnce('vlaser','Сосудистый лазер 595 нм: убирает расширенные сосуды и красные пятна, работает по розацеа','good');
    computeClean();break;}
@@ -595,7 +690,7 @@ function useAbility(id){
     if(k.k==='scar'){k.life=0;fixed++;S.marks.push({x:k.x,y:k.y,k:'red',r:k.r*1.2,life:30,max:30,zone:k.zone,seed:k.seed});}
     else if(k.k==='brown'){k.life-=k.max*0.5;}}
    S.scarsFixed+=fixed;
-   S.fx.push({k:'frac',x:cx,y:cy,r:R,t:0,max:.7,col:'#9fe8ff'});
+   sfx('laser');S.fx.push({k:'frac',x:cx,y:cy,r:R,t:0,max:.7,col:'#9fe8ff'});
    if(fixed){ftext(cx,cy,'Рубцов сглажено: '+fixed,'#9fe8ff',true);warnOnce('flaser','Фракционный лазер: рубец сглажен, на его месте временная эритема');}
    else ftext(cx,cy,'Рубцов рядом нет','#c8c8c8');
    computeClean();break;}
@@ -609,6 +704,7 @@ function tryCast(sid,target,noAuto,pt){
  if(!p.un[sid]){if(p.lvl>=sk.lvl&&sk.quiz) openQuiz(sk.quiz);else toast(sk.name+': откроется на '+sk.lvl+' уровне','bad');return false;}
  if(sid==='mtx'&&p.deb.transam){toast('Трансаминазы повышены в 3 раза: метотрексат на паузе','bad');return false;}
  if((p.cd[sid]||0)>0) return false;
+ S.tutCast[sid]=(S.tutCast[sid]||0)+1;
  if(sk.type==='aura') return castAura(sk);
  let tg=target&&!target.dead?target:(noAuto||pt?null:autoTarget(sk.range+40));
  if(sid==='aza'&&!pt&&(!tg||tg.type==='pore')){const mk=nearestSpot(sk.range+40);if(mk){pt=[mk.x,mk.y];tg=null;}}
@@ -621,12 +717,12 @@ function tryCast(sid,target,noAuto,pt){
  p.ang=ang;p.cd[sid]=sk.cd;
  const sx=Math.cos(ang)-Math.sin(ang);if(Math.abs(sx)>0.05) p.dir=sx>0?1:-1;
  if(sk.type==='area'){
-  S.proj.push({lob:true,sx:p.x,sy:p.y,tx,ty,x:p.x,y:p.y,t:0,dur:clamp(Math.hypot(tx-p.x,ty-p.y)/900,0.18,0.45),sk,trail:[]});
+  sfx('lob');S.proj.push({lob:true,sx:p.x,sy:p.y,tx,ty,x:p.x,y:p.y,t:0,dur:clamp(Math.hypot(tx-p.x,ty-p.y)/900,0.18,0.45),sk,trail:[]});
  }else{
-  S.proj.push({x:p.x+Math.cos(ang)*18,y:p.y+Math.sin(ang)*18,vx:Math.cos(ang)*sk.speed,vy:Math.sin(ang)*sk.speed,ang,sk,tgt:tg||null,trav:0,hit:new Set(),pierce:1,trail:[]});
+  sfx('proj');S.proj.push({x:p.x+Math.cos(ang)*18,y:p.y+Math.sin(ang)*18,vx:Math.cos(ang)*sk.speed,vy:Math.sin(ang)*sk.speed,ang,sk,tgt:tg||null,trav:0,hit:new Set(),pierce:1,trail:[]});
  }
  if(sk.retinoid){p.ret.push(S.t);p.ret=p.ret.filter(t=>S.t-t<5);if(p.ret.length>=4){addDeb('retder',6);p.ret=[];toast('Ретиноидный дерматит: шелушение и жжение, скорость снижена','bad');}}
- if(sid==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Бепантен (F) поможет','bad');addDeb('cheil',10);}
+ if(sid==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Декспантенол (F) поможет','bad');addDeb('cheil',10);}
  if(sid==='mtx'){p.liver+=14;if(p.liver>=100){p.liver=60;addDeb('transam',8);toast('Трансаминазы выросли в 3 раза: пауза в терапии. Фолиевая кислота снижает нагрузку','bad');}}
  if(sid==='efl') S.fx.push({k:'ring',x:p.x,y:p.y,r:70,t:0,max:.5,col:sk.col});
  if(sk.type!=='aura') S.primary=sid;
@@ -635,12 +731,13 @@ function tryCast(sid,target,noAuto,pt){
 function castAura(sk){
  const p=S.p;if((S.buff[sk.id]||0)>0) return false;
  p.cd[sk.id]=sk.cd;S.buff[sk.id]=sk.dur;
- S.fx.push({k:'ring',x:p.x,y:p.y,r:sk.auraR,t:0,max:.6,col:sk.col});burst(p.x,p.y,sk.col,26,220,true);rumble(0.35,160);
- if(sk.id==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Бепантен (F) поможет','bad');addDeb('cheil',sk.dur+4);warnOnce('aknaura','Роаккутан работает системно: всё воспалённое вокруг врача гаснет. Самая сильная аура против акне','good');}
+ S.fx.push({k:'ring',x:p.x,y:p.y,r:sk.auraR,t:0,max:.6,col:sk.col});sfx('aura');burst(p.x,p.y,sk.col,26,220,true);rumble(0.35,160);
+ if(sk.id==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Декспантенол (F) поможет','bad');addDeb('cheil',sk.dur+4);warnOnce('aknaura','Изотретиноин работает системно: всё воспалённое вокруг врача гаснет. Самая сильная аура против акне','good');}
  if(sk.id==='doxy'){addDeb('photo',sk.dur);warnOnce('doxy','Доксициклин: аура гасит воспаление вокруг. Фоточувствительность: урон по врачу +25%, солнцезащитный крем снимает эффект. Антибиотик растит резистентность, бензоилпероксид её сдерживает','hint');}
  S.hudT=0;return true;
 }
 function areaHit(x,y,sk){
+ sfx('area');
  S.fx.push({k:'ring',x,y,r:sk.rad,t:0,max:.45,col:sk.col});
  S.fx.push({k:'puddle',x,y,r:sk.rad,t:0,max:1.2,col:sk.col});
  burst(x,y,sk.col,16,150,true);
@@ -651,8 +748,8 @@ function areaHit(x,y,sk){
    if(k.k==='brown'){k.life-=k.max*0.4;n++;}else if(k.k==='red'){k.life-=k.max*0.5;n++;}
    else if(k.k==='tel'||k.k==='scar') other++;
    if(k.k==='brown'||k.k==='red'){for(let i=0;i<6;i++) S.parts.push({x:k.x+rnd(-k.r,k.r),y:k.y+rnd(-k.r,k.r),z:2,vx:0,vy:0,vz:rnd(60,120),life:rnd(.5,.9),max:.9,col:'#fff6c8',s:rnd(1.5,3),glow:true});}}}
-  if(n){ftext(x,y,n>1?'Пятна светлеют':'Пятно светлеет','#fff1a8',true);warnOnce('azaspot','Скинорен осветляет постакне: коричневое пятно уходит за 3 нанесения, красное за 2','good');}
-  if(other) warnOnce('laser','Расширенные сосуды и рубцы Скинорен не убирает: здесь нужен лазер или процедуры');
+  if(n){ftext(x,y,n>1?'Пятна светлеют':'Пятно светлеет','#fff1a8',true);warnOnce('azaspot','Азелаиновая кислота осветляет постакне: коричневое пятно уходит за 3 нанесения, красное за 2','good');}
+  if(other) warnOnce('laser','Расширенные сосуды и рубцы азелаиновая кислота не убирает: здесь нужен лазер или процедуры');
   computeClean();}
 }
 function hitMob(m,sk,base){
@@ -687,12 +784,13 @@ function hitMob(m,sk,base){
   if(!S.combos[combo.name]){S.combos[combo.name]=true;toast('Открыто комбо: '+combo.name+' ('+Object.keys(S.combos).length+' из '+COMBOS.length+')','good');}
  }
  const dmg=base*dmgScale()*mult*rnd(0.9,1.1)*(S.buff.motiv>0?1.35:1);
- m.hp-=dmg;m.flash=0.12;
+ m.hp-=dmg;m.flash=0.12;sfx(combo?'combo':'hit');
  ftext(m.x,m.y,Math.round(dmg),mult>=1.4?'#ffe07a':(mult<0.35?'#9a9a9a':'#ffffff'),mult>=1.4);
  if(e<0.35) hint(m.type,sk.id);
  if(m.hp<=0) killMob(m);
 }
 function aggravate(m,sk,base,k){
+ sfx('bad');
  const heal=base*k*0.6;
  m.hp=Math.min(m.maxhp,m.hp+heal);m.infl=8;m.flash=0.2;
  ftext(m.x,m.y,ACNE_TYPES[m.type]&&sk.id==='akr'?'Стероидные акне!':(m.type==='pore'?'Пора расширилась':'Ухудшение!'),'#ff6b7a',true);
@@ -703,7 +801,7 @@ function mutate(m){
  const d=MOB.steroid;
  Object.assign(m,{type:'steroid',hp:d.hp,maxhp:d.hp,r:d.r,flash:.3,infl:0,shoot:1});
  burst(m.x,m.y,'#ff4060',22);
- toast('Стероид на розацеа: развился стероидный дерматит. Стероид отменяем, лечим Розаметом','bad');
+ toast('Стероид на розацеа: развился стероидный дерматит. Стероид отменяем, лечим метронидазолом','bad');
 }
 function evolve(m){
  const d=MOB.papule;const f=m.hp/m.maxhp;
@@ -726,13 +824,13 @@ function leaveMark(m){
  S.marks.push({x:m.x,y:m.y,k,r:m.r*(k==='scar'?0.85:1.15),life,max:life,zone:m.zone,seed:Math.random()});
  if(S.marks.length>320){const i=S.marks.findIndex(q=>q.k!=='scar');if(i>=0) S.marks.splice(i,1);}
  if(k==='scar'){S.scars++;warnOnce('scar','Остался атрофический рубец. Узлы и раздражённые высыпания рубцуются: лечите раньше и без раздражения','bad');}
- if(k==='brown') warnOnce('brown','Поствоспалительная гиперпигментация. Скинорен осветляет коричневые пятна');
+ if(k==='brown') warnOnce('brown','Поствоспалительная гиперпигментация. Азелаиновая кислота осветляет коричневые пятна');
  if(k==='tel') warnOnce('tel','На месте розацеа остались расширенные сосуды');
 }
 const DEATHCOL={comedo:'#3a261c',papule:'#d4505a',pustule:'#f3e39a',nodule:'#8e2f45',rosacea:'#f08a96',steroid:'#e23a55',plaque:'#f2f2f8',boss:'#ffffff'};
 function killMob(m){
  if(m.dead) return;
- m.dead=true;S.kills++;
+ m.dead=true;S.kills++;sfx('kill');
  burst(m.x,m.y,DEATHCOL[m.type],m.type==='boss'?80:14,m.type==='boss'?320:160);
  gainXP(MOB[m.type].xp);
  if(m.type!=='boss') S.zk[m.zone]=(S.zk[m.zone]||0)+(m.type==='steroid'||m.type==='pore'?2:1);
@@ -762,7 +860,7 @@ function gainXP(n){
  while(p.xp>=need(p.lvl)){p.xp-=need(p.lvl);p.lvl++;onLevel();}
 }
 function onLevel(){
- const p=S.p;recalcHP(true);burst(p.x,p.y,'#e9c17a',34,200);rumble(0.3,250);
+ const p=S.p;recalcHP(true);burst(p.x,p.y,'#e9c17a',34,200);sfx('level');rumble(0.3,250);
  S.fx.push({k:'ring',x:p.x,y:p.y,r:120,t:0,max:.6,col:'#e9c17a'});S.fx.push({k:'pillar',x:p.x,y:p.y,t:0,max:1.1,col:'#ffe7a8'});
  toast('Уровень '+p.lvl+': '+rankTitle(p.lvl)+(LOOK[p.lvl]?'. Новый облик: '+LOOK[p.lvl]:''),'good');
  for(const a of ABIL) if(a.lvl===p.lvl) setTimeout(()=>{toast('Новый навык: '+a.name+(a.id==='dash'?'':' ('+locOf(a.id)+')')+'. '+a.desc,'good');},900);
@@ -775,10 +873,11 @@ function onLevel(){
 }
 function damagePlayer(n,quiet){
  const p=S.p;if(p.dead>0||S.paused||p.inv>0) return;
+ if(S.tut>=0&&S.tut<4) n*=0.3;
  if(S.buff.spf>0) n*=0.5;
  else if(p.deb.photo) n*=1.25;
  if(S.dry>0) n*=1+S.dry/100*0.4;
- p.hp-=n;S.hurt=Math.min(0.5,S.hurt+(quiet?0.06:0.18));if(!quiet) rumble(n>=20?0.9:0.45,n>=20?220:110);if(!quiet) ftext(p.x,p.y,'-'+Math.round(n),'#ff5a6a');
+ p.hp-=n;S.hurt=Math.min(0.5,S.hurt+(quiet?0.06:0.18));if(!quiet) sfx('hurt');if(!quiet) rumble(n>=20?0.9:0.45,n>=20?220:110);if(!quiet) ftext(p.x,p.y,'-'+Math.round(n),'#ff5a6a');
  if(p.hp<=0){p.hp=0;p.dead=3.2;S.attack=null;p.tx=null;burst(p.x,p.y,'#ff5a6a',30);$('death').classList.add('on');
   $('dtxt').textContent='Возвращение на Лоб через несколько секунд. Опыт сохранён';}
 }
@@ -790,10 +889,34 @@ function respawn(){
 }
 function useBep(){
  const p=S.p;if(p.dead>0) return;
- if(p.bep<=0){toast('Бепантен закончился. Он выпадает из вылеченных высыпаний','bad');return;}
- p.bep--;delete p.deb.cheil;delete p.deb.retder;p.hp=Math.min(p.maxhp,p.hp+25);if(S.dry>0){S.dry=Math.max(0,S.dry-30);ftext(p.x,p.y-20,'Сухость -30','#e8d6a8');}
- ftext(p.x,p.y,'Бепантен +25','#6fcf8e');burst(p.x,p.y,'#6fcf8e',12,90);
+ if(p.bep<=0){toast('Декспантенол закончился. Он выпадает из вылеченных высыпаний','bad');return;}
+ sfx('good');p.bep--;delete p.deb.cheil;delete p.deb.retder;p.hp=Math.min(p.maxhp,p.hp+25);if(S.dry>0){S.dry=Math.max(0,S.dry-30);ftext(p.x,p.y-20,'Сухость -30','#e8d6a8');}
+ ftext(p.x,p.y,'Декспантенол +25','#6fcf8e');burst(p.x,p.y,'#6fcf8e',12,90);
 }
+
+/* ---------- обучение ---------- */
+const TUT_KEY='dq_tut_done';
+const TUT=[
+ {t:'Двигайтесь: джойстик слева внизу (пальцем или мышкой), левый стик геймпада или WASD.',hl:'joy',done:()=>S.tutMoved>160},
+ {t:'Большая кнопка справа внизу: бензоилпероксид. Нажмите её, препарат сам летит в ближайшее высыпание.',hl:'slot0',done:()=>(S.tutCast.bpo||0)>0},
+ {t:'Кнопка 2: адапален, бьёт по площади. Нанесите бензоилпероксид, затем адапален на ту же группу в течение 4 секунд: получится комбо.',hl:'slot1',done:()=>Object.keys(S.combos).length>0},
+ {t:'Вылечите ещё 5 высыпаний. Золотые цифры значат препарат выбора, серые значат, что препарат работает слабо.',hl:null,done:()=>S.kills-S.tutKills0>=5},
+ {t:'После лечения на коже остаются пятна. Кнопка 3: азелаиновая кислота, она осветляет постакне. Нажмите её.',hl:'slot2',done:()=>(S.tutCast.aza||0)>0},
+ {t:'Справа колонка баффов, стрелки ◀ ▶ листают панели заклинаний, ✎ меняет ячейки местами, ? открывает справку. На 5 уровне откроется путь к боссу на Локтях. Удачи, доктор!',hl:'buffs',done:null,last:true},
+];
+function tutStart(){S.tut=0;S.tutMoved=0;S.tutCast={};S.tutKills0=S.kills;$('hud').classList.add('tutOn');renderTut();}
+function tutFinish(){S.tut=-1;try{localStorage.setItem(TUT_KEY,'1');}catch(_){}$('hud').classList.remove('tutOn');tutHL(null);$('tut').style.display='none';}
+function tutHL(id){for(const x of ['joy','slot0','slot1','slot2','buffs']){const e=$(x);if(e&&e.classList) e.classList.toggle('tuthl',x===id);}}
+function renderTut(){
+ if(!S||S.tut<0) return;const st=TUT[S.tut];
+ $('tut').style.display='block';$('tutstep').textContent='Обучение · шаг '+(S.tut+1)+' из '+TUT.length;$('tuttxt').textContent=st.t;
+ $('tutnext').textContent=st.last?'Начать игру':'Дальше ›';tutHL(st.hl);
+}
+function tutAdvance(){if(!S||S.tut<0) return;sfx('good');S.tut++;if(S.tut===3) S.tutKills0=S.kills;if(S.tut>=TUT.length){tutFinish();toast('Обучение пройдено. Справка всегда под кнопкой ?','good');}else renderTut();}
+function tutTick(){if(!S||S.tut<0) return;const st=TUT[S.tut];if(st.done&&st.done()) tutAdvance();}
+$('tutnext').onclick=e=>{e.stopPropagation();tutAdvance();};
+$('tutskip').onclick=e=>{e.stopPropagation();tutFinish();};
+$('tutagain').onclick=()=>{if(!S) return;$('help').classList.remove('on');if(!quizOpen) S.paused=false;tutStart();};
 
 /* ---------- квиз ---------- */
 function openNextQuiz(){
@@ -809,8 +932,8 @@ function openQuiz(id){
  opts.forEach(o=>{const b=document.createElement('button');b.className='qo';b.textContent=o[0];
   b.onclick=()=>{
    if($('qc').style.display==='block') return;
-   if(o[1]){b.classList.add('ok');$('qf').innerHTML='<b style="color:#6fcf8e">Верно.</b> '+q.exp;$('qc').style.display='block';}
-   else{b.classList.add('no');$('qf').innerHTML='<b style="color:#ff7b8a">Неверно.</b> Подумайте ещё.';}
+   if(o[1]){sfx('good');b.classList.add('ok');$('qf').innerHTML='<b style="color:#6fcf8e">Верно.</b> '+q.exp;$('qc').style.display='block';}
+   else{sfx('bad');b.classList.add('no');$('qf').innerHTML='<b style="color:#ff7b8a">Неверно.</b> Подумайте ещё.';}
   };box.appendChild(b);});
  qFocus=0;setQFocus();
  $('quiz').classList.add('on');
@@ -874,7 +997,7 @@ function update(dt){
    }
    const sdx=(nx-p.x)-(ny-p.y);if(Math.abs(sdx)>0.01) p.dir=sdx>0?1:-1;
    if(Math.hypot(nx-p.x,ny-p.y)<0.01){p.tx=null;moving=false;}
-   p.x=nx;p.y=ny;if(moving){p.ang=Math.atan2(mvy,mvx);S.moveAng=p.ang;}
+   if(S.tut>=0) S.tutMoved+=Math.hypot(nx-p.x,ny-p.y);p.x=nx;p.y=ny;if(moving){p.ang=Math.atan2(mvy,mvx);S.moveAng=p.ang;}
   }
   p.moving=moving;if(moving) p.walk+=dt*11;
   // нельзя пройти сквозь высыпание
@@ -882,7 +1005,7 @@ function update(dt){
    if(l<mn&&l>0.01){p.x=m.x+dx/l*mn;p.y=m.y+dy/l*mn;}}
  }
 
- // системные ауры: Юнидокс Солютаб, Роаккутан
+ // системные ауры: доксициклин, изотретиноин
  let calmR=0;
  if(p.dead<=0) for(const sk of SKILLS){if(sk.type!=='aura'||!((S.buff[sk.id]||0)>0)) continue;calmR=Math.max(calmR,sk.auraR);
   for(const m of S.mobs){if(m.dead) continue;if(dist(m,p)>sk.auraR+m.r) continue;
@@ -901,7 +1024,7 @@ function update(dt){
   }
   if(sk.id==='akn'){
    S.dry=Math.min(100,S.dry+(2+S.cum.akn*0.06)*dt);
-   if(S.dry>=40) warnOnce('dry40','Ксероз: кожа сухая, барьер нарушен, урон по врачу растёт. Бепантен смягчает сухость','bad');
+   if(S.dry>=40) warnOnce('dry40','Ксероз: кожа сухая, барьер нарушен, урон по врачу растёт. Декспантенол смягчает сухость','bad');
    if(S.dry>=80) warnOnce('dry80','Выраженная сухость кожи. Чем дольше курс изотретиноина, тем суше кожа','bad');
   }
  }
@@ -929,7 +1052,7 @@ function update(dt){
   const dp=dist(m,p),infl=m.infl>0;
   if(d.aura&&dp<d.aura.r+14){m.auraT-=dt;if(m.auraT<=0){m.auraT=0.5;damagePlayer(d.aura.dps*0.5*(infl?1.4:1),true);
    warnOnce('aura','Приливы: рядом с розацеа кожу жжёт. Лечите с дистанции','hint');}}
-  if(d.shot&&dp<d.shot.range){m.shoot-=dt*(infl?1.6:1)*(calmR&&dp<calmR+m.r&&m.type!=='plaque'?0.4:1);if(m.shoot<=0){m.shoot=d.shot.cd*rnd(0.85,1.15);fireAt(m,d.shot,infl);}}
+  if(d.shot&&dp<d.shot.range){m.shoot-=dt*(infl?1.6:1)*(calmR&&dp<calmR+m.r&&m.type!=='plaque'?0.4:1);if(m.shoot<=0){m.shoot=d.shot.cd*rnd(0.85,1.15);fireAt(m,d.shot,infl);if(dp<340) sfx('eshot');}}
  }
 
  // снаряды
@@ -961,13 +1084,13 @@ function update(dt){
  S.eproj=S.eproj.filter(e=>e.life>0);
 
  for(const t of S.tele){t.t-=dt;if(t.t<=0){
-  S.fx.push({k:'ring',x:t.x,y:t.y,r:t.r,t:0,max:.35,col:'#ff5a6a'});burst(t.x,t.y,'#f2f2f8',20,220);
+  S.fx.push({k:'ring',x:t.x,y:t.y,r:t.r,t:0,max:.35,col:'#ff5a6a'});burst(t.x,t.y,'#f2f2f8',20,220);sfx('slam');rumble(0.6,200);
   if(p.dead<=0&&Math.hypot(p.x-t.x,p.y-t.y)<t.r+12) damagePlayer(t.dmg);}}
  S.tele=S.tele.filter(t=>t.t>0);
 
  for(const dr of S.drops){dr.t+=dt;
   if(p.dead<=0&&Math.hypot(dr.x-p.x,dr.y-p.y)<36){dr.got=true;
-   if(dr.k==='bep'){p.bep++;ftext(p.x,p.y,'+1 Бепантен','#6fcf8e');}
+   sfx('pickup');if(dr.k==='bep'){p.bep++;ftext(p.x,p.y,'+1 декспантенол','#6fcf8e');}
    else{p.liver=Math.max(0,p.liver-35);ftext(p.x,p.y,'Фолиевая кислота: печень -35','#ffe07a');}}}
  S.drops=S.drops.filter(d=>!d.got&&d.t<40);
 
@@ -997,20 +1120,20 @@ function update(dt){
 
 function bossAI(m,dt,pz){
  const p=S.p,d=MOB.boss;
- const inArena=pz==='elbows'&&p.dead<=0;
+ const inArena=pz==='elbows'&&p.dead<=0&&dist(m,p)<(m.engaged?900:620);
  if(!inArena){
   const dx=1960-m.x,dy=1960-m.y,l=Math.hypot(dx,dy);if(l>5){m.x+=dx/l*d.spd*dt;m.y+=dy/l*d.spd*dt;}
   m.hp=Math.min(m.maxhp,m.hp+m.maxhp*0.05*dt);m.engaged=false;return;
  }
- if(!m.engaged){m.engaged=true;m.slamT=2.5;m.kobT=6;toast('Бляшечный псориаз заметил вас. Топика его почти не берёт','boss');}
- const spd=d.spd*(m.enraged?1.35:1),dp=dist(m,p);
+ if(!m.engaged){m.engaged=true;m.slamT=2.5;m.kobT=6;toast('Бляшечный псориаз заметил вас. Топика его почти не берёт','boss');sfx('boss');}
+ const spd=d.spd*(m.enraged?1.2:1),dp=dist(m,p);
  if(dp>m.r+22){m.x+=(p.x-m.x)/dp*spd*dt;m.y+=(p.y-m.y)/dp*spd*dt;}
  const z=ZM.elbows;m.x=clamp(m.x,z.x0+m.r,z.x1-m.r);m.y=clamp(m.y,z.y0+m.r,z.y1-m.r);
- if(dp<m.r+26&&m.atk<=0){m.atk=1.2;damagePlayer(d.dmg);}
- m.slamT-=dt;if(m.slamT<=0){m.slamT=m.enraged?2.4:3.8;S.tele.push({x:p.x,y:p.y,r:115,t:1.0,max:1.0,dmg:24});}
- m.kobT-=dt;if(m.kobT<=0){m.kobT=m.enraged?7:10;
+ if(dp<m.r+26&&m.atk<=0){m.atk=1.6;damagePlayer(d.dmg);}
+ m.slamT-=dt;if(m.slamT<=0){m.slamT=m.enraged?3.6:5.2;S.tele.push({x:p.x,y:p.y,r:110,t:1.4,max:1.4,dmg:18});sfx('warn');}
+ m.kobT-=dt;if(m.kobT<=0){m.kobT=m.enraged?10:14;
   const n=S.mobs.filter(o=>o.kob&&!o.dead).length;
-  if(n<12){let made=0;for(let i=0;i<6&&made<3;i++){const a=rnd(0,TAU);const x=clamp(m.x+Math.cos(a)*rnd(120,170),MID+40,WORLD-40),y=clamp(m.y+Math.sin(a)*rnd(120,170),MID+40,WORLD-40);
+  if(n<8){let made=0;for(let i=0;i<6&&made<2;i++){const a=rnd(0,TAU);const x=clamp(m.x+Math.cos(a)*rnd(120,170),MID+40,WORLD-40),y=clamp(m.y+Math.sin(a)*rnd(120,170),MID+40,WORLD-40);
     if(Math.hypot(x-p.x,y-p.y)<60||S.mobs.some(o=>!o.dead&&o.type!=='boss'&&Math.hypot(o.x-x,o.y-y)<50)) continue;
     spawnMob('plaque','elbows',false,x,y,{kob:true});made++;}
    if(made) toast('Феномен Кёбнера: на месте травмы новые бляшки','boss');}}
@@ -1618,8 +1741,8 @@ function buildBar(){
   b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();onSkill(sk.id);});
   bar.appendChild(b);
  }
- const b=document.createElement('div');b.className='sk bep';b.id='sk_bep';b.title='Бепантен: снимает хейлит и ретиноидный дерматит, +25 здоровья';
- b.innerHTML='<span class="ky">F</span><span class="ct" id="bepct">2</span><span class="nm">Бепантен</span>';
+ const b=document.createElement('div');b.className='sk bep';b.id='sk_bep';b.title='Декспантенол: снимает хейлит и ретиноидный дерматит, +25 здоровья';
+ b.innerHTML='<span class="ky">F</span><span class="ct" id="bepct">2</span><span class="nm">Декспантенол</span>';
  {const icn=makeIcon({id:'bep',col:'#1f9d63',type:'proj'});icn.className='ic';b.insertBefore(icn,b.firstChild);}
  b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(S&&!S.paused) useBep();});
  bar.appendChild(b);
@@ -1641,7 +1764,7 @@ function updateHUD(){
  const rb=$('resb');if(S.res>=1||S.cum.doxy>0){rb.style.display='block';rb.firstElementChild.style.width=Math.min(100,S.res)+'%';rb.lastElementChild.textContent='Резистентность C. acnes: '+Math.round(S.res)+'%';}else rb.style.display='none';
  const db=$('dryb');if(S.dry>=1||S.cum.akn>0){db.style.display='block';db.firstElementChild.style.width=Math.min(100,S.dry)+'%';db.lastElementChild.textContent='Сухость кожи: '+Math.round(S.dry)+'%';}else db.style.display='none';
  $('debuffs').innerHTML=dh;
- updateCluster();
+ updateCluster();tutTick();
  const z=zoneAt(p.x,p.y);
  if(z.id!==S.lastZone){S.lastZone=z.id;$('zname').textContent=z.name;}
  $('zsub').textContent=z.sub+' · чистота '+Math.round(zoneClean(z.id)*100)+'%';
@@ -1652,7 +1775,7 @@ function updateHUD(){
  const tc=totalClean();$('clean').textContent='Чистота кожи: '+Math.round(tc*100)+'% · рубцов: '+Math.max(0,S.scars-S.scarsFixed)+(S.scarsFixed?' (сглажено '+S.scarsFixed+')':'');$('cleanb').firstElementChild.style.width=(tc*100)+'%';
  let g;
  if(!p.un.mtx) g='<b>Цель:</b> 5 уровень и допуск к метотрексату. Сейчас уровень '+p.lvl+'.';
- else if(S.boss&&S.bossKills===0) g='<b>Цель:</b> Локти открыты. Вылечите тяжёлый бляшечный псориаз.'+(p.lvl<6?' С 6 уровня откроется Эфлейра.':'');
+ else if(S.boss&&S.bossKills===0) g='<b>Цель:</b> Локти открыты. Вылечите тяжёлый бляшечный псориаз.'+(p.lvl<6?' С 6 уровня откроется нетакимаб.':'');
  else if(S.boss) g='<b>Обострение!</b> Псориаз вернулся. Снова на Локти.';
  else g='<b>Ремиссия.</b> Обострение через '+Math.ceil(S.bossRespawn)+' с.';
  g+='<br>Комбо найдено: '+Object.keys(S.combos).length+' из '+COMBOS.length;
@@ -1719,6 +1842,8 @@ window.addEventListener('keyup',e=>{keys[(e.key||'').toLowerCase()]=false;});
 window.addEventListener('blur',()=>{for(const k in keys) keys[k]=false;pointer.down=false;});
 function toggleHelp(){const h=$('help');const on=!h.classList.contains('on');h.classList.toggle('on',on);if(S&&!quizOpen) S.paused=on;}
 $('helpbtn').addEventListener('pointerdown',e=>{e.stopPropagation();toggleHelp();});
+$('sndbtn').addEventListener('pointerdown',e=>{e.stopPropagation();audioInit();setSound(!SND.on);});
+setSound(SND.on);
 $('helpclose').onclick=()=>{$('help').classList.remove('on');if(S&&!quizOpen) S.paused=false;};
 
 /* ---------- геймпад (PS5 DualSense и другие) и экранный джойстик ---------- */
@@ -1779,7 +1904,7 @@ function pollPad(dt){
  pad.lx=dz(g.axes[0]);pad.ly=dz(g.axes[1]);pad.rx=dz(g.axes[2]);pad.ry=dz(g.axes[3]);
  const any=g.buttons.some(x=>x&&x.pressed)||pad.lx||pad.ly||pad.rx||pad.ry;
  if(any){pad.active=true;pointer.has=false;
-  if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: заклинания, L1/R1: панель заклинаний, крестовина: баффы, нажатие левого стика: страница баффов, R2: рывок, L2: Бепантен','good');S.hudT=0;}}
+  if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: заклинания, L1/R1: панель заклинаний, крестовина: баффы, нажатие левого стика: страница баффов, R2: рывок, L2: декспантенол','good');S.hudT=0;}}
  pad.navT-=dt;
  const navY=(B(12)||pad.ly<-0.6)?-1:((B(13)||pad.ly>0.6)?1:0);
  if($('start').classList.contains('on')){
@@ -1846,6 +1971,7 @@ function continueGame(sv){
  if(sv.primary&&p.un[sv.primary]) S.primary=sv.primary;
  S.bossKills=sv.bossKills|0;S.zk=Object.assign(S.zk,sv.zk||{});S.scars=sv.scars|0;S.scarsFixed=sv.scarsFixed|0;
  S.combos=sv.combos||{};S.warn=sv.warn||{};S.zdone=sv.zdone||{};S.kills=sv.kills|0;S.res=+sv.res||0;S.cum=Object.assign({doxy:0,akn:0},sv.cum||{});S.dry=+sv.dry||0;
+ if(S.tut>=0) tutFinish();
  computeClean();drawPortrait();updateHUD();
  toast('С возвращением! Уровень '+p.lvl+': '+rankTitle(p.lvl),'good');
 }
@@ -1871,6 +1997,7 @@ function loop(ts){
  requestAnimationFrame(loop);
  const dt=Math.min(0.05,last?(ts-last)/1000:0.016);last=ts;
  pollPad(dt);
+ if(S) musicTick();
  if(S&&!S.paused) update(dt);
  render();
  if($('start').classList.contains('on')) drawPreview();
