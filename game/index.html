@@ -69,7 +69,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 .toast.bad{border-color:rgba(217,70,90,.65);color:#ffd9de}
 .toast.boss{border-color:#ff6b6b;color:#ffe1e1;font-family:Georgia,serif;font-size:15px}
 @keyframes tin{from{opacity:0;transform:translateY(-6px)}}
-#joy{position:absolute;left:22px;bottom:104px;width:124px;height:124px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.09),rgba(255,255,255,.02));border:2px solid rgba(233,193,122,.38);pointer-events:auto;display:none;touch-action:none}
+#joy{position:absolute;left:28px;bottom:28px;width:124px;height:124px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.09),rgba(255,255,255,.02));border:2px solid rgba(233,193,122,.38);pointer-events:auto;display:none;touch-action:none}
 #joy.on{display:block}
 #knob{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,240,210,.6),rgba(233,193,122,.35));border:1px solid rgba(255,255,255,.3);pointer-events:none}
 #abil{position:absolute;right:12px;bottom:64px;display:flex;flex-direction:column-reverse;gap:6px;pointer-events:auto}
@@ -81,7 +81,36 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 .ab .cdv{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);z-index:2;height:0}
 .ab.act{box-shadow:0 0 0 2px #ffd25a,0 0 14px rgba(255,210,90,.6)}
 .ab.sel{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
-#helpbtn{position:absolute;right:12px;bottom:12px;width:42px;height:42px;border-radius:50%;pointer-events:auto;cursor:pointer;font-size:19px;color:var(--gold);display:flex;align-items:center;justify-content:center}
+#cluster{position:absolute;right:4px;bottom:4px;width:280px;height:280px;pointer-events:none;transform-origin:100% 100%}
+.slot{position:absolute;border-radius:50%;pointer-events:auto;cursor:pointer;overflow:hidden;background:radial-gradient(circle at 50% 32%,#3c2a31,#130d10);border:2px solid rgba(233,193,122,.5);box-shadow:0 4px 16px rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;touch-action:none;user-select:none}
+.slot.ab{border-color:rgba(159,232,255,.55);background:radial-gradient(circle at 50% 32%,#24363e,#0f171b)}
+.slot .ic{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:64%;height:64%}
+.slot .nm{position:relative;z-index:3;font-size:9px;line-height:1;margin-bottom:8px;text-shadow:0 1px 2px #000;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+.slot.s0 .nm{font-size:10.5px;margin-bottom:11px}
+.slot .ky{position:absolute;top:5px;left:0;right:0;text-align:center;font-size:10px;color:var(--muted);z-index:3}
+.slot.fixed .ky{font-size:8px;top:3px}
+.slot .ct{position:absolute;right:6px;bottom:5px;font-size:12px;font-weight:700;z-index:3;text-shadow:0 1px 2px #000}
+.slot .cdv{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(0,0,0,.62);z-index:2}
+.slot .lk{position:absolute;inset:0;background:rgba(10,6,8,.8);display:none;align-items:center;justify-content:center;flex-direction:column;font-size:10px;color:var(--muted);z-index:4;text-align:center;line-height:1.25}
+.slot.locked .lk{display:flex}
+.slot.ready .lk{color:var(--gold);animation:pulse 1.1s infinite}
+.slot.primary{border-color:#ffd98a;box-shadow:0 0 0 2px rgba(233,193,122,.6),0 4px 16px rgba(0,0,0,.55)}
+.slot.act{box-shadow:0 0 0 3px #ffd25a,0 0 18px rgba(255,210,90,.7)}
+.slot.bepb{border-color:rgba(111,207,142,.6)}
+.slot.empty{opacity:.35;border-style:dashed}
+.lcell.empty{opacity:.5;border-style:dashed;color:var(--muted)}
+#pager{position:absolute;pointer-events:auto;display:flex;align-items:center;background:rgba(18,12,15,.88);border:1px solid var(--line);border-radius:18px;padding:2px 4px;box-shadow:0 3px 12px rgba(0,0,0,.5)}
+#pager button{background:none;border:none;color:var(--gold);font-size:14px;width:30px;height:30px;cursor:pointer;touch-action:none}
+#pager span{font-size:12px;min-width:26px;text-align:center;color:var(--txt)}
+#lgrid{display:grid;grid-template-columns:62px repeat(4,1fr);gap:6px;align-items:center;margin-bottom:12px}
+.lrow{font-size:11.5px;color:var(--muted)}
+.lrow.cur{color:var(--gold)}
+.lcell{position:relative;height:70px;border-radius:10px;border:1px solid rgba(233,193,122,.3);background:#241a1f;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;padding:0 2px 5px;font-size:9.5px;line-height:1.1;text-align:center}
+.lcell.ab{border-color:rgba(159,232,255,.35);background:#17242a}
+.lcell canvas{width:36px;height:36px;position:absolute;top:5px;left:50%;transform:translateX(-50%)}
+.lcell.cur{box-shadow:0 0 0 1px rgba(233,193,122,.35)}
+.lcell.pick{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset;background:#3a2a1c}
+#helpbtn{position:absolute;right:232px;top:12px;width:42px;height:42px;border-radius:50%;pointer-events:auto;cursor:pointer;font-size:19px;color:var(--gold);display:flex;align-items:center;justify-content:center}
 .ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,5,7,.74);z-index:20;padding:calc(16px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left))}
 .ov.on{display:flex}
 .card{max-width:560px;width:100%;padding:22px 22px 18px;max-height:92vh;overflow:auto}
@@ -123,11 +152,13 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  #tr{width:150px;padding:6px}#mm{width:138px;height:76px}#goal{font-size:10.5px}
  #zone{top:auto;bottom:122px;left:auto;right:12px;transform:none;text-align:right}#zname{font-size:16px}#zsub{font-size:10.5px}
  #bossbar{top:118px;width:72vw}
- #joy{bottom:128px;left:14px;width:116px;height:116px}
- #toasts{top:170px}.toast{font-size:12px}
+ #joy{bottom:22px;left:14px;width:116px;height:116px}
+ #cluster{transform:scale(.78)}
+ #lgrid{grid-template-columns:44px repeat(4,1fr);gap:4px}.lcell{height:62px;font-size:8.5px}.lcell canvas{width:30px;height:30px}
+ #toasts{top:225px}.toast{font-size:12px}
  #bar{bottom:8px;gap:3px;padding:4px;width:calc(100vw - 12px);flex-wrap:wrap;justify-content:center}
  .sk{width:calc((100vw - 52px)/6);max-width:56px;height:48px;padding-bottom:3px}.sk .ic{width:28px;height:28px;top:3px}.sk .nm{font-size:7.5px}
- #helpbtn{bottom:auto;top:auto;left:8px;right:auto;bottom:252px;width:34px;height:34px;font-size:16px}
+ #helpbtn{bottom:auto;top:auto;left:8px;right:auto;top:auto;bottom:150px;width:34px;height:34px;font-size:16px}
  .title{font-size:30px}
  #zone{display:none}
  #abil{right:6px;bottom:126px;gap:4px}
@@ -159,8 +190,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <div id="goal"></div>
  </div>
  <div id="toasts"></div>
- <div id="bar" class="panel"></div>
- <div id="abil"></div>
+ <div id="cluster"></div>
  <div id="helpbtn" class="panel serif">?</div>
  <div id="joy"><div id="knob"></div></div>
 </div>
@@ -198,24 +228,23 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <li>Движение: джойстик слева внизу (пальцем или мышкой), левый стик геймпада или WASD</li>
    <li>Тап или клик по высыпанию: лечить выбранным препаратом (золотая рамка), если оно в зоне досягаемости</li>
    <li>Тап или клик по коже: нанести выбранный препарат в эту точку. Удобно для Скинорена по пятнам</li>
-   <li>Клавиши 1-9 и 0 или кнопки снизу: препараты, F: Бепантен</li>
+   <li>Заклинания справа внизу: четыре быстрых слота (клавиши 1-4), стрелки или Tab, Q, E листают пять панелей, ✎ открывает настройку: две ячейки меняются местами, в пустые ячейки можно переносить</li>
+   <li>Пробел: рывок, F: Бепантен</li>
   </ul>
   <h3>Навыки врача</h3>
   <ul>
-   <li>Пробел: рывок. Q: дерматоскопия, над высыпаниями видно препарат выбора</li>
-   <li>E: чистка комедонов и пробок пор. Воспалённое давить нельзя</li>
-   <li>R: солнцезащитный крем, урон по врачу вдвое меньше и пятна не темнеют. T: комплаенс, препараты сильнее на 35%</li>
-   <li>Y: сосудистый лазер 595 нм по сосудам и красным пятнам. U: фракционный лазер по рубцам</li>
+   <li>Рывок: короткий бросок вперёд. Дерматоскопия: над высыпаниями видно препарат выбора</li>
+   <li>Чистка комедонов и пробок пор. Воспалённое давить нельзя</li>
+   <li>Солнцезащитный крем: урон по врачу вдвое меньше и пятна не темнеют. Комплаенс: препараты сильнее на 35%</li>
+   <li>Сосудистый лазер 595 нм по сосудам и красным пятнам. Фракционный лазер по рубцам</li>
    <li>Навыки открываются с уровнем. С каждым уровнем меняется и облик врача, от ординатора до академика</li>
   </ul>
   <h3>Геймпад (PS5 DualSense и другие)</h3>
   <ul>
    <li>Левый стик: движение. Правый стик: прицел</li>
-   <li>✕ или R2: выбранный препарат, удерживайте для повтора</li>
-   <li>L1 / R1 или крестовина влево и вправо: сменить препарат</li>
-   <li>□ Базирон АС, △ Дифферин, L2 Скинорен: быстрые кнопки для комбо</li>
-   <li>○ рывок, крестовина вниз: Бепантен, крестовина вверх: выбранный навык, Create или тачпад: сменить навык</li>
-   <li>Options: справка и пауза</li>
+   <li>✕ □ △ ○: четыре слота текущей панели, препараты бьют очередью при удержании</li>
+   <li>L1 / R1 или крестовина влево и вправо: сменить панель</li>
+   <li>R2: рывок, L2: Бепантен, Options: справка и пауза</li>
    <li>Вопросы допуска: крестовина вверх и вниз, ✕ выбрать</li>
   </ul>
   <h3>Телефон</h3>
@@ -226,6 +255,12 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <li>По площади, накрывают группу: Дифферин, Скинорен, Эффезел</li>
    <li><b style="color:#ffe07a">Золотые</b> цифры: препарат выбора. Белые: работает. <b style="color:#9a9a9a">Серые</b>: слабо</li>
    <li><b style="color:#ff6b7a">«Ухудшение»</b>: препарат усиливает воспаление. Высыпание растёт, стреляет чаще и оставляет след тяжелее</li>
+  </ul>
+  <h3>Системные баффы</h3>
+  <ul>
+   <li>Юнидокс Солютаб (доксициклин, таблетки): аура вокруг врача на 12 секунд. Гасит воспаление, бьёт по папулам, пустулам и розацеа. Фоточувствительность: урон по врачу +25%, если нет солнцезащитного крема. Растит резистентность</li>
+   <li>Акнекутан: мощная аура на 14 секунд, бьёт по всем формам акне и сужает поры. Хейлит на время курса</li>
+   <li>Высыпания внутри ауры теряют воспаление и стреляют реже</li>
   </ul>
   <h3>Комбо</h3>
   <ul>
@@ -259,6 +294,15 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  </div>
 </div>
 
+<div id="layout" class="ov">
+ <div class="card panel">
+  <h3 class="serif" style="color:var(--gold);font-size:20px;margin-bottom:6px">Панели заклинаний</h3>
+  <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px;line-height:1.4">На экране видна одна панель из четырёх слотов, остальные четыре листаются стрелками. Нажмите на одну ячейку, затем на другую: они поменяются местами. Первая ячейка панели самая крупная кнопка.</div>
+  <div id="lgrid"></div>
+  <button class="big sec" id="lreset">Вернуть как было</button>
+  <button class="big" id="lclose" style="margin-top:8px">Готово</button>
+ </div>
+</div>
 <div id="death" class="ov"><div class="card panel"><h2>Вы выбыли</h2><div id="dtxt">Возвращение в ординаторскую...</div></div></div>
 <div id="banner" class="ov"><div class="card panel"><h2 id="btitle">Ремиссия</h2><div id="btxt"></div></div></div>
 
@@ -302,7 +346,8 @@ const SKILLS=[
  {id:'metr',key:'5',name:'Розамет',inn:'метронидазол 1%: точечно, препарат для розацеа',lvl:2,cd:0.5,dmg:12,range:430,type:'proj',speed:700,col:'#ff9fc0',r:7},
  {id:'akr',key:'6',name:'Акридерм',inn:'бетаметазон, топический стероид: точечно',lvl:2,cd:0.8,dmg:14,range:400,type:'proj',speed:560,col:'#9fd3ff',r:8},
  {id:'eff',key:'7',name:'Эффезел',inn:'адапален + бензоилпероксид: по площади',lvl:3,cd:1.8,dmg:22,range:440,type:'area',rad:130,col:'#e8e0ff',retinoid:true,tags:['bpo','ada']},
- {id:'akn',key:'8',name:'Акнекутан',inn:'изотретиноин: системно, задевает соседние высыпания',lvl:4,cd:2.6,dmg:60,range:440,type:'proj',speed:520,col:'#ff9f43',r:13,splash:85,quiz:'akn'},
+ {id:'doxy',key:'',name:'Юнидокс Солютаб',inn:'доксициклин, таблетки: системная аура вокруг врача, гасит воспаление',lvl:3,cd:30,dur:12,auraR:170,dps:11,type:'aura',col:'#7fe0a0',range:0},
+ {id:'akn',key:'8',name:'Акнекутан',inn:'изотретиноин: мощная системная аура, бьёт по всем формам акне и порам',lvl:4,cd:36,dur:14,auraR:235,dps:17,type:'aura',col:'#ff9f43',range:0,quiz:'akn'},
  {id:'mtx',key:'9',name:'Методжект',inn:'метотрексат подкожно',lvl:5,cd:1.8,dmg:46,range:460,type:'proj',speed:760,col:'#ffd23f',r:9,syringe:true,quiz:'mtx'},
  {id:'efl',key:'0',name:'Эфлейра',inn:'нетакимаб, генно-инженерный биопрепарат, ингибитор интерлейкина-17',lvl:6,cd:18,dmg:170,range:520,type:'proj',speed:480,col:'#8f7bff',r:20,splash:120,quiz:'efl'},
 ];
@@ -324,15 +369,15 @@ const POP={forehead:{comedo:12,papule:8,pustule:5,pore:6},chin:{pustule:6,papule
 
 /* коэффициенты: >0 урон, <0 ухудшение (воспаление растёт, высыпание лечится) */
 const EFF={
- comedo: {bpo:.8, ada:1.8,aza:1,  clin:.2, metr:.15,akr:-.8,eff:1.7, akn:1.5,mtx:.2,efl:.2},
- papule: {bpo:1.6,ada:1,  aza:1,  clin:1.4,metr:.3, akr:-.8,eff:1.6, akn:1.8,mtx:.2,efl:.2},
- pustule:{bpo:1.8,ada:.8, aza:.9, clin:1.4,metr:.3, akr:-.8,eff:1.8, akn:1.8,mtx:.2,efl:.2},
- nodule: {bpo:.3, ada:.25,aza:.2, clin:.3, metr:.1, akr:-.5,eff:.4,  akn:1.7,mtx:.2,efl:.2},
- rosacea:{bpo:-1, ada:-1, aza:1.5,clin:.3, metr:1.7,akr:'mutate',eff:-1.2,akn:.8,mtx:.2,efl:.2},
- steroid:{bpo:-1, ada:-1, aza:.8, clin:.6, metr:1.3,akr:-1,eff:-1.2,akn:.6,mtx:.2,efl:.2},
- pore:   {bpo:.1, ada:1.6,aza:.7, clin:0,  metr:0,  akr:-.8,eff:1.3, akn:2.2,mtx:0,efl:0},
- plaque: {bpo:.15,ada:.15,aza:.3, clin:.1, metr:.1, akr:1.5,eff:.15, akn:.2,mtx:1.2,efl:1.5},
- boss:   {bpo:.03,ada:.03,aza:.03,clin:.03,metr:.03,akr:.08,eff:.04,akn:.04,mtx:1,efl:1},
+ comedo: {bpo:.8,doxy:.3, ada:1.8,aza:1,  clin:.2, metr:.15,akr:-.8,eff:1.7, akn:1.5,mtx:.2,efl:.2},
+ papule: {bpo:1.6,doxy:1.5,ada:1,  aza:1,  clin:1.4,metr:.3, akr:-.8,eff:1.6, akn:1.8,mtx:.2,efl:.2},
+ pustule:{bpo:1.8,doxy:1.6,ada:.8, aza:.9, clin:1.4,metr:.3, akr:-.8,eff:1.8, akn:1.8,mtx:.2,efl:.2},
+ nodule: {bpo:.3,doxy:.6, ada:.25,aza:.2, clin:.3, metr:.1, akr:-.5,eff:.4,  akn:1.7,mtx:.2,efl:.2},
+ rosacea:{bpo:-1,doxy:1.4, ada:-1, aza:1.5,clin:.3, metr:1.7,akr:'mutate',eff:-1.2,akn:.8,mtx:.2,efl:.2},
+ steroid:{bpo:-1,doxy:1, ada:-1, aza:.8, clin:.6, metr:1.3,akr:-1,eff:-1.2,akn:.6,mtx:.2,efl:.2},
+ pore:   {bpo:.1,doxy:0, ada:1.6,aza:.7, clin:0,  metr:0,  akr:-.8,eff:1.3, akn:2.2,mtx:0,efl:0},
+ plaque: {bpo:.15,doxy:0,ada:.15,aza:.3, clin:.1, metr:.1, akr:1.5,eff:.15, akn:.2,mtx:1.2,efl:1.5},
+ boss:   {bpo:.03,doxy:0,ada:.03,aza:.03,clin:.03,metr:.03,akr:.08,eff:.04,akn:.04,mtx:1,efl:1},
 };
 const ACNE={metr:'Метронидазол при акне почти не работает. Это препарат для розацеа',akr:'Стероид провоцирует стероидные акне',mtx:'Метотрексат при акне не показан',efl:'Биопрепарат при акне не показан'};
 const NOD='Узловое акне: наружной терапии мало, нужен изотретиноин';
@@ -364,11 +409,12 @@ const DEBUFF={
  retder:{name:'Ретиноидный дерматит',col:'#c7a6ff'},
  cheil:{name:'Хейлит',col:'#ff9f43'},
  transam:{name:'Трансаминазы ×3',col:'#ffd23f'},
+ photo:{name:'Фоточувствительность',col:'#ffe07a'},
 };
 const QUIZ={
  akn:{skill:'akn',title:'Допуск к изотретиноину',q:'Пациентке 19 лет планируете Акнекутан. Что обязательно до старта терапии?',
   opts:[['Тест на беременность и надёжная контрацепция',1],['УЗИ щитовидной железы',0],['Отмена всех средств ухода',0]],
-  exp:'Изотретиноин тератогенен. Контрацепция за месяц до старта, весь курс и месяц после окончания, тест на беременность до начала и ежемесячно на фоне терапии. Побочный эффект в игре: хейлит, держите Бепантен под рукой. Изотретиноин вовремя снижает риск рубцов от узлов.'},
+  exp:'В игре Акнекутан работает системно: аура вокруг врача гасит воспаление и бьёт по всем формам акне. Изотретиноин тератогенен. Контрацепция за месяц до старта, весь курс и месяц после окончания, тест на беременность до начала и ежемесячно на фоне терапии. Побочный эффект в игре: хейлит, держите Бепантен под рукой. Изотретиноин вовремя снижает риск рубцов от узлов.'},
  mtx:{skill:'mtx',title:'Допуск к метотрексату',q:'Назначаете Методжект при тяжёлом псориазе. Что добавляете для снижения токсичности?',
   opts:[['Фолиевую кислоту',1],['Высокие дозы витамина D',0],['Омепразол ежедневно',0]],
   exp:'Фолиевая кислота снижает частоту желудочно-кишечных побочек и повышения трансаминаз. Контроль: общий анализ крови, печёночные пробы, креатинин. В игре следите за шкалой печени. Путь к Локтям открыт.'},
@@ -429,10 +475,10 @@ function startGame(){
  const c=iso(S.p.x,S.p.y);camX=c[0];camY=c[1];
  $('start').classList.remove('on');$('hud').classList.add('on');
  $('pname').textContent=name;
- buildBar();buildAbil();drawPortrait();
+ buildCluster();drawPortrait();
  $('joy').classList.add('on');
- toast('Ходите джойстиком слева внизу, геймпадом или WASD. Тап по высыпанию: лечить. Тап по коже: нанести выбранный препарат в точку','hint');
- setTimeout(()=>toast('Базирон бьёт точечно, Дифферин и Скинорен накрывают группу. Ищите комбо'),1800);
+ toast('Ходите джойстиком слева внизу. Заклинания справа внизу: четыре быстрых слота, стрелки листают пять панелей, ✎ меняет ячейки местами','hint');
+ setTimeout(()=>toast('Базирон бьёт точечно, Дифферин и Скинорен накрывают группу. Ищите комбо'),2400);
 }
 
 function findSpot(type,zid,initial){
@@ -547,6 +593,7 @@ function tryCast(sid,target,noAuto,pt){
  if(!p.un[sid]){if(p.lvl>=sk.lvl&&sk.quiz) openQuiz(sk.quiz);else toast(sk.name+': откроется на '+sk.lvl+' уровне','bad');return false;}
  if(sid==='mtx'&&p.deb.transam){toast('Трансаминазы повышены в 3 раза: метотрексат на паузе','bad');return false;}
  if((p.cd[sid]||0)>0) return false;
+ if(sk.type==='aura') return castAura(sk);
  let tg=target&&!target.dead?target:(noAuto||pt?null:autoTarget(sk.range+40));
  if(sid==='aza'&&!pt&&(!tg||tg.type==='pore')){const mk=nearestSpot(sk.range+40);if(mk){pt=[mk.x,mk.y];tg=null;}}
  let ang,tx,ty;
@@ -566,8 +613,16 @@ function tryCast(sid,target,noAuto,pt){
  if(sid==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Бепантен (F) поможет','bad');addDeb('cheil',10);}
  if(sid==='mtx'){p.liver+=14;if(p.liver>=100){p.liver=60;addDeb('transam',8);toast('Трансаминазы выросли в 3 раза: пауза в терапии. Фолиевая кислота снижает нагрузку','bad');}}
  if(sid==='efl') S.fx.push({k:'ring',x:p.x,y:p.y,r:70,t:0,max:.5,col:sk.col});
- S.primary=sid;
+ if(sk.type!=='aura') S.primary=sid;
  return true;
+}
+function castAura(sk){
+ const p=S.p;if((S.buff[sk.id]||0)>0) return false;
+ p.cd[sk.id]=sk.cd;S.buff[sk.id]=sk.dur;
+ S.fx.push({k:'ring',x:p.x,y:p.y,r:sk.auraR,t:0,max:.6,col:sk.col});burst(p.x,p.y,sk.col,26,220,true);rumble(0.35,160);
+ if(sk.id==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Бепантен (F) поможет','bad');addDeb('cheil',sk.dur+4);warnOnce('aknaura','Акнекутан работает системно: всё воспалённое вокруг врача гаснет. Самая сильная аура против акне','good');}
+ if(sk.id==='doxy'){addDeb('photo',sk.dur);warnOnce('doxy','Доксициклин: аура гасит воспаление вокруг. Фоточувствительность: урон по врачу +25%, солнцезащитный крем снимает эффект. Антибиотик растит резистентность, бензоилпероксид её сдерживает','hint');}
+ S.hudT=0;return true;
 }
 function areaHit(x,y,sk){
  S.fx.push({k:'ring',x,y,r:sk.rad,t:0,max:.45,col:sk.col});
@@ -694,10 +749,10 @@ function onLevel(){
  const p=S.p;recalcHP(true);burst(p.x,p.y,'#e9c17a',34,200);rumble(0.3,250);
  S.fx.push({k:'ring',x:p.x,y:p.y,r:120,t:0,max:.6,col:'#e9c17a'});S.fx.push({k:'pillar',x:p.x,y:p.y,t:0,max:1.1,col:'#ffe7a8'});
  toast('Уровень '+p.lvl+': '+rankTitle(p.lvl)+(LOOK[p.lvl]?'. Новый облик: '+LOOK[p.lvl]:''),'good');
- for(const a of ABIL) if(a.lvl===p.lvl) setTimeout(()=>toast('Новый навык: '+a.name+' ('+a.label+'). '+a.desc,'good'),900);
+ for(const a of ABIL) if(a.lvl===p.lvl) setTimeout(()=>{const pi=Math.floor(LAYOUT.indexOf(a.id)/4)+1;toast('Новый навык: '+a.name+(a.id==='dash'?'':' (панель '+pi+')')+'. '+a.desc,'good');},900);
  for(const sk of SKILLS) if(sk.lvl===p.lvl&&!p.un[sk.id]){
   if(sk.quiz) S.quizQ.push(sk.quiz);
-  else{p.un[sk.id]=true;toast('Открыт препарат: '+sk.name+' ('+sk.inn+')','good');}
+  else{p.un[sk.id]=true;toast('Открыт препарат: '+sk.name+' ('+sk.inn+'), панель '+(Math.floor(LAYOUT.indexOf(sk.id)/4)+1),'good');}
  }
  if(S.quizQ.length&&!quizOpen) setTimeout(openNextQuiz,700);
  drawPortrait();
@@ -705,6 +760,7 @@ function onLevel(){
 function damagePlayer(n,quiet){
  const p=S.p;if(p.dead>0||S.paused||p.inv>0) return;
  if(S.buff.spf>0) n*=0.5;
+ else if(p.deb.photo) n*=1.25;
  p.hp-=n;S.hurt=Math.min(0.5,S.hurt+(quiet?0.06:0.18));if(!quiet) rumble(n>=20?0.9:0.45,n>=20?220:110);if(!quiet) ftext(p.x,p.y,'-'+Math.round(n),'#ff5a6a');
  if(p.hp<=0){p.hp=0;p.dead=3.2;S.attack=null;p.tx=null;burst(p.x,p.y,'#ff5a6a',30);$('death').classList.add('on');
   $('dtxt').textContent='Возвращение на Лоб через несколько секунд. Опыт сохранён';}
@@ -808,6 +864,17 @@ function update(dt){
    if(l<mn&&l>0.01){p.x=m.x+dx/l*mn;p.y=m.y+dy/l*mn;}}
  }
 
+ // системные ауры: Юнидокс Солютаб, Акнекутан
+ let calmR=0;
+ if(p.dead<=0) for(const sk of SKILLS){if(sk.type!=='aura'||!((S.buff[sk.id]||0)>0)) continue;calmR=Math.max(calmR,sk.auraR);
+  for(const m of S.mobs){if(m.dead) continue;if(dist(m,p)>sk.auraR+m.r) continue;
+   const e=EFF[m.type][sk.id];if(!(e>0)) continue;
+   if(m.infl>0){m.infl=0;ftext(m.x,m.y,'Воспаление ушло','#a6f0c0');}
+   const dmg=sk.dps*e*dmgScale()*(S.buff.motiv>0?1.35:1)*dt;m.hp-=dmg;m.lastHit=sk.id;m.lastHitT=S.t;m.sysAcc=(m.sysAcc||0)+dmg;
+   m.sysT=(m.sysT||0)-dt;if(m.sysT<=0){m.sysT=0.7;if(m.sysAcc>=1){ftext(m.x,m.y,Math.round(m.sysAcc),sk.col);m.sysAcc=0;}m.flash=0.06;}
+   if(m.hp<=0) killMob(m);}
+  if(sk.id==='doxy'){S.res=Math.min(100,S.res+0.5*dt);if(S.res>=30&&!S.resWarn){S.resWarn=true;toast('Антибиотики растят резистентность C. acnes. Комбинируйте с бензоилпероксидом','bad');}}
+ }
  // высыпания
  const pz=zoneAt(p.x,p.y).id;const alive=p.dead<=0;
  for(const m of S.mobs){
@@ -832,7 +899,7 @@ function update(dt){
   const dp=dist(m,p),infl=m.infl>0;
   if(d.aura&&dp<d.aura.r+14){m.auraT-=dt;if(m.auraT<=0){m.auraT=0.5;damagePlayer(d.aura.dps*0.5*(infl?1.4:1),true);
    warnOnce('aura','Приливы: рядом с розацеа кожу жжёт. Лечите с дистанции','hint');}}
-  if(d.shot&&dp<d.shot.range){m.shoot-=dt*(infl?1.6:1);if(m.shoot<=0){m.shoot=d.shot.cd*rnd(0.85,1.15);fireAt(m,d.shot,infl);}}
+  if(d.shot&&dp<d.shot.range){m.shoot-=dt*(infl?1.6:1)*(calmR&&dp<calmR+m.r&&m.type!=='plaque'?0.4:1);if(m.shoot<=0){m.shoot=d.shot.cd*rnd(0.85,1.15);fireAt(m,d.shot,infl);}}
  }
 
  // снаряды
@@ -1199,6 +1266,14 @@ function drawPlayer(){
  const p=S.p;if(p.dead>0) return;const [ix,iy]=iso(p.x,p.y);
  if(p.deb.retder){ctx.fillStyle='rgba(199,166,255,.25)';ctx.beginPath();ctx.ellipse(ix,iy,24,11,0,0,TAU);ctx.fill();}
  if(S.buff.motiv>0){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='rgba(255,210,90,'+(0.5+0.2*Math.sin(S.t*8))+')';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(ix,iy,34,15,0,0,TAU);ctx.stroke();ctx.restore();}
+ for(const sk of SKILLS){if(sk.type!=='aura'||!((S.buff[sk.id]||0)>0)) continue;
+  const R=sk.auraR,fade=Math.min(1,S.buff[sk.id]/1.5);ctx.save();ctx.globalCompositeOperation='lighter';
+  const ag=ctx.createRadialGradient(ix,iy,R*0.3,ix,iy,R*1.41);const c=hexRgb(sk.col).join(',');
+  ag.addColorStop(0,'rgba('+c+',0)');ag.addColorStop(0.85,'rgba('+c+','+(0.10*fade)+')');ag.addColorStop(1,'rgba('+c+',0)');
+  ctx.fillStyle=ag;ctx.beginPath();ctx.ellipse(ix,iy,R*1.41,R*0.707,0,0,TAU);ctx.fill();
+  ctx.strokeStyle='rgba('+c+','+(0.55*fade)+')';ctx.lineWidth=2;ctx.setLineDash([10,9]);ctx.lineDashOffset=-S.t*30;ctx.beginPath();ctx.ellipse(ix,iy,R*1.41,R*0.707,0,0,TAU);ctx.stroke();ctx.setLineDash([]);
+  for(let i=0;i<10;i++){const a=S.t*0.9+i*TAU/10+(sk.id==='akn'?0.3:0);ctx.fillStyle='rgba('+c+','+(0.8*fade)+')';ctx.beginPath();ctx.arc(ix+Math.cos(a)*R*1.41,iy+Math.sin(a)*R*0.707-4-Math.sin(S.t*3+i)*4,2.6,0,TAU);ctx.fill();}
+  ctx.restore();}
  drawHero(ctx,ix,iy,{gender:p.gender,age:p.age,dir:p.dir,walk:p.walk,moving:p.moving,t:S.t,hurt:S.hurt,lvl:p.lvl});
  if(S.buff.spf>0){ctx.save();ctx.globalCompositeOperation='lighter';const sh=ctx.createRadialGradient(ix,iy-34,10,ix,iy-34,46);sh.addColorStop(0,'rgba(255,240,180,0)');sh.addColorStop(0.8,'rgba(255,236,170,.12)');sh.addColorStop(1,'rgba(255,236,170,.4)');
   ctx.fillStyle=sh;ctx.beginPath();ctx.ellipse(ix,iy-34,40,48,0,0,TAU);ctx.fill();ctx.restore();}
@@ -1327,7 +1402,7 @@ function render(){
 /* ---------- интерфейс ---------- */
 function makeIcon(sk){
  const c=document.createElement('canvas');c.width=72;c.height=72;const g=c.getContext('2d');g.translate(36,36);
- const form=sk.id==='akn'?'caps':sk.id==='mtx'?'syr':sk.id==='efl'?'pen':sk.id==='bep'?'tube':'tube';
+ const form=sk.id==='doxy'?'tabs':sk.id==='akn'?'caps':sk.id==='mtx'?'syr':sk.id==='efl'?'pen':sk.id==='bep'?'tube':'tube';
  if(sk.type==='area'){g.strokeStyle=sk.col;g.globalAlpha=0.5;g.setLineDash([4,4]);g.lineWidth=2;g.beginPath();g.arc(0,0,31,0,TAU);g.stroke();g.setLineDash([]);g.globalAlpha=1;}
  const glow=g.createRadialGradient(0,0,2,0,0,30);glow.addColorStop(0,'rgba(255,255,255,.18)');glow.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=glow;g.fillRect(-36,-36,72,72);
  g.rotate(-0.6);
@@ -1339,6 +1414,8 @@ function makeIcon(sk){
   const cg=g.createLinearGradient(0,-7,0,7);cg.addColorStop(0,shade(sk.col==='#ffffff'?'#d8dde6':sk.col,-0.1));cg.addColorStop(1,shade(sk.col==='#ffffff'?'#d8dde6':sk.col,-0.45));
   g.fillStyle=cg;rr(g,10,-7,13,14,3);g.fill();
   g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=1.5;g.beginPath();g.moveTo(-20,-5);g.lineTo(6,-6.5);g.stroke();
+ }else if(form==='tabs'){
+  g.rotate(0.6);for(const [ox,oy] of [[-10,-6],[9,-9],[0,10]]){const tg2=g.createRadialGradient(ox-3,oy-3,1,ox,oy,10);tg2.addColorStop(0,'#ffffff');tg2.addColorStop(1,'#b9e8c8');g.fillStyle=tg2;g.beginPath();g.ellipse(ox,oy,10,7,0.3,0,TAU);g.fill();g.strokeStyle='rgba(60,120,80,.55)';g.lineWidth=1.2;g.beginPath();g.moveTo(ox-6,oy-2);g.lineTo(ox+6,oy+2);g.stroke();}
  }else if(form==='caps'){
   for(const [ox,oy,rt] of [[-6,-6,0],[6,8,0.9]]){g.save();g.translate(ox,oy);g.rotate(rt);
    g.fillStyle='#ff9f43';rr(g,-14,-6,14,12,6);g.fill();g.fillStyle='#8a4a16';rr(g,0,-6,14,12,6);g.fill();
@@ -1382,6 +1459,92 @@ function updateAbil(){
   const cd=(S.acd[a.id]||0)/a.cd;b.querySelector('.cdv').style.height=(cd*100)+'%';
   b.classList.toggle('act',(S.buff[a.id]||0)>0);b.classList.toggle('sel',S.selAb===a.id&&pad.active);}
 }
+/* ---------- панели заклинаний: 4 панели по 4 слота ---------- */
+const DEF_LAYOUT=['bpo','ada','aza','eff','clin','doxy','akn','extr','metr','akr','spf','scope','mtx','efl','motiv','vlaser','flaser',null,null,null];
+const NP=5;
+const LAYOUT_KEY='dq_layout_v2';
+let LAYOUT=DEF_LAYOUT.slice(),PAGE=0,pickCell=-1;
+(function(){try{const l=JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null');
+ const ids=DEF_LAYOUT.filter(Boolean);if(Array.isArray(l)&&l.length===NP*4){const got=l.filter(Boolean);if(got.length===ids.length&&new Set(got).size===got.length&&ids.every(id=>got.includes(id))) LAYOUT=l;}}catch(_){}})();
+function saveLayout(){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(LAYOUT));}catch(_){}}
+function actInfo(id){
+ if(!id) return {kind:'empty',name:'Пусто',lvl:0,desc:'Свободная ячейка'};
+ if(SK[id]) return {kind:'drug',name:SK[id].name,lvl:SK[id].lvl,desc:SK[id].inn,col:SK[id].col};
+ const a=AB[id];return {kind:'ab',name:a.name,lvl:a.lvl,desc:a.desc};
+}
+function actIcon(id){if(!id){const c=document.createElement('canvas');c.width=8;c.height=8;return c;}return SK[id]?makeIcon(SK[id]):makeAbIcon(id);}
+function useSlot(i){
+ if(!S||S.paused) return;const id=LAYOUT[PAGE*4+i];if(!id) return;
+ if(SK[id]) onSkill(id);else useAbility(id);
+}
+function setPage(n){PAGE=(n+NP)%NP;buildSlots();if(S){S.hudT=0;}}
+const CL={c:[230,230],r:108,big:84,small:62,fix:50};
+function polar(r,deg){const a=deg*Math.PI/180;return [CL.c[0]+Math.cos(a)*r,CL.c[1]+Math.sin(a)*r];}
+const SLOT_POS=[CL.c,polar(CL.r,180),polar(CL.r,225),polar(CL.r,270)];
+const SLOT_GLYPH=['✕','□','△','○'];
+function place(el,center,size){el.style.width=size+'px';el.style.height=size+'px';el.style.left=(center[0]-size/2)+'px';el.style.top=(center[1]-size/2)+'px';}
+function buildCluster(){
+ const box=$('cluster');box.innerHTML='';
+ for(let i=0;i<4;i++){const b=document.createElement('div');b.className='slot'+(i===0?' s0':'');b.id='slot'+i;place(b,SLOT_POS[i],i===0?CL.big:CL.small);
+  b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useSlot(i);});box.appendChild(b);}
+ const dash=document.createElement('div');dash.className='slot fixed';dash.id='slotdash';place(dash,polar(190,200),CL.fix);
+ dash.innerHTML='<span class="ky">Пробел</span><span class="cdv"></span>';const di=makeAbIcon('dash');di.className='ic';dash.insertBefore(di,dash.firstChild);
+ dash.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useAbility('dash');});box.appendChild(dash);
+ const bep=document.createElement('div');bep.className='slot fixed bepb';bep.id='slotbep';place(bep,polar(190,250),CL.fix);
+ bep.innerHTML='<span class="ky">F</span><span class="ct" id="bepct">2</span>';const bi=makeIcon({id:'bep',col:'#1f9d63',type:'proj'});bi.className='ic';bep.insertBefore(bi,bep.firstChild);
+ bep.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(S&&!S.paused) useBep();});box.appendChild(bep);
+ const pg=document.createElement('div');pg.id='pager';pg.style.left='10px';pg.style.top='55px';
+ pg.innerHTML='<button data-d="-1">◀</button><span id="pgn">1/'+NP+'</span><button data-d="1">▶</button><button id="pged" title="Настроить панели">✎</button>';
+ pg.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();setPage(PAGE+(+b.dataset.d));}));
+ pg.querySelector('#pged').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openLayout();});
+ box.appendChild(pg);
+ buildSlots();
+}
+function buildSlots(){
+ for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];const inf=actInfo(id);
+  b.className='slot'+(i===0?' s0':'')+(inf.kind==='ab'?' ab':'')+(inf.kind==='empty'?' empty':'');b.dataset.id=id;b.title=inf.name+': '+inf.desc;
+  b.innerHTML='<span class="ky"></span><span class="nm">'+inf.name+'</span><span class="cdv"></span><span class="lk"></span>';
+  const ic=actIcon(id);ic.className='ic';b.insertBefore(ic,b.firstChild);}
+ const n=$('pgn');if(n) n.textContent=(PAGE+1)+'/'+NP;
+ updateCluster();
+}
+function updateCluster(){
+ if(!S) return;const p=S.p;
+ for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];
+  let un,ready=false,cdr=0,act=false,lk='';
+  if(!id){un=true;}
+  else if(SK[id]){const sk=SK[id];un=!!p.un[id];ready=!un&&p.lvl>=sk.lvl;cdr=(p.cd[id]||0)/sk.cd;act=(S.buff[id]||0)>0;if(id==='mtx'&&p.deb.transam) cdr=1;lk=ready?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;}
+  else{const a=AB[id];un=p.lvl>=a.lvl;cdr=(S.acd[id]||0)/a.cd;act=(S.buff[id]||0)>0;lk='🔒<br>ур. '+a.lvl;}
+  b.classList.toggle('locked',!un);b.classList.toggle('ready',ready);b.classList.toggle('primary',un&&S.primary===id);b.classList.toggle('act',act);
+  const l=b.querySelector('.lk');if(l&&l.innerHTML!==lk) l.innerHTML=lk;
+  const c=b.querySelector('.cdv');if(c) c.style.height=(Math.min(1,cdr)*100)+'%';
+  const k=b.querySelector('.ky');if(k) k.textContent=pad.active?SLOT_GLYPH[i]:String(i+1);}
+ const d=$('slotdash');if(d){d.querySelector('.cdv').style.height=((S.acd.dash||0)/AB.dash.cd*100)+'%';d.querySelector('.ky').textContent=pad.active?'R2':'Пробел';}
+ const bp=$('slotbep');if(bp) bp.querySelector('.ky').textContent=pad.active?'L2':'F';
+ const bc=$('bepct');if(bc) bc.textContent=p.bep;
+}
+function openLayout(){
+ pickCell=-1;renderLayout();$('layout').classList.add('on');if(S) S.paused=true;
+}
+function closeLayout(){$('layout').classList.remove('on');pickCell=-1;if(S&&!quizOpen) S.paused=false;buildSlots();}
+function renderLayout(){
+ const gbox=$('lgrid');gbox.innerHTML='';
+ for(let r=0;r<NP;r++){
+  const lab=document.createElement('div');lab.className='lrow'+(r===PAGE?' cur':'');lab.textContent='Панель '+(r+1);gbox.appendChild(lab);
+  for(let c=0;c<4;c++){const idx=r*4+c,id=LAYOUT[idx],inf=actInfo(id);
+   const cell=document.createElement('div');cell.className='lcell'+(inf.kind==='ab'?' ab':'')+(inf.kind==='empty'?' empty':'')+(idx===pickCell?' pick':'')+(r===PAGE?' cur':'');
+   const locked=!id?false:S?(SK[id]?!S.p.un[id]:S.p.lvl<inf.lvl):false;
+   cell.innerHTML='<span>'+inf.name+(locked?' 🔒':'')+'</span>';const ic=actIcon(id);cell.insertBefore(ic,cell.firstChild);
+   cell.addEventListener('click',()=>{
+    if(pickCell<0){pickCell=idx;}
+    else if(pickCell===idx){pickCell=-1;}
+    else{const t=LAYOUT[pickCell];LAYOUT[pickCell]=LAYOUT[idx];LAYOUT[idx]=t;pickCell=-1;saveLayout();}
+    renderLayout();});
+   gbox.appendChild(cell);}
+ }
+}
+$('lclose').onclick=closeLayout;
+$('lreset').onclick=()=>{LAYOUT=DEF_LAYOUT.slice();saveLayout();pickCell=-1;renderLayout();};
 function buildBar(){
  const bar=$('bar');bar.innerHTML='';
  for(const sk of SKILLS){
@@ -1399,14 +1562,13 @@ function buildBar(){
 }
 function onSkill(sid){
  if(!S||S.paused) return;
- if(S.p.un[sid]) S.primary=sid;
+ if(S.p.un[sid]&&SK[sid].type!=='aura') S.primary=sid;
  if(stickAim()!=null) tryCast(sid,aimTarget(SK[sid].range+40),true);
  else tryCast(sid,null);
 }
 function updateHUD(){
  const p=S.p;
  $('plvl').textContent='Уровень '+p.lvl+' · '+rankTitle(p.lvl);
- updateAbil();
  $('hpb').firstElementChild.style.width=(p.hp/p.maxhp*100)+'%';$('hpb').lastElementChild.textContent=Math.ceil(p.hp)+' / '+p.maxhp;
  const nx=need(p.lvl);$('xpb').firstElementChild.style.width=(p.xp/nx*100)+'%';$('xpb').lastElementChild.textContent=p.xp+' / '+nx+' опыта';
  const lv=$('lvb');if(p.un.mtx){lv.style.display='block';lv.firstElementChild.style.width=Math.min(100,p.liver)+'%';lv.lastElementChild.textContent='Печень: '+Math.round(p.liver)+'%';}
@@ -1414,11 +1576,7 @@ function updateHUD(){
  if(S.sebum>0) dh+='<span class="chip" style="color:#f3d98a;border-color:#f3d98a">Себум: скорость -30%</span>';
  if(S.res>=1) dh+='<span class="chip" style="color:#7fe0ff;border-color:#7fe0ff">Резистентность C. acnes '+Math.round(S.res)+'%</span>';
  $('debuffs').innerHTML=dh;
- for(const sk of SKILLS){const b=$('sk_'+sk.id);if(!b) continue;const un=!!p.un[sk.id];
-  b.classList.toggle('locked',!un);b.classList.toggle('ready',!un&&p.lvl>=sk.lvl);b.classList.toggle('primary',un&&S.primary===sk.id);
-  b.querySelector('.lk').innerHTML=(!un&&p.lvl>=sk.lvl)?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;
-  let cdr=(p.cd[sk.id]||0)/sk.cd;if(sk.id==='mtx'&&p.deb.transam) cdr=1;b.querySelector('.cdv').style.height=(cdr*100)+'%';}
- $('bepct').textContent=p.bep;
+ updateCluster();
  const z=zoneAt(p.x,p.y);
  if(z.id!==S.lastZone){S.lastZone=z.id;$('zname').textContent=z.name;}
  $('zsub').textContent=z.sub+' · чистота '+Math.round(zoneClean(z.id)*100)+'%';
@@ -1480,11 +1638,14 @@ window.addEventListener('keydown',e=>{
  const k=(e.key||'').toLowerCase();keys[k]=true;if(k===' '&&S) e.preventDefault();
  if(!S) return;
  if(k==='h'||k==='р'){toggleHelp();return;}
- if(k==='escape'){$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
+ if(k==='escape'){if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
  if(S.paused) return;
- const sk=SKILLS.find(s=>s.key===k);if(sk){onSkill(sk.id);e.preventDefault();}
+ if(k>='1'&&k<='4'){useSlot(+k-1);e.preventDefault();}
+ if(k==='tab'){setPage(PAGE+(e.shiftKey?-1:1));e.preventDefault();}
+ if(k==='q'||k==='й') setPage(PAGE-1);
+ if(k==='e'||k==='у') setPage(PAGE+1);
+ if(k===' ') useAbility('dash');
  if(k==='f'||k==='а') useBep();
- const ab=ABIL.find(a=>a.keys.includes(k));if(ab){useAbility(ab.id);e.preventDefault();}
 });
 window.addEventListener('keyup',e=>{keys[(e.key||'').toLowerCase()]=false;});
 window.addEventListener('blur',()=>{for(const k in keys) keys[k]=false;pointer.down=false;});
@@ -1550,7 +1711,7 @@ function pollPad(dt){
  pad.lx=dz(g.axes[0]);pad.ly=dz(g.axes[1]);pad.rx=dz(g.axes[2]);pad.ry=dz(g.axes[3]);
  const any=g.buttons.some(x=>x&&x.pressed)||pad.lx||pad.ly||pad.rx||pad.ry;
  if(any){pad.active=true;pointer.has=false;
-  if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ или R2: препарат, L1/R1: сменить, □ Базирон, △ Дифферин, L2 Скинорен, ○ рывок, крестовина вверх: навык, вниз: Бепантен','good');}}
+  if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: четыре быстрых слота, L1/R1: сменить панель, R2: рывок, L2: Бепантен','good');S.hudT=0;}}
  pad.navT-=dt;
  const navY=(B(12)||pad.ly<-0.6)?-1:((B(13)||pad.ly>0.6)?1:0);
  if($('start').classList.contains('on')){
@@ -1561,22 +1722,20 @@ function pollPad(dt){
   pad.lx=pad.ly=0;
   if(navY&&pad.navT<=0){pad.navT=0.22;const n=qButtons().length||1;qFocus=(qFocus+navY+n)%n;setQFocus();}
   if(P(0)){if($('qc').style.display==='block') $('qc').click();else{const b=qButtons()[qFocus];if(b) b.click();}}
+ }else if($('layout').classList.contains('on')){
+  pad.lx=pad.ly=0;
+  if(P(0)||P(1)||P(9)) closeLayout();
  }else if($('help').classList.contains('on')){
   pad.lx=pad.ly=0;
   if(P(0)||P(1)||P(9)) $('helpclose').click();
  }else if(S){
   if(P(9)) toggleHelp();
   else if(!S.paused&&S.p.dead<=0){
-   if(P(4)||P(14)) cycleSkill(-1);
-   if(P(5)||P(15)) cycleSkill(1);
-   if(B(0)||B(7)) padCast(S.primary,false);
-   if(P(2)) padCast('bpo',true);
-   if(P(3)) padCast('ada',true);
-   if(P(6)) padCast('aza',true);
-   if(P(1)) useAbility('dash');
-   if(P(13)) useBep();
-   if(P(12)) useAbility(S.selAb);
-   if(P(8)||P(17)||P(11)){const list=ABIL.filter(a=>a.id!=='dash'&&S.p.lvl>=a.lvl);if(list.length){let i=list.findIndex(a=>a.id===S.selAb);i=(i+1)%list.length;S.selAb=list[i].id;ftext(S.p.x,S.p.y,'Навык: '+list[i].name,'#9fe8ff');S.hudT=0;}}
+   if(P(4)||P(14)) setPage(PAGE-1);
+   if(P(5)||P(15)) setPage(PAGE+1);
+   [0,2,3,1].forEach((btn,i)=>{const id=LAYOUT[PAGE*4+i];if(!id) return;if(SK[id]){if(B(btn)&&(S.p.un[id]||P(btn))) padCast(id,false);}else if(P(btn)) useAbility(id);});
+   if(P(7)) useAbility('dash');
+   if(P(6)) useBep();
   }
  }
  pad.prev=g.buttons.map(x=>!!(x&&(x.pressed||x.value>0.5)));
