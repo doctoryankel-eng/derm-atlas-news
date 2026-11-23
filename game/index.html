@@ -38,7 +38,35 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 #resb i{background:linear-gradient(#9ff0ff,#2f9db8)}
 #dryb i{background:linear-gradient(#f3e2b8,#b98f4e)}#lvb i{background:linear-gradient(#ffe07a,#c99a1c)}
 #debuffs{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-#spbtn{pointer-events:auto;margin-top:6px;background:#261b20;border:1px solid rgba(233,193,122,.45);color:var(--gold);border-radius:9px;padding:4px 9px;font-size:12px;cursor:pointer}
+
+.hbtns{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+#eqbtn{pointer-events:auto;background:#17242a;border:1px solid rgba(159,232,255,.45);color:#9fe8ff;border-radius:9px;padding:4px 9px;font-size:12px;cursor:pointer}
+#eqbtn b{display:inline-block;min-width:16px;padding:0 4px;margin-left:3px;border-radius:8px;background:#1f3a44;color:#dff8ff}
+#eqbtn.has{animation:pulse3 1.2s infinite;border-color:#9fe8ff}
+@keyframes pulse3{50%{box-shadow:0 0 0 3px rgba(159,232,255,.45)}}
+.eqb{flex:none;padding:8px 10px;border-radius:9px;border:1px solid #9fe8ff;background:#17242a;color:#dff8ff;font-size:12px;cursor:pointer}
+.eqb:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;gap:6px;margin-bottom:6px}
+.tab{flex:1;padding:8px;border-radius:9px;border:1px solid rgba(233,193,122,.35);background:#261b20;color:var(--muted);cursor:pointer;font-size:13px}
+.tab.on{color:#ffe9bf;border-color:var(--gold);background:#3a2a1c}
+.skv{display:flex;gap:6px;margin:-1px 0 8px 48px;flex-wrap:wrap}
+.skvl{font-size:11px;color:var(--muted)}
+.vbtn{flex:1;min-width:130px;text-align:left;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:#1d1418;color:var(--txt);font-size:11.5px;cursor:pointer;line-height:1.3}
+.vbtn span{color:var(--muted);font-size:10.5px}
+.vbtn.on{border-color:var(--gold);background:#3a2a1c}
+.mrow{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-left:2px solid rgba(255,255,255,.08);padding-left:10px;margin-left:6px;position:relative}
+.mrow.open{border-left-color:var(--gold)}
+.mlv{width:52px;flex:none;font-size:12px;color:var(--muted);padding-top:14px}
+.mrow.open .mlv{color:var(--gold)}
+.mnodes{display:flex;flex-wrap:wrap;gap:8px}
+.mnode{width:74px;text-align:center;font-size:10px;line-height:1.15}
+.mnode .mic{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 50% 35%,#3c2a31,#130d10);border:1px solid rgba(233,193,122,.5);display:block;margin:0 auto 3px}
+.mnode.eqn .mic{border-color:rgba(159,232,255,.6)}
+.mnode.near{opacity:.55}
+.mnode .mn span{color:var(--muted)}
+.mnode.fog .mq{width:44px;height:44px;border-radius:50%;margin:0 auto 3px;background:#1a1216;border:1px dashed rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;color:#5a4a50}
+.mnode.fog .mn{color:#5a4a50}
+#spbtn{pointer-events:auto;background:#261b20;border:1px solid rgba(233,193,122,.45);color:var(--gold);border-radius:9px;padding:4px 9px;font-size:12px;cursor:pointer}
 #spbtn b{display:inline-block;min-width:16px;padding:0 4px;margin-left:3px;border-radius:8px;background:#3a2a1c;color:#ffe9bf}
 #spbtn.has{animation:pulse2 1.2s infinite;border-color:var(--gold)}
 @keyframes pulse2{50%{box-shadow:0 0 0 3px rgba(233,193,122,.45)}}
@@ -109,7 +137,10 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 .slot.s0 .nm{font-size:9px;margin-bottom:8px;max-width:76%}
 #proc{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;pointer-events:none}
 #proctg{pointer-events:auto;font-size:11px;color:#9fe8ff;background:rgba(18,12,15,.88);border:1px solid rgba(159,232,255,.45);border-radius:12px;padding:5px 9px;cursor:default;font-family:Georgia,serif}
-#procs{display:flex;gap:6px;pointer-events:auto}
+#procs{display:flex;gap:6px;pointer-events:auto;align-items:center}
+#ppager{display:flex;flex-direction:column;align-items:center;background:rgba(18,12,15,.88);border:1px solid rgba(159,232,255,.35);border-radius:12px}
+#ppager button{background:none;border:none;color:#9fe8ff;font-size:10px;width:24px;height:16px;cursor:pointer}
+#ppager span{font-size:10px}
 .slot.pr{position:relative;width:56px;height:56px;left:auto;top:auto;flex:none;border-color:rgba(159,232,255,.55);background:radial-gradient(circle at 50% 32%,#24363e,#0f171b)}
 .slot.sel{box-shadow:0 0 0 3px var(--gold)}
 .slot.ab .nm{display:-webkit-box;position:relative;right:auto;top:auto;transform:none;background:none;padding:0;border-radius:0;font-size:7.5px;white-space:normal}
@@ -153,6 +184,8 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 #tutnext{border-color:var(--gold);color:#ffe9bf}
 #hud.tutOn #toasts{top:200px}
 .tuthl{animation:tutpulse 1s infinite}
+.slot.pop{animation:popin .7s cubic-bezier(.2,1.6,.4,1),tutpulse 1s .7s 3}
+@keyframes popin{0%{transform:scale(0);opacity:0}60%{transform:scale(1.25);opacity:1}100%{transform:scale(1)}}
 #buffs.tuthl{border-radius:16px}
 @keyframes tutpulse{50%{box-shadow:0 0 0 5px rgba(255,224,122,.85),0 0 26px rgba(255,224,122,.9)}}
 #helpbtn{position:absolute;right:232px;top:12px;width:42px;height:42px;border-radius:50%;pointer-events:auto;cursor:pointer;font-size:19px;color:var(--gold);display:flex;align-items:center;justify-content:center}
@@ -261,7 +294,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <div class="bar" id="resb"><i></i><span></span></div>
    <div class="bar" id="dryb"><i></i><span></span></div>
    <div id="debuffs"></div>
-   <button id="spbtn">★ Прокачка <b id="spn">1</b></button>
+   <div class="hbtns"><button id="spbtn">★ Прокачка <b id="spn">1</b></button><button id="eqbtn">🛠 Кабинет <b id="eqn">0</b></button></div>
   </div>
  </div>
  <div id="zone"><div id="zname" class="serif">Лоб</div><div id="zsub"></div></div>
@@ -340,6 +373,11 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <h3>Навыки врача</h3>
   <ul>
    <li>★ Прокачка под портретом (клавиша K, кнопка PS на геймпаде): очки навыков за уровень и босса тратятся на ранги заклинаний. Ранг усиливает урон, площадь, радиус ауры или длительность и ускоряет перезарядку</li>
+   <li>🛠 Кабинет: на юбилейных уровнях (3, 6, 9) выбираете один прибор: дерматоскоп, лампу Вуда, сосудистый лазер, фототерапию 311 нм, фракционный лазер. Прибор открывает процедуру</li>
+   <li>Лампа Вуда подсвечивает невидимые микрокомедоны и порфирины C. acnes. Ретиноиды и изотретиноин бьют по микрокомедонам даже без лампы</li>
+   <li>Фототерапия 311 нм: импульс вокруг врача по бляшкам псориаза. Розацеа от ультрафиолета обостряется</li>
+   <li>Со 2 ранга у части препаратов открываются варианты: адапален 0,3%, бензоилпероксид 2,5%, азелаиновая кислота гель 15%, доксициклин 40 мг, низкие дозы изотретиноина</li>
+   <li>Карта способностей в меню прокачки постепенно открывается с уровнем</li>
    <li>Рывок: короткий бросок вперёд</li>
    <li>Меню процедур внизу (клавиши C, V, B, N; на телефоне кнопка «Процедуры»): чистка, дерматоскопия, сосудистый и фракционный лазер</li>
    <li>Дерматоскопия: над высыпаниями видно препарат выбора</li>
@@ -422,7 +460,9 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  <div class="card panel">
   <h3 class="serif" style="color:var(--gold);font-size:20px;margin-bottom:4px">Прокачка заклинаний</h3>
   <div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">Очки навыков: <b id="spleft" style="color:var(--gold)">0</b>. За каждый уровень +2, за победу над боссом +2. У каждого заклинания пять рангов.</div>
+  <div class="tabs"><button id="tabr" class="tab on">Ранги</button><button id="tabm" class="tab">Карта способностей</button></div>
   <div id="sklist"></div>
+  <div id="skmap" style="display:none"></div>
   <button class="big sec" id="skreset">Сбросить ранги и вернуть очки</button>
   <button class="big" id="skclose" style="margin-top:8px">Готово</button>
  </div>
@@ -453,6 +493,14 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <button class="big" id="rnext">Следующая глава</button>
   <button class="big sec" id="rcamp">К сюжетам</button>
   <button class="big sec" id="rstay">Остаться на карте</button>
+ </div>
+</div>
+<div id="eqp" class="ov">
+ <div class="card panel">
+  <h3 class="serif" style="color:var(--gold);font-size:20px;margin-bottom:4px">Оснащение кабинета</h3>
+  <div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">На юбилейных уровнях (3, 6, 9...) можно выбрать один прибор. Свободных выборов: <b id="eqleft" style="color:var(--gold)">0</b>. Прибор открывает процедуру в меню процедур.</div>
+  <div id="eqlist"></div>
+  <button class="big" id="eqclose" style="margin-top:8px">Готово</button>
  </div>
 </div>
 <div id="death" class="ov"><div class="card panel"><h2>Вы выбыли</h2><div id="dtxt">Возвращение в ординаторскую...</div></div></div>
@@ -518,11 +566,12 @@ const MOB={
  nodule:{name:'Узловое акне',hp:240,xp:70,r:30,elite:true,shot:{range:300,cd:3.0,dmg:14,speed:240,col:'#a8405a',sz:10}},
  rosacea:{name:'Розацеа',hp:60,xp:25,r:20,aura:{r:135,dps:5},shot:{range:260,cd:3.2,dmg:5,speed:260,col:'#ff8fa0',sz:5}},
  steroid:{name:'Стероидный дерматит',hp:130,xp:40,r:23,elite:true,aura:{r:150,dps:8},shot:{range:300,cd:1.8,dmg:8,speed:300,col:'#ff4060',sz:6}},
+ micro:{name:'Микрокомедон',hp:14,xp:6,r:9,hidden:true,evolve:[30,50],to:'comedo'},
  pore:{name:'Расширенная пора',hp:120,xp:35,r:17,pore:true,seb:110,regen:3},
  plaque:{name:'Бляшка',hp:85,xp:30,r:22,shot:{range:280,cd:2.8,dmg:6,speed:260,col:'#eef0f8',sz:6}},
  boss:{name:'Бляшечный псориаз, PASI 24',hp:2400,spd:38,dmg:14,xp:600,r:72,boss:true},
 };
-const POP={forehead:{comedo:12,papule:8,pustule:5,pore:6},chin:{pustule:6,papule:5,nodule:4,pore:3},cheeks:{rosacea:11},elbows:{plaque:5}};
+const POP={forehead:{comedo:12,papule:8,pustule:5,pore:6,micro:6},chin:{pustule:6,papule:5,nodule:4,pore:3,micro:4},cheeks:{rosacea:11},elbows:{plaque:5}};
 
 /* коэффициенты: >0 урон, <0 ухудшение (воспаление растёт, высыпание лечится) */
 const EFF={
@@ -532,6 +581,7 @@ const EFF={
  nodule: {bpo:.3,doxy:.6, ada:.25,aza:.2, clin:.3, metr:.1, akr:-.5,eff:.4,  akn:1.7,mtx:.2,efl:.2},
  rosacea:{bpo:-1,doxy:1.4, ada:-1, aza:1.5,clin:.3, metr:1.7,akr:'mutate',eff:-1.2,akn:.8,mtx:.2,efl:.2},
  steroid:{bpo:-1,doxy:1, ada:-1, aza:.8, clin:.6, metr:1.3,akr:-1,eff:-1.2,akn:.6,mtx:.2,efl:.2},
+ micro:  {bpo:.5,doxy:.2,ada:2,aza:.8,clin:.1,metr:.1,akr:-.5,eff:1.8,akn:2,mtx:.1,efl:.1},
  pore:   {bpo:.1,doxy:0, ada:1.6,aza:.7, clin:0,  metr:0,  akr:-.8,eff:1.3, akn:2.2,mtx:0,efl:0},
  plaque: {bpo:.15,doxy:0,ada:.15,aza:.3, clin:.1, metr:.1, akr:1.5,eff:.15, akn:.2,mtx:1.2,efl:1.5},
  boss:   {bpo:.03,doxy:0,ada:.03,aza:.03,clin:.03,metr:.03,akr:.08,eff:.04,akn:.04,mtx:1,efl:1},
@@ -546,6 +596,7 @@ const HINTS={
  steroid:{akr:'Стероид поддерживает стероидный дерматит. Отменяйте его',bpo:'Раздражающие средства усиливают дерматит',ada:'Ретиноиды усиливают раздражение',eff:'Ретиноиды усиливают раздражение'},
  plaque:{bpo:'Бензоилпероксид при псориазе бесполезен',ada:'Ретиноид раздражает бляшку',eff:'Ретиноид раздражает бляшку',aza:'Азелаиновая кислота при псориазе слабая',clin:'Антибиотик при псориазе не нужен',metr:'Метронидазол при псориазе не нужен',akn:'Изотретиноин при псориазе малоэффективен'},
  pore:{bpo:'Бензоилпероксид поры не сужает. Нужен ретиноид',aza:'Азелаиновая кислота сужает поры умеренно. Сильнее ретиноиды и изотретиноин',clin:'Антибиотик на поры не действует',metr:'Метронидазол на поры не действует',akr:'Стероид истончает кожу: поры выглядят крупнее',mtx:'Метотрексат на поры не действует',efl:'Биопрепарат на поры не действует'},
+ uvbros:{x:'Ультрафиолет обостряет розацеа: фототерапию на щёки не направляем'},
  boss:{def:'Тяжёлый псориаз: наружной терапии недостаточно. Нужна системная терапия'},
 };
 const COMBOS=[
@@ -553,7 +604,8 @@ const COMBOS=[
  {a:'bpo',b:'clin',m:1.8,name:'Бензоилпероксид + клиндамицин'},
  {a:'ada',b:'clin',m:1.6,name:'Адапален + клиндамицин'},
 ];
-const ACNE_TYPES={comedo:1,papule:1,pustule:1,nodule:1};
+const ACNE_TYPES={comedo:1,papule:1,pustule:1,nodule:1,micro:1};
+function vis(m){return !MOB[m.type].hidden||(S.buff.wood||0)>0;}
 const STCOL={bpo:'#ffffff',ada:'#c7a6ff',clin:'#7fe0ff',aza:'#f2e3a0'};
 const MARK={
  red:{name:'Поствоспалительная эритема',life:45,w:.004},
@@ -583,14 +635,26 @@ const QUIZ={
 /* ---------- навыки врача ---------- */
 const ABIL=[
  {id:'dash',keys:[' '],label:'Пробел',name:'Рывок',lvl:1,cd:2.5,desc:'Быстрый рывок по направлению движения, неуязвимость на мгновение'},
- {id:'scope',keys:['q','й'],label:'Q',name:'Дермато­скопия',lvl:2,cd:8,dur:8,desc:'Над каждым высыпанием видно препарат выбора'},
+ {id:'scope',keys:['q','й'],label:'Q',name:'Дермато­скопия',lvl:1,eq:true,cd:8,dur:8,desc:'Над каждым высыпанием видно препарат выбора'},
  {id:'extr',keys:['e','у'],label:'E',name:'Чистка',lvl:2,cd:4,desc:'Удаляет комедоны и пробки пор рядом. Воспалённые элементы давить нельзя'},
  {id:'spf',keys:['r','к'],label:'R',name:'Солнцезащитный крем',lvl:3,cd:14,dur:10,desc:'Урон по врачу вдвое меньше, новые пятна не темнеют'},
  {id:'motiv',keys:['t','е'],label:'T',name:'Комплаенс',lvl:4,cd:16,dur:10,desc:'Пациент не бросает лечение: урон всех препаратов +35%'},
- {id:'vlaser',keys:['y','н'],label:'Y',name:'Сосу­дистый лазер',lvl:3,cd:6,desc:'Поле 595 нм в выбранной точке: убирает красные пятна и сосуды, осветляет коричневые, бьёт по розацеа'},
- {id:'flaser',keys:['u','г'],label:'U',name:'Фракци­онный лазер',lvl:4,cd:8,desc:'Поле в выбранной точке: сглаживает рубцы, сужает поры, кожа становится гладкой'},
+ {id:'vlaser',keys:['y','н'],label:'Y',name:'Сосу­дистый лазер',lvl:1,eq:true,cd:6,desc:'Поле 595 нм в выбранной точке: убирает красные пятна и сосуды, осветляет коричневые, бьёт по розацеа'},
+ {id:'flaser',keys:['u','г'],label:'U',name:'Фракци­онный лазер',lvl:1,eq:true,cd:8,desc:'Поле в выбранной точке: сглаживает рубцы, сужает поры, кожа становится гладкой'},
+ {id:'wood',keys:[],label:'',name:'Лампа Вуда',lvl:1,eq:true,cd:12,dur:8,desc:'Подсвечивает скрытые микрокомедоны и порфирины C. acnes: подсвеченные высыпания получают на 30% больше урона'},
+ {id:'uvb',keys:[],label:'',name:'Фото­терапия 311 нм',lvl:1,eq:true,cd:6,desc:'Импульс узкополосного ультрафиолета B вокруг врача: бьёт по бляшкам псориаза, обостряет розацеа'},
 ];
 const AB={};ABIL.forEach(a=>AB[a.id]=a);
+const EQUIP=[
+ {id:'scope',name:'Дерматоскоп',lvl:3,desc:'Процедура «Дерматоскопия»: над каждым высыпанием виден препарат выбора'},
+ {id:'wood',name:'Лампа Вуда',lvl:3,desc:'Подсвечивает скрытые микрокомедоны и коралловое свечение порфиринов C. acnes'},
+ {id:'vlaser',name:'Сосудистый лазер 595 нм',lvl:3,desc:'Поле: убирает красные пятна и сосуды, осветляет коричневые, бьёт по розацеа'},
+ {id:'uvb',name:'Фототерапия 311 нм',lvl:6,desc:'Узкополосный ультрафиолет B: импульс по бляшкам псориаза вокруг врача'},
+ {id:'flaser',name:'Фракционный лазер',lvl:6,desc:'Поле: сглаживает рубцы, сужает поры, кожа становится гладкой'},
+];
+const EQ={};EQUIP.forEach(e=>EQ[e.id]=e);
+function abUnl(id){const a=AB[id];return S.p.lvl>=a.lvl&&(!a.eq||!!(S.eq&&S.eq[id]));}
+function availEquip(){return EQUIP.filter(e=>!S.eq[e.id]&&S.p.lvl>=e.lvl);}
 const BEST={};
 for(const t in EFF){BEST[t]=Object.keys(EFF[t]).filter(k=>typeof EFF[t][k]==='number'&&EFF[t][k]>0.9).sort((a,b)=>EFF[t][b]-EFF[t][a]);}
 
@@ -626,7 +690,7 @@ function startGame(opt){opt=(opt&&opt.story!==undefined)?opt:{};
  audioInit();
  const name=($('nm').value||'').trim().slice(0,16)||'Доктор';
  S={t:0,mobs:[],proj:[],eproj:[],fx:[],parts:[],texts:[],drops:[],tele:[],marks:[],boss:null,bossRespawn:0,bossKills:0,kills:0,paused:false,spawnT:2,cleanT:0,hintCD:{},quizQ:[],primary:'bpo',attack:null,attackHold:false,hurt:0,banner:0,lastZone:'',hudT:0,blockT:0,hover:null,
-  smooth:[],sp:1,rank:{},acdMax:{},mode:'free',chap:null,flags:{},stars:3,startPos:[300,300],pop:null,chDone:false,kills0:0,tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
+  smooth:[],sp:1,rank:{},acdMax:{},eq:{},picks:0,var:{},eqWant:false,mode:'free',chap:null,flags:{},stars:3,startPos:[300,300],pop:null,chDone:false,kills0:0,tutShow:new Set(),seen:{},tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
   p:{x:300,y:300,tx:null,ty:null,name,gender:sel.g,age:sel.a,hp:0,maxhp:0,lvl:1,xp:0,dir:1,walk:0,moving:false,ang:0.8,cd:{},un:{bpo:true,ada:true,aza:true},deb:{},liver:0,ret:[],bep:2,dead:0}};
  recalcHP(true);
  for(const zid in POP) for(const type in POP[zid]) for(let i=0;i<POP[zid][type];i++) spawnMob(type,zid,true);
@@ -634,7 +698,7 @@ function startGame(opt){opt=(opt&&opt.story!==undefined)?opt:{};
  const c=iso(S.p.x,S.p.y);camX=c[0];camY=c[1];
  $('start').classList.remove('on');$('hud').classList.add('on');
  $('pname').textContent=name;
- buildCluster();drawPortrait();
+ buildCluster();drawPortrait();S.revealReady=false;
  $('joy').classList.add('on');
  let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
  if(opt.story){}
@@ -749,10 +813,27 @@ window.addEventListener('keydown',()=>{if(S) audioInit();},true);
 const MAXR=5;
 function rk(id){return (S&&S.rank&&S.rank[id])||0;}
 function cdK(id){return 1-0.08*rk(id);}
-function setCd(id,base){const p=S.p;const v=base*cdK(id);p.cd[id]=v;p.cdMax=p.cdMax||{};p.cdMax[id]=v;}
+function setCd(id,base){const p=S.p;const v=base*cdK(id)*(id==='bpo'&&vr('bpo')==='25'?0.75:1);p.cd[id]=v;p.cdMax=p.cdMax||{};p.cdMax[id]=v;}
 function durOf(id,base){return base+1.5*rk(id);}
-function radOf(sk){return sk.rad*(1+0.1*rk(sk.id));}
+function radOf(sk){return sk.rad*(1+0.1*rk(sk.id))*(sk.id==='aza'&&vr('aza')==='gel'?1.25:1);}
 function auraROf(sk){return sk['aura'+'R']*(1+0.08*rk(sk.id));}
+const VARIANTS={
+ bpo:[['5','Гель 5%','Стандарт'],['25','Гель 2,5%','Урон -15%, перезарядка на 25% быстрее']],
+ ada:[['01','Гель 0,1%','Стандарт'],['03','Гель 0,3%','Урон +30%, ретиноидный дерматит наступает вдвое быстрее']],
+ aza:[['cream','Крем 20%','Стандарт'],['gel','Гель 15%','Площадь +25%, урон -10%']],
+ doxy:[['100','100 мг','Стандарт'],['40','40 мг модифицированного высвобождения','Розацеа +40%, акне -40%, резистентность почти не растёт']],
+ akn:[['std','Стандартная доза','Стандарт'],['low','Низкие дозы','Сухость копится вдвое медленнее, сила -30%']],
+};
+function vr(id){return (S&&S.var&&S.var[id])||(VARIANTS[id]?VARIANTS[id][0][0]:null);}
+function varK(id,m){
+ if(id==='bpo'&&vr('bpo')==='25') return 0.85;
+ if(id==='ada'&&vr('ada')==='03') return 1.3;
+ if(id==='aza'&&vr('aza')==='gel') return 0.9;
+ if(id==='doxy'&&vr('doxy')==='40') return (m&&(m.type==='rosacea'||m.type==='steroid'))?1.4:0.6;
+ if(id==='akn'&&vr('akn')==='low') return 0.7;
+ return 1;
+}
+function woodK(m){return (S.buff.wood||0)>0&&m&&(ACNE_TYPES[m.type]||m.type==='pore')?1.3:1;}
 function motivK(){return 1.35+0.05*rk('motiv');}
 function rankText(id){
  if(SK[id]){const sk=SK[id];
@@ -763,13 +844,13 @@ function rankText(id){
   spf:'Защита +5%, длительность +1,5 с, перезарядка -8%',motiv:'Бонус к урону +5%, длительность +1,5 с, перезарядка -8%',
   vlaser:'Поле +10%, урон по розацеа +15%, перезарядка -8%',flaser:'Поле +10%, перезарядка -8%'}[id]||'';
 }
-function isUnl(id){return SK[id]?!!S.p.un[id]:S.p.lvl>=AB[id].lvl;}
-function openSkills(){if(!S) return;renderSkills();$('skills').classList.add('on');S.paused=true;}
+function isUnl(id){return SK[id]?!!S.p.un[id]:abUnl(id);}
+function openSkills(){if(!S) return;skTab('ranks');$('skills').classList.add('on');S.paused=true;}
 function closeSkills(){$('skills').classList.remove('on');if(S&&!quizOpen) S.paused=false;S.hudT=0;}
 function renderSkills(){
  $('spleft').textContent=S.sp;
  const box=$('sklist');box.innerHTML='';
- const groups=[['Препараты',SKILLS.filter(s=>s.type!=='aura').map(s=>s.id)],['Системные баффы и защита',['doxy','akn','spf','motiv']],['Процедуры и рывок',['extr','scope','vlaser','flaser','dash']]];
+ const groups=[['Препараты',SKILLS.filter(s=>s.type!=='aura').map(s=>s.id)],['Системные баффы и защита',['doxy','akn','spf','motiv']],['Процедуры и рывок',['extr','scope','wood','uvb','vlaser','flaser','dash']]];
  for(const [title,ids] of groups){
   const h=document.createElement('div');h.className='skh';h.textContent=title;box.appendChild(h);
   for(const id of ids){const inf=actInfo(id),r=rk(id),un=isUnl(id);
@@ -781,12 +862,62 @@ function renderSkills(){
    row.appendChild(mid);
    const bt=document.createElement('button');bt.className='skp';bt.textContent='+';bt.disabled=!(un&&r<MAXR&&S.sp>0);
    bt.onclick=()=>{if(!(isUnl(id)&&rk(id)<MAXR&&S.sp>0)) return;S.rank[id]=rk(id)+1;S.sp--;sfx('level');renderSkills();saveGame();};
-   row.appendChild(bt);box.appendChild(row);}
+   row.appendChild(bt);box.appendChild(row);
+   if(VARIANTS[id]&&un){const vrow=document.createElement('div');vrow.className='skv';
+    if(r<2) vrow.innerHTML='<span class="skvl">Варианты откроются со 2 ранга</span>';
+    else for(const [vid,vn,vd] of VARIANTS[id]){const vb=document.createElement('button');vb.className='vbtn'+(vr(id)===vid?' on':'');vb.innerHTML='<b>'+vn+'</b><br><span>'+vd+'</span>';
+     vb.onclick=()=>{S.var[id]=vid;sfx('click');renderSkills();saveGame();};vrow.appendChild(vb);}
+    box.appendChild(vrow);}}
+ }
+}
+function skTab(t){$('tabr').classList.toggle('on',t==='ranks');$('tabm').classList.toggle('on',t==='map');$('sklist').style.display=t==='ranks'?'block':'none';$('skmap').style.display=t==='map'?'block':'none';$('skreset').style.display=t==='ranks'?'block':'none';if(t==='ranks') renderSkills();else renderMap();}
+$('tabr').onclick=()=>skTab('ranks');$('tabm').onclick=()=>skTab('map');
+function mapNodes(){
+ const n=[];
+ for(const sk of SKILLS) n.push({id:sk.id,lvl:sk.lvl,kind:'drug'});
+ for(const a of ABIL) if(!a.eq) n.push({id:a.id,lvl:a.lvl,kind:'ab'});
+ for(const e of EQUIP) n.push({id:e.id,lvl:e.lvl,kind:'eq'});
+ return n;
+}
+function renderMap(){
+ $('spleft').textContent=S.sp;
+ const box=$('skmap');box.innerHTML='';const L=S.p.lvl;const nodes=mapNodes();
+ const lv=[...new Set(nodes.map(q=>q.lvl))].sort((a,b)=>a-b);
+ for(const l of lv){
+  const row=document.createElement('div');row.className='mrow'+(l<=L?' open':'');
+  row.innerHTML='<div class="mlv">'+(l%3===0?'🎖 ':'')+'Ур. '+l+'</div>';
+  const wrap=document.createElement('div');wrap.className='mnodes';
+  for(const q of nodes.filter(q=>q.lvl===l)){
+   const el=document.createElement('div');el.className='mnode';
+   if(l>L+1){el.classList.add('fog');el.innerHTML='<div class="mq">?</div><div class="mn">???</div>';}
+   else{const ic=actIcon(q.id);ic.className='mic';el.appendChild(ic);const nm=document.createElement('div');nm.className='mn';
+    let tag='';
+    if(q.kind==='eq'){tag=S.eq[q.id]?'✓ в кабинете':(l<=L?'🛠 можно выбрать':'🛠 юбилей');el.classList.add('eqn');}
+    else if(l>L) tag='🔒';else if(q.kind==='drug'&&!S.p.un[q.id]) tag='допуск';
+    nm.innerHTML=(q.kind==='eq'?EQ[q.id].name:actInfo(q.id).name)+(tag?'<br><span>'+tag+'</span>':'');el.appendChild(nm);
+    if(l>L) el.classList.add('near');}
+   wrap.appendChild(el);}
+  row.appendChild(wrap);box.appendChild(row);
  }
 }
 $('skclose').onclick=closeSkills;
 $('skreset').onclick=()=>{if(!S) return;let n=0;for(const k in S.rank) n+=S.rank[k];S.rank={};S.sp+=n;renderSkills();};
 $('spbtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openSkills();});
+function openEquip(){if(!S) return;renderEquip();$('eqp').classList.add('on');S.paused=true;S.eqWant=false;qFocus=0;}
+function closeEquip(){$('eqp').classList.remove('on');if(S&&!quizOpen&&!DLG) S.paused=false;S.hudT=0;buildSlots();}
+function renderEquip(){
+ $('eqleft').textContent=S.picks;const box=$('eqlist');box.innerHTML='';
+ for(const e of EQUIP){const own=!!S.eq[e.id],can=!own&&S.p.lvl>=e.lvl&&S.picks>0;
+  const row=document.createElement('div');row.className='skr'+(own||S.p.lvl>=e.lvl?'':' off');
+  const ic=actIcon(e.id);ic.className='skic';row.appendChild(ic);
+  const mid=document.createElement('div');mid.className='skm';mid.innerHTML='<div class="skn">'+e.name+'</div><div class="skd">'+e.desc+(S.p.lvl<e.lvl?'<br>Доступно с '+e.lvl+' уровня':'')+'</div>';row.appendChild(mid);
+  const bt=document.createElement('button');bt.className='eqb';bt.textContent=own?'✓ В кабинете':'Выбрать';bt.disabled=!can;
+  bt.onclick=()=>{if(!(S.picks>0&&!S.eq[e.id]&&S.p.lvl>=e.lvl)) return;S.eq[e.id]=true;S.picks--;sfx('level');burst(S.p.x,S.p.y,'#9fe8ff',30,200,true);
+   toast(e.name+' теперь в кабинете: '+locOf(e.id),'good');renderEquip();saveGame();if(S.picks<=0) setTimeout(closeEquip,500);};
+  row.appendChild(bt);box.appendChild(row);}
+}
+$('eqclose').onclick=closeEquip;
+$('eqbtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openEquip();});
 
 /* ---------- сообщения ---------- */
 const recent={};
@@ -811,6 +942,7 @@ function autoTarget(range){
  if(pointer.has&&S.hover&&!S.hover.dead&&dist(S.hover,p)<range*1.5) return S.hover;
  let best=null,bd=range,pb=null,pd=range;
  for(const m of S.mobs){if(m.dead) continue;const d=dist(m,p)-m.r;
+  if(!vis(m)) continue;
   if(m.type==='pore'){if(d<pd){pd=d;pb=m;}}else if(d<bd){bd=d;best=m;}}
  return best||pb;
 }
@@ -823,6 +955,7 @@ function aimAngle(range){
 }
 function useAbility(id){
  const a=AB[id],p=S.p;if(!a||p.dead>0||S.paused) return;
+ if(a.eq&&!(S.eq&&S.eq[id])){toast(a.name.replace(/\u00ad/g,'')+': нужно оборудование. Его выбирают на юбилейных уровнях: '+EQ[id].lvl+', 6, 9','bad');return;}
  if(p.lvl<a.lvl){toast(a.name+': откроется на '+a.lvl+' уровне','bad');return;}
  if((S.acd[id]||0)>0) return;
  S.acd[id]=a.cd*cdK(id);S.acdMax[id]=S.acd[id];
@@ -831,7 +964,7 @@ function useAbility(id){
   case 'scope':S.buff.scope=durOf('scope',a.dur);warnOnce('scope','Дерматоскопия: над высыпаниями видно препарат выбора');burst(p.x,p.y,'#96f0ff',14,120,true);break;
   case 'extr':{
    const R=115*(1+0.1*rk('extr'));let n=0,bad=0;
-   for(const m of S.mobs){if(m.dead||m.type==='boss') continue;if(dist(m,p)>R+m.r) continue;
+   for(const m of S.mobs){if(m.dead||m.type==='boss'||!vis(m)) continue;if(dist(m,p)>R+m.r) continue;
     if(m.type==='comedo'){killMob(m);n++;}
     else if(m.type==='pore'){m.hp-=m.maxhp*0.25;m.lastHitT=S.t;m.flash=0.15;if(m.hp<=0) killMob(m);n++;}
     else if(ACNE_TYPES[m.type]||m.type==='rosacea'||m.type==='steroid'){m.infl=8;m.hp=Math.min(m.maxhp,m.hp+10);ftext(m.x,m.y,'Не давить!','#ff6b7a',true);bad++;}}
@@ -854,6 +987,21 @@ function useAbility(id){
    if(cleared||light) ftext(cx,cy,(cleared?'Пятен и сосудов убрано: '+cleared:'')+(cleared&&light?', ':'')+(light?'осветлено: '+light:''),'#ffd28a',true);
    warnOnce('vlaser','Сосудистый лазер 595 нм: поле убирает красные пятна и расширенные сосуды, коричневые пятна светлеют, розацеа получает сильный урон','good');
    computeClean();break;}
+  case 'wood':{
+   S.buff.wood=durOf('wood',a.dur);sfx('aura');
+   let n=0;for(const m of S.mobs) if(!m.dead&&m.type==='micro'&&dist(m,p)<700) n++;
+   ftext(p.x,p.y,n?'Скрытых микрокомедонов: '+n:'Лампа Вуда включена','#c9a6ff',true);
+   warnOnce('wood','Лампа Вуда: коралловое свечение порфиринов C. acnes и скрытые микрокомедоны. Подсвеченные высыпания получают на 30% больше урона. Ретиноиды и изотретиноин бьют по микрокомедонам даже без лампы','good');
+   break;}
+  case 'uvb':{
+   const R=200*(1+0.1*rk('uvb'));let hit=0;
+   for(const m of S.mobs){if(m.dead||!vis(m)) continue;if(dist(m,p)>R+m.r) continue;
+    if(m.type==='rosacea'||m.type==='steroid'){m.infl=8;m.hp=Math.min(m.maxhp,m.hp+10);ftext(m.x,m.y,'Ухудшение!','#ff6b7a',true);hint('uvbros','x');continue;}
+    const dmg=(m.type==='plaque'?45:m.type==='boss'?35:ACNE_TYPES[m.type]?8:5)*dmgScale()*(1+0.15*rk('uvb'));
+    m.hp-=dmg;m.flash=0.15;m.lastHitT=S.t;hit++;ftext(m.x,m.y,Math.round(dmg),m.type==='plaque'||m.type==='boss'?'#ffe07a':'#ffffff',m.type==='plaque');if(m.hp<=0) killMob(m);}
+   S.fx.push({k:'ring',x:p.x,y:p.y,r:R,t:0,max:.5,col:'#b48cff'});S.fx.push({k:'ring',x:p.x,y:p.y,r:R*0.6,t:-0.1,max:.5,col:'#d8c4ff'});burst(p.x,p.y,'#b48cff',20,220,true);sfx('laser');
+   warnOnce('uvb','Фототерапия 311 нм: работает по псориазу. Розацеа на ультрафиолет обостряется','good');
+   break;}
   case 'flaser':{
    const tg=laserTarget(['scar','brown'],['pore']);const cx=tg[0],cy=tg[1],R=125*(1+0.1*rk('flaser'));let fixed=0,pores=0;
    for(const k of S.marks){if(Math.hypot(k.x-cx,k.y-cy)>R+k.r) continue;
@@ -905,7 +1053,7 @@ function tryCast(sid,target,noAuto,pt){
  }else{
   sfx('proj');S.proj.push({x:p.x+Math.cos(ang)*18,y:p.y+Math.sin(ang)*18,vx:Math.cos(ang)*sk.speed,vy:Math.sin(ang)*sk.speed,ang,sk,tgt:tg||null,trav:0,hit:new Set(),pierce:1,trail:[]});
  }
- if(sk.retinoid){p.ret.push(S.t);p.ret=p.ret.filter(t=>S.t-t<5);if(p.ret.length>=6){addDeb('retder',6);p.ret=[];toast('Ретиноидный дерматит: шелушение и жжение, скорость снижена','bad');}}
+ if(sk.retinoid){p.ret.push(S.t);if(sid==='ada'&&vr('ada')==='03') p.ret.push(S.t);p.ret=p.ret.filter(t=>S.t-t<5);if(p.ret.length>=6){addDeb('retder',6);p.ret=[];toast('Ретиноидный дерматит: шелушение и жжение, скорость снижена','bad');}}
  if(sid==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Декспантенол (F) поможет','bad');addDeb('cheil',10);}
  if(sid==='mtx'){p.liver+=14;if(p.liver>=100){p.liver=60;addDeb('transam',8);S.flags.transam=true;toast('Трансаминазы выросли в 3 раза: пауза в терапии. Фолиевая кислота снижает нагрузку','bad');}}
  if(sid==='efl') S.fx.push({k:'ring',x:p.x,y:p.y,r:70,t:0,max:.5,col:sk.col});
@@ -926,7 +1074,7 @@ function areaHit(x,y,sk){
  S.fx.push({k:'puddle',x,y,r:radOf(sk),t:0,max:1.2,col:sk.col});
  burst(x,y,sk.col,16,150,true);
  S.fx.push({k:'ring',x,y,r:radOf(sk)*0.65,t:-0.12,max:.45,col:sk.col});
- for(const m of S.mobs) if(!m.dead&&Math.hypot(m.x-x,m.y-y)<radOf(sk)+m.r*0.6) hitMob(m,sk,sk.dmg);
+ for(const m of S.mobs) if(!m.dead&&(vis(m)||sk.retinoid)&&Math.hypot(m.x-x,m.y-y)<radOf(sk)+m.r*0.6) hitMob(m,sk,sk.dmg);
  if(sk.id==='aza'){let n=0,other=0;
   for(const k of S.marks){if(Math.hypot(k.x-x,k.y-y)<radOf(sk)+k.r){
    if(k.k==='brown'){k.life-=k.max*0.4;n++;}else if(k.k==='red'){k.life-=k.max*0.5;n++;}
@@ -967,7 +1115,7 @@ function hitMob(m,sk,base){
   S.texts.push({x:m.x,y:m.y,txt:'КОМБО ×'+combo.m,col:'#ffd23f',big:true,t:1.2,dy:18});
   if(!S.combos[combo.name]){S.combos[combo.name]=true;toast('Открыто комбо: '+combo.name+' ('+Object.keys(S.combos).length+' из '+COMBOS.length+')','good');}
  }
- const dmg=base*dmgScale()*mult*rnd(0.9,1.1)*(1+0.15*rk(sk.id))*(S.buff.motiv>0?motivK():1);
+ const dmg=base*dmgScale()*mult*rnd(0.9,1.1)*(1+0.15*rk(sk.id))*(S.buff.motiv>0?motivK():1)*woodK(m)*varK(sk.id,m);
  m.hp-=dmg;m.flash=0.12;sfx(combo?'combo':'hit');
  ftext(m.x,m.y,Math.round(dmg),mult>=1.4?'#ffe07a':(mult<0.35?'#9a9a9a':'#ffffff'),mult>=1.4);
  if(e<0.35) hint(m.type,sk.id);
@@ -989,8 +1137,9 @@ function mutate(m){
  toast('Стероид на розацеа: развился стероидный дерматит. Стероид отменяем, лечим метронидазолом','bad');
 }
 function evolve(m){
- const d=MOB.papule;const f=m.hp/m.maxhp;
- Object.assign(m,{type:'papule',r:d.r,maxhp:d.hp,hp:Math.max(8,d.hp*f),shoot:1.5,flash:.3});
+ const from=m.type,to=MOB[from].to||'papule',d=MOB[to];const f=m.hp/m.maxhp;
+ Object.assign(m,{type:to,r:d.r,maxhp:d.hp,hp:Math.max(8,d.hp*f),shoot:1.5,flash:.3});
+ if(to==='comedo'){m.evo=rnd(35,55);ftext(m.x,m.y,'Микрокомедон стал комедоном','#d9b48a');warnOnce('micro','Невидимый микрокомедон созрел в комедон. Лампа Вуда показывает их заранее, ретиноиды убирают их даже невидимыми');return;}
  ftext(m.x,m.y,'Комедон воспалился','#ff9aa8');burst(m.x,m.y,'#e8505c',8,80);
  warnOnce('evo','Невылеченный комедон превращается в папулу. Ретиноиды бьют по комедонам лучше всего');
 }
@@ -1050,6 +1199,7 @@ function onLevel(){
  const p=S.p;recalcHP(true);burst(p.x,p.y,'#e9c17a',34,200);sfx('level');rumble(0.3,250);
  S.fx.push({k:'ring',x:p.x,y:p.y,r:120,t:0,max:.6,col:'#e9c17a'});S.fx.push({k:'pillar',x:p.x,y:p.y,t:0,max:1.1,col:'#ffe7a8'});
  S.sp+=2;
+ if(p.lvl%3===0&&S.mode!=='story'&&availEquip().length){S.picks++;S.eqWant=true;setTimeout(()=>toast('Юбилейный уровень '+p.lvl+'! Выберите оборудование для кабинета','boss'),1200);}
  toast('Уровень '+p.lvl+': '+rankTitle(p.lvl)+(LOOK[p.lvl]?'. Новый облик: '+LOOK[p.lvl]:'')+'. +2 очка навыков','good');
  for(const a of ABIL) if(a.lvl===p.lvl) setTimeout(()=>{toast('Новый навык: '+a.name+(a.id==='dash'?'':' ('+locOf(a.id)+')')+'. '+a.desc,'good');},900);
  for(const sk of SKILLS) if(sk.lvl===p.lvl&&!p.un[sk.id]){
@@ -1061,7 +1211,7 @@ function onLevel(){
 }
 function damagePlayer(n,quiet){
  const p=S.p;if(p.dead>0||S.paused||p.inv>0) return;
- if(S.tut>=0&&S.tut<4) n*=0.3;
+ if(S.tut>=0&&S.tut<8) n*=0.3;
  n*=Math.min(1,0.55+0.09*p.lvl);
  if(S.buff.spf>0) n*=Math.max(0.25,0.5-0.05*rk('spf'));
  else if(p.deb.photo) n*=1.25;
@@ -1086,23 +1236,44 @@ function useBep(){
 /* ---------- обучение ---------- */
 const TUT_KEY='dq_tut_done';
 const TUT=[
- {t:'Двигайтесь: джойстик слева внизу (пальцем или мышкой), левый стик геймпада или WASD.',hl:'joy',done:()=>S.tutMoved>160},
- {t:'Большая кнопка справа внизу: бензоилпероксид. Нажмите её, препарат сам летит в ближайшее высыпание.',hl:'slot0',done:()=>(S.tutCast.bpo||0)>0},
- {t:'Кнопка 2: адапален, бьёт по площади. Нанесите бензоилпероксид, затем адапален на ту же группу в течение 4 секунд: получится комбо.',hl:'slot1',done:()=>Object.keys(S.combos).length>0},
- {t:'Вылечите ещё 5 высыпаний. Золотые цифры значат препарат выбора, серые значат, что препарат работает слабо.',hl:null,done:()=>S.kills-S.tutKills0>=5},
- {t:'После лечения на коже остаются пятна. Кнопка 3: азелаиновая кислота, она осветляет постакне. Нажмите её.',hl:'slot2',done:()=>(S.tutCast.aza||0)>0},
- {t:'Справа колонка баффов, внизу меню процедур (лазеры, чистка, дерматоскопия), стрелки ◀ ▶ листают панели заклинаний, ✎ меняет ячейки местами, ★ под портретом тратит очки навыков на прокачку, ? открывает справку. На 5 уровне откроется путь к боссу на Локтях. Удачи, доктор!',hl:'buffs',done:null,last:true},
+ {t:'Добро пожаловать в отделение! Двигайтесь джойстиком слева внизу (или WASD, или левым стиком геймпада).',hl:'joy',done:()=>S.tutMoved>160},
+ {show:['bpo'],t:'Появилось первое заклинание: бензоилпероксид. Он убивает C. acnes и бьёт точечно, сам летит в ближайшее высыпание. Нажмите кнопку справа внизу.',hl:'bpo',done:()=>(S.tutCast.bpo||0)>0},
+ {setK:true,t:'Вылечите бензоилпероксидом 3 высыпания.',hl:'bpo',done:()=>S.kills-S.tutKills0>=3,p:()=>Math.min(3,S.kills-S.tutKills0)+'/3'},
+ {show:['ada'],t:'Новое заклинание: адапален. Это ретиноид, он работает вдолгую: нормализует ороговение в устье фолликула, бьёт по комедонам и даже по невидимым микрокомедонам. Накрывает целую группу. Попробуйте.',hl:'ada',done:()=>(S.tutCast.ada||0)>0},
+ {t:'Теперь комбо: нанесите бензоилпероксид, затем адапален на ту же группу в течение 4 секунд. Цветные точки над высыпанием показывают, что уже нанесено.',hl:'bpo',done:()=>Object.keys(S.combos).length>0},
+ {show:['clin'],t:'Ещё одно оружие: клиндамицин, антибиотик против воспалённых папул и пустул. В одиночку он растит резистентность, поэтому его всегда сочетают с бензоилпероксидом. Попробуйте.',hl:'clin',done:()=>(S.tutCast.clin||0)>0},
+ {show:['hp'],setK:true,t:'Высыпания начинают сопротивляться и стрелять. Здоровье врача в панели слева сверху. Вылечите ещё 5 высыпаний.',hl:'tl',done:()=>S.kills-S.tutKills0>=5,p:()=>Math.min(5,S.kills-S.tutKills0)+'/5'},
+ {show:['aza'],t:'После лечения на коже остаются пятна. Азелаиновая кислота осветляет постакне и тоже бьёт по площади. Нанесите её.',hl:'aza',done:()=>(S.tutCast.aza||0)>0},
+ {show:['dash','bep'],t:'Рывок (кнопка с шевронами) уводит из-под огня, декспантенол (зелёный тюбик) лечит врача и снимает сухость. Сделайте рывок.',hl:'slotdash',done:()=>(S.acd.dash||0)>0},
+ {show:['all'],t:'Обучение пройдено! Справа сверху карта и цели. Новые препараты, баффы и процедуры будут появляться на экране с уровнем. ✎ меняет кнопки местами, ★ прокачка, ? справка.',hl:'tr',last:true},
 ];
-function tutStart(){S.tut=0;S.tutMoved=0;S.tutCast={};S.tutKills0=S.kills;$('hud').classList.add('tutOn');renderTut();}
-function tutFinish(){S.tut=-1;try{localStorage.setItem(TUT_KEY,'1');}catch(_){}$('hud').classList.remove('tutOn');tutHL(null);$('tut').style.display='none';}
-function tutHL(id){for(const x of ['joy','slot0','slot1','slot2','buffs','proc']){const e=$(x);if(e&&e.classList) e.classList.toggle('tuthl',x===id);}}
+const TUT_PEACE=6;
+function shown(id){
+ if(!id||!S) return false;
+ if(S.tut>=0) return S.tutShow.has(id);
+ if(SK[id]){const sk=SK[id];return !!S.p.un[id]||(!!sk.quiz&&S.p.lvl>=sk.lvl);}
+ return abUnl(id);
+}
+function uiShown(k){return !S||S.tut<0||S.tutShow.has(k)||S.tutShow.has('all');}
+function tutApply(st){
+ if(st.show) for(const k of st.show){S.tutShow.add(k);if(SK[k]){S.p.un[k]=true;}}
+ if(st.setK) S.tutKills0=S.kills;
+ S.hudT=0;
+}
+function tutStart(){S.tut=0;S.tutMoved=0;S.tutCast={};S.tutKills0=S.kills;S.tutShow=new Set();S.seen={};PAGE=0;$('hud').classList.add('tutOn');tutApply(TUT[0]);renderTut();buildSlots();}
+function tutFinish(){if(S&&S.tutShow) S.tutShow.add('all');S.tut=-1;if(S) S.hudT=0;try{localStorage.setItem(TUT_KEY,'1');}catch(_){}$('hud').classList.remove('tutOn');tutHL(null);$('tut').style.display='none';}
+function tutHL(id){
+ const els=['joy','tl','tr','slotdash','slot0','slot1','slot2','slot3','buffs','proc'];
+ let target=null;if(id){if(els.includes(id)) target=id;else for(const x of ['slot0','slot1','slot2','slot3']){const e=$(x);if(e&&e.dataset&&e.dataset.id===id) target=x;}}
+ for(const x of els){const e=$(x);if(e&&e.classList) e.classList.toggle('tuthl',x===target);}
+}
 function renderTut(){
  if(!S||S.tut<0) return;const st=TUT[S.tut];
- $('tut').style.display='block';$('tutstep').textContent='Обучение · шаг '+(S.tut+1)+' из '+TUT.length;$('tuttxt').textContent=st.t;
+ $('tut').style.display='block';$('tutstep').textContent='Обучение · шаг '+(S.tut+1)+' из '+TUT.length+(st.p?' · '+st.p():'');$('tuttxt').textContent=st.t;
  $('tutnext').textContent=st.last?'Начать игру':'Дальше ›';tutHL(st.hl);
 }
-function tutAdvance(){if(!S||S.tut<0) return;sfx('good');S.tut++;if(S.tut===3) S.tutKills0=S.kills;if(S.tut>=TUT.length){tutFinish();toast('Обучение пройдено. Справка всегда под кнопкой ?','good');}else renderTut();}
-function tutTick(){if(!S||S.tut<0) return;const st=TUT[S.tut];if(st.done&&st.done()) tutAdvance();}
+function tutAdvance(){if(!S||S.tut<0) return;sfx('good');S.tut++;if(S.tut<TUT.length){tutApply(TUT[S.tut]);buildSlots();}if(S.tut>=TUT.length){tutFinish();toast('Обучение пройдено. Справка всегда под кнопкой ?','good');}else renderTut();}
+function tutTick(){if(!S||S.tut<0) return;const st=TUT[S.tut];if(st.done&&st.done()) tutAdvance();else if(st.p) $('tutstep').textContent='Обучение · шаг '+(S.tut+1)+' из '+TUT.length+' · '+st.p();}
 $('tutnext').onclick=e=>{e.stopPropagation();tutAdvance();};
 $('tutskip').onclick=e=>{e.stopPropagation();tutFinish();};
 $('tutagain').onclick=()=>{if(!S) return;$('help').classList.remove('on');if(!quizOpen) S.paused=false;tutStart();};
@@ -1191,7 +1362,7 @@ function update(dt){
   }
   p.moving=moving;if(moving) p.walk+=dt*11;
   // нельзя пройти сквозь высыпание
-  for(const m of S.mobs){if(m.dead||m.type==='pore') continue;const dx=p.x-m.x,dy=p.y-m.y,l=Math.hypot(dx,dy),mn=m.r+14;
+  for(const m of S.mobs){if(m.dead||m.type==='pore'||!vis(m)) continue;const dx=p.x-m.x,dy=p.y-m.y,l=Math.hypot(dx,dy),mn=m.r+14;
    if(l<mn&&l>0.01){p.x=m.x+dx/l*mn;p.y=m.y+dy/l*mn;}}
  }
 
@@ -1202,18 +1373,18 @@ function update(dt){
    const e=EFF[m.type][sk.id];if(!(e>0)) continue;
    if(m.infl>0){m.infl=0;ftext(m.x,m.y,'Воспаление ушло','#a6f0c0');}
    const resK=sk.id==='doxy'?Math.max(0.15,1-S.res/100*0.8):1;
-   const dmg=sk.dps*e*resK*dmgScale()*(1+0.15*rk(sk.id))*(S.buff.motiv>0?motivK():1)*dt;m.hp-=dmg;m.lastHit=sk.id;m.lastHitT=S.t;m.sysAcc=(m.sysAcc||0)+dmg;
+   const dmg=sk.dps*e*resK*dmgScale()*(1+0.15*rk(sk.id))*(S.buff.motiv>0?motivK():1)*woodK(m)*varK(sk.id,m)*dt;m.hp-=dmg;m.lastHit=sk.id;m.lastHitT=S.t;m.sysAcc=(m.sysAcc||0)+dmg;
    m.sysT=(m.sysT||0)-dt;if(m.sysT<=0){m.sysT=0.7;if(m.sysAcc>=1){ftext(m.x,m.y,Math.round(m.sysAcc),sk.col);m.sysAcc=0;}m.flash=0.06;}
    if(m.hp<=0) killMob(m);}
   S.cum[sk.id]=(S.cum[sk.id]||0)+dt;
   if(sk.id==='doxy'){
-   S.res=Math.min(100,S.res+(0.5+S.cum.doxy*0.035)*dt);
+   S.res=Math.min(100,S.res+(0.5+S.cum.doxy*0.035)*dt*(vr('doxy')==='40'?0.2:1));
    if(S.res>=30&&!S.resWarn){S.resWarn=true;toast('Антибиотик растит резистентность C. acnes. Комбинируйте с бензоилпероксидом','bad');}
    if(S.cum.doxy>=36) warnOnce('doxylong','Длительный курс доксициклина: резистентность растёт всё быстрее, препарат слабеет','bad');
    if(S.res>=60) warnOnce('res60','Резистентность C. acnes выше 60%: доксициклин и клиндамицин почти не работают. Нужен бензоилпероксид и перерыв в антибиотиках','bad');
   }
   if(sk.id==='akn'){
-   S.dry=Math.min(100,S.dry+(2+S.cum.akn*0.06)*dt);
+   S.dry=Math.min(100,S.dry+(2+S.cum.akn*0.06)*dt*(vr('akn')==='low'?0.5:1));
    if(S.dry>=40) warnOnce('dry40','Ксероз: кожа сухая, барьер нарушен, урон по врачу растёт. Декспантенол смягчает сухость','bad');
    if(S.dry>=80){S.flags.dry80=true;}
    if(S.dry>=80) warnOnce('dry80','Выраженная сухость кожи. Чем дольше курс изотретиноина, тем суше кожа','bad');
@@ -1226,7 +1397,7 @@ function update(dt){
   m.flash-=dt;m.atk-=dt;m.infl=Math.max(0,m.infl-dt);
   if(m.type==='boss'){bossAI(m,dt,pz);continue;}
   const d=MOB[m.type];
-  if(m.evo!=null&&m.type==='comedo'){m.evo-=dt;if(m.evo<=0){evolve(m);}continue;}
+  if(m.evo!=null&&(m.type==='comedo'||m.type==='micro')){m.evo-=dt;if(m.evo<=0){evolve(m);}continue;}
   if(d.pore){
    if(S.t-m.lastHitT>6&&m.hp<m.maxhp){m.hp=Math.min(m.maxhp,m.hp+d.regen*dt);}
    m.plugT-=dt;
@@ -1240,7 +1411,7 @@ function update(dt){
    continue;
   }
   if(!alive) continue;
-  if(S.tut>=0&&S.tut<3) continue;
+  if(S.tut>=0&&S.tut<TUT_PEACE) continue;
   const dp=dist(m,p),infl=m.infl>0;
   if(d.aura&&dp<d.aura.r+14){m.auraT-=dt;if(m.auraT<=0){m.auraT=0.5;damagePlayer(d.aura.dps*0.5*(infl?1.4:1),true);
    warnOnce('aura','Приливы: рядом с розацеа кожу жжёт. Лечите с дистанции','hint');}}
@@ -1258,7 +1429,7 @@ function update(dt){
   if(pr.tgt&&!pr.tgt.dead){const a=Math.atan2(pr.tgt.y-pr.y,pr.tgt.x-pr.x);const sp=pr.sk.speed;pr.vx+=(Math.cos(a)*sp-pr.vx)*Math.min(1,dt*10);pr.vy+=(Math.sin(a)*sp-pr.vy)*Math.min(1,dt*10);pr.ang=Math.atan2(pr.vy,pr.vx);}
   pr.x+=pr.vx*dt;pr.y+=pr.vy*dt;pr.trav+=pr.sk.speed*dt;
   for(const m of S.mobs){
-   if(m.dead||pr.hit.has(m)) continue;
+   if(m.dead||pr.hit.has(m)||!vis(m)) continue;
    if(Math.hypot(m.x-pr.x,m.y-pr.y)<m.r+pr.sk.r){
     pr.hit.add(m);hitMob(m,pr.sk,pr.sk.dmg);
     if(pr.sk.splash){
@@ -1483,6 +1654,10 @@ function drawMob(m){
  if(d.aura){ctx.strokeStyle='rgba(255,90,110,'+(0.18+0.08*Math.sin(S.t*3+m.seed*5))+')';ctx.lineWidth=2;ctx.setLineDash([6,8]);ctx.beginPath();ctx.ellipse(ix,iy,d.aura.r*1.41,d.aura.r*0.707,0,0,TAU);ctx.stroke();ctx.setLineDash([]);}
  let cx=ix,cy=iy-r*0.72+bob,rx=r*1.12,ry=r*0.9;
  switch(m.type){
+  case 'micro':{
+   ctx.save();ctx.globalCompositeOperation='lighter';const mg2=ctx.createRadialGradient(ix,iy-4,0,ix,iy-4,r*1.6);mg2.addColorStop(0,'rgba(220,235,255,.9)');mg2.addColorStop(1,'rgba(150,170,255,0)');
+   ctx.fillStyle=mg2;ctx.beginPath();ctx.arc(ix,iy-4,r*1.6,0,TAU);ctx.fill();ctx.restore();
+   cx=ix;cy=iy-4;rx=r;ry=r*0.7;blob(cx,cy,r*0.8,r*0.6,'#f4f0ff','#b8b0e0',true);break;}
   case 'comedo':{
    const ripe=m.evo<10;
    blob(cx,cy,rx,ry,ripe?'#f0b8a8':'#ecc6a8',ripe?'#cf7d72':'#c29478');
@@ -1537,6 +1712,9 @@ function drawMob(m){
    break;}
  }
  if(m.flash>0){ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,TAU);ctx.fill();}
+ if((S.buff.wood||0)>0&&(ACNE_TYPES[m.type]||m.type==='pore')&&m.type!=='micro'){ctx.save();ctx.globalCompositeOperation='lighter';
+  for(let k=0;k<3;k++){const a=m.seed*7+k*2.1;const fx=cx+Math.cos(a)*rx*0.45,fy=cy+Math.sin(a)*ry*0.4-ry*0.2;const fg=ctx.createRadialGradient(fx,fy,0,fx,fy,5);
+   fg.addColorStop(0,'rgba(255,120,80,.95)');fg.addColorStop(1,'rgba(255,90,60,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(fx,fy,5,0,TAU);ctx.fill();}ctx.restore();}
  if(m.type!=='boss'){
   let top=cy-ry-10;
   if(m.hp<m.maxhp){const w=Math.max(26,r*2.2);ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(cx-w/2,top-4,w,4);ctx.fillStyle=d.elite?'#e9c17a':'#e2566a';ctx.fillRect(cx-w/2,top-4,w*Math.max(0,m.hp/m.maxhp),4);top-=6;}
@@ -1721,7 +1899,7 @@ function render(){
    ctx.globalAlpha=(1-k)*0.85;ctx.strokeStyle=f.col;ctx.lineWidth=4*(1-k)+1.5;ctx.beginPath();ctx.ellipse(ix,iy,f.r*1.41*(0.3+0.7*k),f.r*0.707*(0.3+0.7*k),0,0,TAU);ctx.stroke();ctx.globalAlpha=1;}
   ctx.globalCompositeOperation='source-over';
   for(const d of S.drops) drawDrop(d);
-  const ents=S.mobs.filter(m=>!m.dead).map(m=>({d:m.x+m.y,m}));ents.push({d:S.p.x+S.p.y,player:true});
+  const ents=S.mobs.filter(m=>!m.dead&&vis(m)).map(m=>({d:m.x+m.y,m}));ents.push({d:S.p.x+S.p.y,player:true});
   ents.sort((a,b)=>a.d-b.d);
   for(const e of ents){if(e.player) drawPlayer();else drawMob(e.m);}
   if(S.attack&&!S.attack.dead){const m=S.attack;const [ix,iy]=iso(m.x,m.y);ctx.strokeStyle='rgba(233,193,122,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(ix,iy,m.r*1.5,m.r*0.75,0,0,TAU);ctx.stroke();}
@@ -1761,6 +1939,7 @@ function render(){
  const vg=ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.38,cx,cy,Math.max(W,H)*0.8);
  vg.addColorStop(0,'rgba(10,5,8,0)');vg.addColorStop(1,'rgba(10,5,8,.55)');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
  if(S){
+  if((S.buff.wood||0)>0){ctx.fillStyle='rgba(70,20,140,'+(0.28*Math.min(1,S.buff.wood))+')';ctx.fillRect(0,0,W,H);}
   if(S.boss&&S.boss.enraged&&zoneAt(S.p.x,S.p.y).id==='elbows'){ctx.fillStyle='rgba(255,0,30,'+(0.07+0.04*Math.sin(S.t*5))+')';ctx.fillRect(0,0,W,H);}
   if(S.hurt>0){const g=ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.25,cx,cy,Math.max(W,H)*0.7);g.addColorStop(0,'rgba(200,20,40,0)');g.addColorStop(1,'rgba(200,20,40,'+Math.min(.5,S.hurt)+')');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
  }
@@ -1808,6 +1987,8 @@ function makeAbIcon(id){
   case 'spf':glow('rgba(255,214,90,.35)');g.fillStyle='#ffd25a';g.beginPath();g.arc(0,0,9,0,TAU);g.fill();g.strokeStyle='#ffd25a';g.lineWidth=3;for(let i=0;i<8;i++){const a=i/8*TAU;g.beginPath();g.moveTo(Math.cos(a)*13,Math.sin(a)*13);g.lineTo(Math.cos(a)*19,Math.sin(a)*19);g.stroke();}g.strokeStyle='#fff';g.lineWidth=2.5;g.beginPath();g.arc(0,0,24,Math.PI*0.15,Math.PI*0.85);g.stroke();break;
   case 'motiv':glow('rgba(255,210,90,.3)');g.fillStyle='#ffcf5a';g.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?8:19;g.lineTo(Math.cos(a)*r,Math.sin(a)*r);}g.closePath();g.fill();break;
   case 'vlaser':glow('rgba(255,170,60,.35)');g.strokeStyle='#ffb43a';g.lineWidth=7;g.beginPath();g.moveTo(-20,16);g.lineTo(20,-16);g.stroke();g.strokeStyle='#fff3d6';g.lineWidth=2.5;g.beginPath();g.moveTo(-20,16);g.lineTo(20,-16);g.stroke();break;
+  case 'wood':glow('rgba(170,110,255,.4)');g.fillStyle='#3b2a55';rr(g,-16,-6,32,14,4);g.fill();g.fillStyle='#b48cff';rr(g,-13,-3,26,8,3);g.fill();g.fillStyle='rgba(200,170,255,.5)';g.beginPath();g.moveTo(-14,8);g.lineTo(14,8);g.lineTo(22,24);g.lineTo(-22,24);g.closePath();g.fill();g.fillStyle='#ff7a50';g.beginPath();g.arc(-6,18,2.5,0,TAU);g.arc(6,20,2.5,0,TAU);g.fill();break;
+  case 'uvb':glow('rgba(180,140,255,.4)');g.fillStyle='#b48cff';g.beginPath();g.arc(0,0,8,0,TAU);g.fill();g.strokeStyle='#d8c4ff';g.lineWidth=3;for(let i=0;i<12;i++){const a=i/12*TAU;g.beginPath();g.moveTo(Math.cos(a)*12,Math.sin(a)*12);g.lineTo(Math.cos(a)*(i%2?18:22),Math.sin(a)*(i%2?18:22));g.stroke();}break;
   case 'flaser':glow('rgba(159,232,255,.3)');g.fillStyle='#9fe8ff';for(let x=-15;x<=15;x+=6) for(let y=-15;y<=15;y+=6){if(x*x+y*y>260) continue;g.fillRect(x-1.4,y-1.4,2.8,2.8);}g.strokeStyle='#9fe8ff';g.lineWidth=2;g.beginPath();g.arc(0,0,20,0,TAU);g.stroke();break;
  }
  return c;
@@ -1827,11 +2008,12 @@ function updateAbil(){
   b.classList.toggle('act',(S.buff[a.id]||0)>0);b.classList.toggle('sel',S.selAb===a.id&&pad.active);}
 }
 /* ---------- панели заклинаний: 4 панели по 4 слота ---------- */
-const DEF_LAYOUT=['bpo','ada','aza','eff','clin','metr','akr','mtx','efl',null,null,null,
+const DEF_LAYOUT=['bpo','ada','clin','aza','eff','metr','akr','mtx','efl',null,null,null,
  'doxy','akn','spf','motiv',null,null,null,null,
- 'extr','scope','vlaser','flaser'];
-const NP=3,NBP=2,BOFF=NP*4,POFF=BOFF+NBP*4;
-const LAYOUT_KEY='dq_layout_v4';
+ 'extr','scope','wood','vlaser','flaser','uvb',null,null];
+const NP=3,NBP=2,NPP=2,BOFF=NP*4,POFF=BOFF+NBP*4;
+const LAYOUT_KEY='dq_layout_v6';
+let PPAGE=0;
 let PSEL=0;
 let BPAGE=0;
 let LAYOUT=DEF_LAYOUT.slice(),PAGE=0,pickCell=-1;
@@ -1850,7 +2032,8 @@ function useSlot(i){
 }
 function setPage(n){PAGE=(n+NP)%NP;buildSlots();if(S){S.hudT=0;}}
 function setBPage(n){BPAGE=(n+NBP)%NBP;buildSlots();if(S){S.hudT=0;}}
-function useProcSlot(i){if(!S||S.paused) return;const id=LAYOUT[POFF+i];if(!id) return;PSEL=i;if(SK[id]) onSkill(id);else useAbility(id);}
+function setPPage(n){PPAGE=(n+NPP)%NPP;buildSlots();if(S) S.hudT=0;}
+function useProcSlot(i){if(!S||S.paused) return;const id=LAYOUT[POFF+PPAGE*4+i];if(!id) return;PSEL=PPAGE*4+i;if(SK[id]) onSkill(id);else useAbility(id);}
 function useBuffSlot(i){if(!S||S.paused) return;const id=LAYOUT[BOFF+BPAGE*4+i];if(!id) return;if(SK[id]) onSkill(id);else useAbility(id);}
 function locOf(id){const i=LAYOUT.indexOf(id);if(i<0) return '';return i<BOFF?'панель '+(Math.floor(i/4)+1):i<POFF?'баффы справа, страница '+(Math.floor((i-BOFF)/4)+1):'меню процедур';}
 const BUFF_GLYPH=['↑','→','↓','←'];
@@ -1883,6 +2066,8 @@ function buildCluster(){
  for(let i=0;i<4;i++){const b=document.createElement('div');b.className='slot bf';b.id='bslot'+i;
   b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useBuffSlot(i);});bx.appendChild(b);}
  const pr=$('procs');pr.innerHTML='';
+ {const pp=document.createElement('div');pp.id='ppager';pp.innerHTML='<button data-d="-1">◀</button><span id="ppgn">1/'+NPP+'</span><button data-d="1">▶</button>';
+  pp.querySelectorAll('[data-d]').forEach(b2=>b2.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();setPPage(PPAGE+(+b2.dataset.d));}));pr.appendChild(pp);}
  for(let i=0;i<4;i++){const b=document.createElement('div');b.className='slot pr';b.id='pslot'+i;
   b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useProcSlot(i);});pr.appendChild(b);}
  const tg=$('proctg');tg.onpointerdown=e=>{e.preventDefault();e.stopPropagation();$('proc').classList.toggle('open');};
@@ -1894,7 +2079,8 @@ function fillSlot(b,id,extra){const inf=actInfo(id);
   const ic=actIcon(id);ic.className='ic';b.insertBefore(ic,b.firstChild);}
 function buildSlots(){
  for(let i=0;i<4;i++){const b=$('bslot'+i);if(b) fillSlot(b,LAYOUT[BOFF+BPAGE*4+i],' bf');}
- for(let i=0;i<4;i++){const b=$('pslot'+i);if(b) fillSlot(b,LAYOUT[POFF+i],' pr');}
+ for(let i=0;i<4;i++){const b=$('pslot'+i);if(b) fillSlot(b,LAYOUT[POFF+PPAGE*4+i],' pr');}
+ {const pn=$('ppgn');if(pn) pn.textContent=(PPAGE+1)+'/'+NPP;}
  const bn=$('bpgn');if(bn) bn.textContent=(BPAGE+1)+'/'+NBP;
  for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];const inf=actInfo(id);
   b.className='slot'+(i===0?' s0':'')+(inf.kind==='ab'?' ab':'')+(inf.kind==='empty'?' empty':'');b.dataset.id=id;b.title=inf.name+': '+inf.desc;
@@ -1907,7 +2093,7 @@ function updSlot(b,id,key){
   const p=S.p;let un,ready=false,cdr=0,act=false,lk='';
   if(!id){un=true;}
   else if(SK[id]){const sk=SK[id];un=!!p.un[id];ready=!un&&p.lvl>=sk.lvl;cdr=(p.cd[id]||0)/((p.cdMax&&p.cdMax[id])||sk.cd);act=(S.buff[id]||0)>0;if(id==='mtx'&&p.deb.transam) cdr=1;lk=ready?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;}
-  else{const a=AB[id];un=p.lvl>=a.lvl;cdr=(S.acd[id]||0)/((S.acdMax&&S.acdMax[id])||a.cd);act=(S.buff[id]||0)>0;lk='🔒<br>ур. '+a.lvl;}
+  else{const a=AB[id];un=abUnl(id);cdr=(S.acd[id]||0)/((S.acdMax&&S.acdMax[id])||a.cd);act=(S.buff[id]||0)>0;lk=(a.eq&&!(S.eq&&S.eq[id]))?'🛠<br>ур. '+EQ[id].lvl:'🔒<br>ур. '+a.lvl;}
   b.classList.toggle('locked',!un);b.classList.toggle('ready',ready);b.classList.toggle('primary',!!id&&un&&S.primary===id);b.classList.toggle('act',act);
   const l=b.querySelector('.lk');if(l&&l.innerHTML!==lk) l.innerHTML=lk;
   const c=b.querySelector('.cdv');if(c) c.style.height=(Math.min(1,cdr)*100)+'%';
@@ -1917,12 +2103,12 @@ function updSlot(b,id,key){
 function updateCluster(){
  if(!S) return;const p=S.p;
  for(let i=0;i<4;i++){const b=$('bslot'+i);if(b) updSlot(b,LAYOUT[BOFF+BPAGE*4+i],pad.active?BUFF_GLYPH[i]:String(i+5));}
- for(let i=0;i<4;i++){const b=$('pslot'+i);if(b){updSlot(b,LAYOUT[POFF+i],pad.active?(i===PSEL?'R3':''):PROC_KEYS[i]);b.classList.toggle('sel',pad.active&&i===PSEL);}}
+ for(let i=0;i<4;i++){const b=$('pslot'+i);if(b){const gi=PPAGE*4+i;updSlot(b,LAYOUT[POFF+gi],pad.active?(gi===PSEL?'R3':''):PROC_KEYS[i]);b.classList.toggle('sel',pad.active&&gi===PSEL);}}
  for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];
   let un,ready=false,cdr=0,act=false,lk='';
   if(!id){un=true;}
   else if(SK[id]){const sk=SK[id];un=!!p.un[id];ready=!un&&p.lvl>=sk.lvl;cdr=(p.cd[id]||0)/((p.cdMax&&p.cdMax[id])||sk.cd);act=(S.buff[id]||0)>0;if(id==='mtx'&&p.deb.transam) cdr=1;lk=ready?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;}
-  else{const a=AB[id];un=p.lvl>=a.lvl;cdr=(S.acd[id]||0)/((S.acdMax&&S.acdMax[id])||a.cd);act=(S.buff[id]||0)>0;lk='🔒<br>ур. '+a.lvl;}
+  else{const a=AB[id];un=abUnl(id);cdr=(S.acd[id]||0)/((S.acdMax&&S.acdMax[id])||a.cd);act=(S.buff[id]||0)>0;lk=(a.eq&&!(S.eq&&S.eq[id]))?'🛠<br>ур. '+EQ[id].lvl:'🔒<br>ур. '+a.lvl;}
   b.classList.toggle('locked',!un);b.classList.toggle('ready',ready);b.classList.toggle('primary',un&&S.primary===id);b.classList.toggle('act',act);
   const l=b.querySelector('.lk');if(l&&l.innerHTML!==lk) l.innerHTML=lk;
   const c=b.querySelector('.cdv');if(c) c.style.height=(Math.min(1,cdr)*100)+'%';
@@ -1930,6 +2116,33 @@ function updateCluster(){
  const d=$('slotdash');if(d){d.querySelector('.cdv').style.height=((S.acd.dash||0)/((S.acdMax&&S.acdMax.dash)||AB.dash.cd)*100)+'%';d.querySelector('.ky').textContent=pad.active?'R2':'Пробел';}
  const bp=$('slotbep');if(bp) bp.querySelector('.ky').textContent=pad.active?'L2':'F';
  const bc=$('bepct');if(bc) bc.textContent=p.bep;
+ applyReveal();
+}
+function setDisp(el,on,disp){if(el&&el.style){const v=on?(disp||''):'none';if(el.style.display!==v) el.style.display=v;}}
+function popIn(el){if(!el||!el.classList) return;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');setTimeout(()=>{if(el.classList) el.classList.remove('pop');},3800);}
+function applyReveal(){
+ if(!S) return;
+ // новые кнопки: появляются с анимацией
+ const ids=LAYOUT.filter(Boolean).concat(['dash']);
+ for(const id of ids){if(shown(id)&&!S.seen[id]){S.seen[id]=true;
+  if(S.revealReady){let idx=LAYOUT.indexOf(id);
+   if(idx>=0&&idx<BOFF&&Math.floor(idx/4)!==PAGE){PAGE=Math.floor(idx/4);buildSlots();}
+   else if(idx>=BOFF&&idx<POFF&&Math.floor((idx-BOFF)/4)!==BPAGE){BPAGE=Math.floor((idx-BOFF)/4);buildSlots();}
+   else if(idx>=POFF&&Math.floor((idx-POFF)/4)!==PPAGE){PPAGE=Math.floor((idx-POFF)/4);buildSlots();}
+   setTimeout(()=>{for(const x of ['slot0','slot1','slot2','slot3','bslot0','bslot1','bslot2','bslot3','pslot0','pslot1','pslot2','pslot3']){const e=$(x);if(e&&e.dataset&&e.dataset.id===id) popIn(e);}
+    if(id==='dash') popIn($('slotdash'));},30);
+   sfx('level');if(S.tut<0&&id!=='dash') toast('Новая кнопка: '+actInfo(id).name.replace(/­/g,''),'good');}}}
+ S.revealReady=true;
+ for(let i=0;i<4;i++){setDisp($('slot'+i),shown(LAYOUT[PAGE*4+i]),'flex');setDisp($('bslot'+i),shown(LAYOUT[BOFF+BPAGE*4+i]),'flex');setDisp($('pslot'+i),shown(LAYOUT[POFF+PPAGE*4+i]),'flex');}
+ const grp=(off,n,pg)=>{let any=false,other=false;for(let i=0;i<n*4;i++){if(shown(LAYOUT[off+i])){any=true;if(Math.floor(i/4)!==pg) other=true;}}return [any,other];};
+ const [sa,so]=grp(0,NP,PAGE),[ba,bo]=grp(BOFF,NBP,BPAGE),[pa,po]=grp(POFF,NPP,PPAGE);
+ const pg=$('pager');setDisp(pg,(so||PAGE>0||S.tut<0),'flex');
+ const ed=$('pged');setDisp(ed,S.tut<0,'');
+ setDisp($('buffs'),ba,'flex');setDisp($('bpager'),bo||BPAGE>0,'flex');
+ setDisp($('proc'),pa,'flex');setDisp($('ppager'),po||PPAGE>0,'flex');
+ setDisp($('slotdash'),uiShown('dash'),'flex');setDisp($('slotbep'),uiShown('bep'),'flex');
+ setDisp($('tl'),uiShown('hp'),'flex');setDisp($('tr'),uiShown('tr')||uiShown('all'),'block');
+ setDisp($('helpbtn'),uiShown('all'),'flex');setDisp($('sndbtn'),uiShown('all'),'flex');setDisp($('zone'),uiShown('all'),'block');
 }
 function openLayout(){
  pickCell=-1;renderLayout();$('layout').classList.add('on');if(S) S.paused=true;
@@ -1939,7 +2152,7 @@ function renderLayout(){
  const gbox=$('lgrid');gbox.innerHTML='';
  const rows=[];for(let r=0;r<NP;r++) rows.push({label:'Панель '+(r+1),base:r*4,cur:r===PAGE,head:r===0?'Заклинания: веер справа внизу':null});
  for(let r=0;r<NBP;r++) rows.push({label:'Баффы '+(r+1),base:BOFF+r*4,cur:r===BPAGE,head:r===0?'Баффы: колонка справа':null});
- rows.push({label:'Процедуры',base:POFF,cur:false,head:'Меню процедур: внизу'});
+ for(let r=0;r<NPP;r++) rows.push({label:'Процедуры '+(r+1),base:POFF+r*4,cur:r===PPAGE,head:r===0?'Меню процедур: внизу':null});
  for(const row of rows){
   if(row.head){const h=document.createElement('div');h.className='lhead';h.textContent=row.head;gbox.appendChild(h);}
   const lab=document.createElement('div');lab.className='lrow'+(row.cur?' cur':'');lab.textContent=row.label;gbox.appendChild(lab);
@@ -1982,6 +2195,8 @@ function updateHUD(){
  const p=S.p;
  $('plvl').textContent='Уровень '+p.lvl+' · '+rankTitle(p.lvl);
  $('spn').textContent=S.sp;$('spbtn').classList.toggle('has',S.sp>0);
+ $('eqn').textContent=S.picks;$('eqbtn').classList.toggle('has',S.picks>0);
+ if(S.eqWant&&S.picks>0&&!quizOpen&&!DLG&&!S.paused) openEquip();
  $('hpb').firstElementChild.style.width=(p.hp/p.maxhp*100)+'%';$('hpb').lastElementChild.textContent=Math.ceil(p.hp)+' / '+p.maxhp;
  const nx=need(p.lvl);$('xpb').firstElementChild.style.width=(p.xp/nx*100)+'%';$('xpb').lastElementChild.textContent=p.xp+' / '+nx+' опыта';
  const lv=$('lvb');if(p.un.mtx){lv.style.display='block';lv.firstElementChild.style.width=Math.min(100,p.liver)+'%';lv.lastElementChild.textContent='Печень: '+Math.round(p.liver)+'%';}
@@ -2020,7 +2235,7 @@ function drawMinimap(){
   mg.globalAlpha=1;mg.strokeStyle='rgba(0,0,0,.35)';mg.lineWidth=1;mg.stroke();}
  if(!canEnter()){mg.strokeStyle='#e8ecff';mg.lineWidth=3;const a=P(MID,WORLD),b=P(MID,MID),c=P(WORLD,MID);mg.beginPath();mg.moveTo(a[0],a[1]);mg.lineTo(b[0],b[1]);mg.lineTo(c[0],c[1]);mg.stroke();}
  for(const q of S.marks){if(q.k!=='scar') continue;const s=P(q.x,q.y);mg.fillStyle='#fff3ec';mg.fillRect(s[0]-1,s[1]-1,2,2);}
- for(const m of S.mobs){if(m.type==='boss') continue;mg.fillStyle=m.type==='pore'?'#5a3420':'rgba(160,30,50,.85)';const q=P(m.x,m.y);mg.fillRect(q[0]-1.5,q[1]-1.5,3,3);}
+ for(const m of S.mobs){if(m.type==='boss'||!vis(m)) continue;mg.fillStyle=m.type==='pore'?'#5a3420':'rgba(160,30,50,.85)';const q=P(m.x,m.y);mg.fillRect(q[0]-1.5,q[1]-1.5,3,3);}
  if(S.boss){const q=P(S.boss.x,S.boss.y);mg.fillStyle='#fff';mg.strokeStyle='#ff3048';mg.lineWidth=2;mg.beginPath();mg.arc(q[0],q[1],6,0,TAU);mg.fill();mg.stroke();}
  const q=P(S.p.x,S.p.y);mg.fillStyle='#ffe07a';mg.strokeStyle='#000';mg.lineWidth=1.5;mg.beginPath();mg.arc(q[0],q[1],5,0,TAU);mg.fill();mg.stroke();
 }
@@ -2032,7 +2247,7 @@ function drawPortrait(){
 /* ---------- ввод ---------- */
 function mobAtScreen(sx,sy){
  if(!S) return null;let best=null,bd=1e9;
- for(const m of S.mobs){if(m.dead||m._sx==null) continue;
+ for(const m of S.mobs){if(m.dead||m._sx==null||!vis(m)) continue;
   const px=(m._sx-camX)*Z+W/2,py=(m._sy-camY)*Z+H/2+H*0.06;const d=Math.hypot(px-sx,py-sy);
   if(d<(m._sr+10)*Z&&d<bd){bd=d;best=m;}}
  return best;
@@ -2055,12 +2270,13 @@ window.addEventListener('keydown',e=>{
  if(!S) return;
  if(k==='h'||k==='р'){toggleHelp();return;}
  if(k==='k'||k==='л'){if($('skills').classList.contains('on')) closeSkills();else openSkills();return;}
- if(k==='escape'){if($('skills').classList.contains('on')){closeSkills();return;}if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
+ if(k==='escape'){if($('eqp').classList.contains('on')){closeEquip();return;}if($('skills').classList.contains('on')){closeSkills();return;}if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
  if(S.paused) return;
  if(k>='1'&&k<='4'){useSlot(+k-1);e.preventDefault();}
  if(k>='5'&&k<='8'){useBuffSlot(+k-5);e.preventDefault();}
  if(k==='z'||k==='я') setBPage(BPAGE-1);
  {const pi={'c':0,'с':0,'v':1,'м':1,'b':2,'и':2,'n':3,'т':3}[k];if(pi!=null){useProcSlot(pi);e.preventDefault();}}
+ if(k==='g'||k==='п') setPPage(PPAGE+1);
  if(k==='x'||k==='ч') setBPage(BPAGE+1);
  if(k==='tab'){setPage(PAGE+(e.shiftKey?-1:1));e.preventDefault();}
  if(k==='q'||k==='й') setPage(PAGE-1);
@@ -2150,6 +2366,11 @@ function pollPad(dt){
   pad.lx=pad.ly=0;
   if(navY&&pad.navT<=0){pad.navT=0.22;const n=qButtons().length||1;qFocus=(qFocus+navY+n)%n;setQFocus();}
   if(P(0)){if($('qc').style.display==='block') $('qc').click();else{const b=qButtons()[qFocus];if(b) b.click();}}
+ }else if($('eqp').classList.contains('on')){
+  pad.lx=pad.ly=0;const bs=Array.prototype.slice.call($('eqp').querySelectorAll('button:not(:disabled)'));
+  if(navY&&pad.navT<=0&&bs.length){pad.navT=0.22;qFocus=(qFocus+navY+bs.length)%bs.length;bs.forEach((b,i)=>b.classList.toggle('focus',i===qFocus));}
+  if(P(0)&&bs.length) bs[Math.min(qFocus,bs.length-1)].click();
+  if(P(1)||P(9)) closeEquip();
  }else if($('skills').classList.contains('on')){
   pad.lx=pad.ly=0;
   if(P(1)||P(9)) closeSkills();
@@ -2167,8 +2388,8 @@ function pollPad(dt){
    [12,15,13,14].forEach((btn,i)=>{if(P(btn)) useBuffSlot(i);});
    if(P(10)) setBPage(BPAGE+1);
    if(P(16)) openSkills();
-   if(P(8)){PSEL=(PSEL+1)%4;const id=LAYOUT[POFF+PSEL];ftext(S.p.x,S.p.y,'Процедура: '+(id?actInfo(id).name:'пусто'),'#9fe8ff');S.hudT=0;}
-   if(P(11)||P(17)) useProcSlot(PSEL);
+   if(P(8)){PSEL=(PSEL+1)%(NPP*4);PPAGE=Math.floor(PSEL/4);buildSlots();const id=LAYOUT[POFF+PSEL];ftext(S.p.x,S.p.y,'Процедура: '+(id?actInfo(id).name:'пусто'),'#9fe8ff');S.hudT=0;}
+   if(P(11)||P(17)) useProcSlot(PSEL%4);
    [0,2,3,1].forEach((btn,i)=>{const id=LAYOUT[PAGE*4+i];if(!id) return;if(SK[id]){if(B(btn)&&(S.p.un[id]||P(btn))) padCast(id,false);}else if(P(btn)) useAbility(id);});
    if(P(7)) useAbility('dash');
    if(P(6)) useBep();
@@ -2252,7 +2473,7 @@ const CH={
          {t:'Чистота лба 50%',c:()=>PCT('forehead')>=50,p:()=>PCT('forehead')+'%'}],
   outro:st=>[{who:'anya',t:st>=3?'Лоб почти чистый! Мама даже разрешила не надевать чёлку.':'Стало лучше, но ещё есть что лечить.'},
              {who:'prof',t:st>=3?'Отличный первый приём. Пациентка вернётся к нам через полгода, акне любит возвращаться.':'Неплохо для первого раза. В следующий раз меньше экспериментов.'}]},
- acne2:{line:'acne',title:'Глава 2. Через полгода',zone:'chin',lvl:4,start:[300,1700],pop:{chin:{comedo:6,papule:6,pustule:6,nodule:3}},
+ acne2:{line:'acne',title:'Глава 2. Через полгода',zone:'chin',lvl:4,eq:['scope','wood'],start:[300,1700],pop:{chin:{comedo:6,papule:6,pustule:6,nodule:3,micro:4}},
   setup:()=>{spawnMob('nodule','chin',true,760,2000,{maxhp:900,hp:900,r:44,title:'Гигантский узел'});},
   intro:[
    {who:'anya',t:'Доктор, я снова к вам. На подбородке появились огромные болезненные шишки. Можно я их просто выдавлю перед выпускным?',
@@ -2266,7 +2487,7 @@ const CH={
          {t:'Чистота подбородка 50%',c:()=>PCT('chin')>=50,p:()=>PCT('chin')+'%'}],
   outro:st=>[{who:'anya',t:'Шишки ушли! Только губы сохнут, но вы предупреждали.'},
              {who:'prof',t:'Рубцов: '+Math.max(0,S.scars-S.scarsFixed)+'. '+(Math.max(0,S.scars-S.scarsFixed)<=3?'Узлы вовремя погашены, рубцов почти нет.':'Рубцов многовато: часть узлов лечили слишком поздно. Фракционный лазер поможет.')}]},
- acne3:{line:'acne',title:'Глава 3. Курс изотретиноина',zone:'chin',lvl:5,un:['akn'],start:[300,1700],pop:{chin:{comedo:8,papule:8,pustule:6,nodule:3,pore:3}},
+ acne3:{line:'acne',title:'Глава 3. Курс изотретиноина',zone:'chin',lvl:5,eq:['scope','wood','flaser'],un:['akn'],start:[300,1700],pop:{chin:{comedo:8,papule:8,pustule:6,nodule:3,pore:3,micro:5}},
   intro:[
    {who:'anya',t:'Третий месяц на изотретиноине. Губы трескаются, кожа сухая и шелушится. Может, бросить?',
     ch:[{t:'Курс продолжаем: сухость ожидаема. Губы и кожу защищаем декспантенолом и эмолентами',ok:true,
@@ -2278,7 +2499,7 @@ const CH={
          {t:'Чистота подбородка 70%',c:()=>PCT('chin')>=70,p:()=>PCT('chin')+'%'}],
   outro:st=>[{who:'anya',t:'Я на выпускном была без единого прыща. Спасибо вам!'},
              {who:'prof',t:(S.flags.dry80?'Сухость кожи доходила до выраженной: декспантенол нужно давать раньше. ':'Сухость держали под контролем. ')+'Линия акне пройдена, коллега.'}]},
- ros1:{line:'ros',title:'Глава 1. Гормональная мазь',zone:'cheeks',lvl:3,start:[1700,300],pop:{cheeks:{rosacea:9}},
+ ros1:{line:'ros',title:'Глава 1. Гормональная мазь',zone:'cheeks',lvl:3,eq:['scope','vlaser'],start:[1700,300],pop:{cheeks:{rosacea:9}},
   setup:()=>{for(let i=0;i<5;i++) spawnMob('steroid','cheeks',true);
    for(let i=0;i<6;i++) S.marks.push({x:rnd(1550,2300),y:rnd(150,1250),k:'tel',r:22,life:600,max:600,zone:'cheeks',seed:Math.random()});},
   intro:[
@@ -2293,7 +2514,7 @@ const CH={
          {t:'Чистота щёк 40%',c:()=>PCT('cheeks')>=40,p:()=>PCT('cheeks')+'%'}],
   outro:st=>[{who:'irina',t:'Лицо спокойное, сосудов почти не видно. К косметологу больше ни ногой.'},
              {who:'prof',t:S.flags.akrRos?'Вы применили стероид на розацеа и получили новый дерматит. Запомните это навсегда.':'Розацеа под контролем, стероид отменён. Чистая работа.'}]},
- pso1:{line:'pso',title:'Глава 1. PASI 24',zone:'elbows',lvl:6,start:[1580,1580],pop:{elbows:{plaque:5}},boss:true,
+ pso1:{line:'pso',title:'Глава 1. PASI 24',zone:'elbows',lvl:6,eq:['scope','uvb'],start:[1580,1580],pop:{elbows:{plaque:5}},boss:true,
   intro:[
    {who:'sergey',t:'Десять лет мажу мази, бляшки по всему телу, на работе стесняюсь закатать рукава. Может, на диете станет лучше?',
     ch:[{t:'Питание важно для общего здоровья. При таком псориазе нужна системная терапия: начнём с метотрексата',ok:true,
@@ -2339,7 +2560,7 @@ function startStory(cid){
  const p=S.p;p.lvl=ch.lvl;p.x=ch.start[0];p.y=ch.start[1];p.xp=0;recalcHP(true);
  p.un={bpo:true,ada:true,aza:true};for(const sk of SKILLS) if(!sk.quiz&&sk.lvl<=ch.lvl) p.un[sk.id]=true;
  if(ch.un) for(const u of ch.un) p.un[u]=true;
- S.sp=1+Math.max(0,ch.lvl-1)*2;
+ S.sp=1+Math.max(0,ch.lvl-1)*2;S.eq={};for(const e of (ch.eq||[])) S.eq[e]=true;S.picks=0;
  for(const zid in S.pop) for(const type in S.pop[zid]) for(let i=0;i<S.pop[zid][type];i++) spawnMob(type,zid,true);
  if(ch.boss) spawnBoss();
  if(ch.setup) ch.setup();
@@ -2404,7 +2625,7 @@ const SAVE_KEY='dq_save_v1';
 function saveGame(){
  if(!S||S.mode==='story') return;const p=S.p;
  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,name:p.name,gender:p.gender,age:p.age,lvl:p.lvl,xp:p.xp,un:p.un,bep:p.bep,primary:S.primary,
-  bossKills:S.bossKills,zk:S.zk,scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,warn:S.warn,zdone:S.zdone,kills:S.kills,res:S.res,cum:S.cum,dry:S.dry,sp:S.sp,rank:S.rank,smooth:S.smooth.filter(q=>q.k==='smooth').map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone}))}));}catch(_){}
+  bossKills:S.bossKills,zk:S.zk,scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,warn:S.warn,zdone:S.zdone,kills:S.kills,res:S.res,cum:S.cum,dry:S.dry,sp:S.sp,rank:S.rank,eq:S.eq,picks:S.picks,var:S.var,smooth:S.smooth.filter(q=>q.k==='smooth').map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone}))}));}catch(_){}
 }
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&s.v===1?s:null;}catch(_){return null;}}
 function continueGame(sv){
@@ -2415,7 +2636,7 @@ function continueGame(sv){
  recalcHP(true);
  if(sv.primary&&p.un[sv.primary]) S.primary=sv.primary;
  S.bossKills=sv.bossKills|0;S.zk=Object.assign(S.zk,sv.zk||{});S.scars=sv.scars|0;S.scarsFixed=sv.scarsFixed|0;
- S.combos=sv.combos||{};S.warn=sv.warn||{};S.zdone=sv.zdone||{};S.kills=sv.kills|0;S.res=+sv.res||0;S.cum=Object.assign({doxy:0,akn:0},sv.cum||{});S.dry=+sv.dry||0;S.rank=sv.rank||{};S.sp=sv.sp!=null?sv.sp|0:1+2*(p.lvl-1);S.smooth=(sv.smooth||[]).map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone,k:'smooth',life:Infinity,max:Infinity,seed:Math.random()}));
+ S.combos=sv.combos||{};S.warn=sv.warn||{};S.zdone=sv.zdone||{};S.kills=sv.kills|0;S.res=+sv.res||0;S.cum=Object.assign({doxy:0,akn:0},sv.cum||{});S.dry=+sv.dry||0;S.rank=sv.rank||{};S.var=sv.var||{};S.eq=sv.eq||{};S.picks=sv.picks!=null?sv.picks|0:Math.max(0,Math.floor(p.lvl/3)-Object.keys(S.eq).length);S.sp=sv.sp!=null?sv.sp|0:1+2*(p.lvl-1);S.smooth=(sv.smooth||[]).map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone,k:'smooth',life:Infinity,max:Infinity,seed:Math.random()}));
  if(S.tut>=0) tutFinish();
  computeClean();drawPortrait();updateHUD();
  toast('С возвращением! Уровень '+p.lvl+': '+rankTitle(p.lvl),'good');
@@ -2459,7 +2680,7 @@ function loop(ts){
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
