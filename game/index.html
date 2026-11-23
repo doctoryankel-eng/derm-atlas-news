@@ -15,7 +15,9 @@
 <title>ДермаКвест: Хроники ремиссии</title>
 <style>
 :root{--panel:rgba(18,12,15,.86);--line:rgba(233,193,122,.28);--txt:#f3e8de;--muted:#b6a397;--gold:#e9c17a;--red:#d9465a;--green:#6fcf8e}
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;touch-action:none}
+button,input,.qo,.big,.clb{touch-action:manipulation}
+.card{touch-action:pan-y}
 html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-callout:none;background:#120d10;color:var(--txt);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;-webkit-user-select:none;user-select:none;touch-action:none;-webkit-tap-highlight-color:transparent}
 #game{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
 .serif{font-family:Georgia,"Times New Roman",serif}
@@ -168,6 +170,29 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 .perk{font-size:12px;color:var(--muted);text-align:center;margin:6px 0 12px}
 .big{display:block;width:100%;padding:13px;border-radius:10px;border:1px solid var(--gold);background:linear-gradient(#5a3d1d,#3a2712);color:#ffe9bf;font-size:17px;cursor:pointer;font-family:Georgia,serif}
 .big:hover{filter:brightness(1.12)}
+.istep{display:flex;gap:10px;align-items:center;text-align:left;font-size:14px;line-height:1.4;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);margin-bottom:6px}
+.inum{flex:none;width:26px;height:26px;border-radius:50%;background:#3a2a1c;border:1px solid var(--gold);color:#ffe9bf;display:flex;align-items:center;justify-content:center;font-weight:700}
+.iarrow{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:34px;color:#7fb2ff;animation:ibounce 1s infinite;text-shadow:0 0 12px rgba(127,178,255,.8)}
+@keyframes ibounce{50%{transform:translate(-50%,8px)}}
+.dlgc{max-width:600px}
+.dlgtop{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+#dlgface{width:92px;height:92px;border-radius:12px;border:1px solid var(--line);flex:none}
+#dlgname{font-size:19px;color:var(--gold)}
+#dlgrole{font-size:12px;color:var(--muted);margin-top:2px}
+#dlgtext{font-size:15px;line-height:1.5;margin-bottom:10px}
+#dlghint{font-size:11.5px;color:var(--muted);margin-bottom:2px}
+.qo.focus,.big.focus,.clb.focus{outline:2px solid var(--gold);outline-offset:1px}
+.cl{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px;background:rgba(255,255,255,.02)}
+.cl.soon{opacity:.6}
+.cltop{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.clface{width:54px;height:54px;border-radius:10px;flex:none}
+.cln{font-family:Georgia,serif;font-size:17px;color:var(--gold)}
+.cld{font-size:12px;color:var(--muted);line-height:1.35}
+.soonb{font-family:system-ui;font-size:10px;color:#9fd3ff;border:1px solid #9fd3ff;border-radius:8px;padding:1px 6px;vertical-align:middle}
+.clb{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;margin-top:6px;border-radius:9px;border:1px solid rgba(233,193,122,.35);background:#261b20;color:var(--txt);font-size:14px;cursor:pointer;text-align:left}
+.clb.done{border-color:rgba(111,207,142,.6)}
+.clb:disabled{opacity:.4;cursor:default}
+.cls{color:#ffd25a;font-size:13px;white-space:nowrap;margin-left:8px}
 .big.sec{background:#261b20;border-color:rgba(233,193,122,.45);font-size:15px;padding:10px;margin-top:8px}
 #cont{display:none}
 #install{display:none;font-size:12px;color:#d8e7ff;text-align:center;margin-top:10px;padding:8px;border:1px dashed rgba(127,178,255,.5);border-radius:8px;line-height:1.4}
@@ -267,12 +292,31 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <div class="row"><span>Возраст</span><button class="opt" data-a="teen">Подросток</button><button class="opt on" data-a="adult">Взрослый</button></div>
   <div class="perk" id="perk"></div>
   <button id="cont" class="big"></button>
-  <button id="go" class="big">Начать приём</button>
+  <button id="go" class="big">Сюжет</button>
+  <button id="free" class="big sec">Свободная игра</button>
   <div id="install">Чтобы игра жила на айфоне как приложение: нажмите «Поделиться» внизу Safari, затем «На экран Домой». Игра будет открываться на весь экран и работать без интернета.</div>
   <div class="foot">Прототип одиночного режима. Игровая модель упрощает клинические рекомендации: дозы, схемы и показания в реальной практике сложнее.<br>Геймпад: ✕ начать, □ пол, △ возраст.</div>
  </div>
 </div>
 
+<div id="inst" class="ov" style="z-index:40">
+ <div class="card panel" style="text-align:center">
+  <img src="icons/icon-192.png" alt="" style="width:76px;height:76px;border-radius:18px;margin:0 auto 8px;display:block;box-shadow:0 6px 18px rgba(0,0,0,.5)" onerror="this.style.display='none'">
+  <div class="serif" style="font-size:22px;color:var(--gold);margin-bottom:6px">Установите ДермаКвест на экран «Домой»</div>
+  <div style="font-size:13.5px;color:var(--muted);line-height:1.45;margin-bottom:12px">Так игра откроется на весь экран, без адресной строки и случайного масштабирования, будет работать без интернета и сохранит прогресс.</div>
+  <div id="inst_ios">
+   <div class="istep"><span class="inum">1</span><span>Нажмите <b>«Поделиться»</b> <svg width="20" height="24" viewBox="0 0 20 24" style="vertical-align:-5px"><path d="M10 2v13M5 7l5-5 5 5" stroke="#7fb2ff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M4 11H2v11h16V11h-2" stroke="#7fb2ff" stroke-width="2" fill="none"/></svg> на панели Safari внизу экрана</span></div>
+   <div class="istep"><span class="inum">2</span><span>Пролистайте меню и выберите <b>«На экран Домой»</b> <svg width="20" height="20" viewBox="0 0 20 20" style="vertical-align:-4px"><rect x="2" y="2" width="16" height="16" rx="4" stroke="#e9ecff" stroke-width="1.8" fill="none"/><path d="M10 6v8M6 10h8" stroke="#e9ecff" stroke-width="1.8" stroke-linecap="round"/></svg></span></div>
+   <div class="istep"><span class="inum">3</span><span>Нажмите <b>«Добавить»</b> и запускайте игру с иконки</span></div>
+   <button class="big" id="inst_ok" style="margin-top:12px">Понятно</button>
+   <div class="iarrow">⬇︎</div>
+  </div>
+  <div id="inst_and" style="display:none">
+   <button class="big" id="inst_btn">Установить</button>
+  </div>
+  <button class="big sec" id="inst_close">Продолжить в браузере</button>
+ </div>
+</div>
 <div id="quiz" class="ov">
  <div class="card panel">
   <h3 id="qt"></h3>
@@ -359,6 +403,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <li>Печень: метотрексат копит нагрузку, на 100% препарат на паузе. Фолиевая кислота из лута снижает нагрузку</li>
    <li>Стероид на розацеа превращает её в стероидный дерматит</li>
   </ul>
+  <button class="big sec" id="tocamp" style="display:none">Выйти к сюжетам</button>
   <button class="big sec" id="tutagain">Пройти обучение заново</button>
   <button class="big" id="helpclose" style="margin-top:8px">Понятно</button>
  </div>
@@ -382,6 +427,34 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <button class="big" id="skclose" style="margin-top:8px">Готово</button>
  </div>
 </div>
+<div id="dlg" class="ov">
+ <div class="card panel dlgc">
+  <div class="dlgtop"><canvas id="dlgface" width="200" height="200"></canvas><div><div id="dlgname" class="serif"></div><div id="dlgrole"></div></div></div>
+  <div id="dlgtext"></div>
+  <div id="dlghint">Ваш ответ:</div>
+  <div id="dlgch"></div>
+ </div>
+</div>
+<div id="camp" class="ov">
+ <div class="card panel">
+  <div class="title serif" style="font-size:28px">Сюжетные линии</div>
+  <div class="subt">Каждая линия: свой пациент, свои главы и контрольный визит в финале</div>
+  <div id="clist"></div>
+  <button class="big sec" id="cback">Назад</button>
+ </div>
+</div>
+<div id="res" class="ov">
+ <div class="card panel" style="text-align:center">
+  <div style="font-size:12px;color:var(--muted)">Контрольный визит через 3 месяца</div>
+  <h2 class="serif" id="rtitle" style="color:var(--gold);font-size:22px;margin:4px 0"></h2>
+  <div id="rstars" style="font-size:38px;color:#ffd25a;letter-spacing:4px"></div>
+  <div id="rgrade" class="serif" style="font-size:18px;margin-bottom:8px"></div>
+  <div id="rrows" style="font-size:13px;line-height:1.6;color:var(--txt);margin-bottom:12px"></div>
+  <button class="big" id="rnext">Следующая глава</button>
+  <button class="big sec" id="rcamp">К сюжетам</button>
+  <button class="big sec" id="rstay">Остаться на карте</button>
+ </div>
+</div>
 <div id="death" class="ov"><div class="card panel"><h2>Вы выбыли</h2><div id="dtxt">Возвращение в ординаторскую...</div></div></div>
 <div id="banner" class="ov"><div class="card panel"><h2 id="btitle">Ремиссия</h2><div id="btxt"></div></div></div>
 
@@ -393,6 +466,11 @@ const cv=$('game'),ctx=cv.getContext('2d');
 let W=0,H=0,Z=1,DPR=1;
 function resize(){DPR=Math.min(window.devicePixelRatio||1,window.innerWidth<700?1.6:2);W=window.innerWidth;H=window.innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);Z=W<700?0.82:(W<1100?0.98:1.1);}
 window.addEventListener('resize',resize);resize();
+// защита от случайного масштабирования страницы на телефоне (Safari игнорирует user-scalable=no)
+['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1) e.preventDefault();},{passive:false});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+if(window.visualViewport) window.visualViewport.addEventListener('resize',()=>{if(window.visualViewport.scale>1.01){const m=document.querySelector('meta[name=viewport]');if(m){const c=m.content;m.content=c.replace(/,?\s*minimum-scale=[^,]*/,'')+',minimum-scale=1';setTimeout(()=>{m.content=c;},60);}}});
 
 const TAU=Math.PI*2;
 const rnd=(a,b)=>a+Math.random()*(b-a);
@@ -544,11 +622,11 @@ function computeClean(){
 function zoneClean(zid){return S.zc[zid]||0;}
 function totalClean(){return (S.zc.forehead+S.zc.chin+S.zc.cheeks+S.zc.elbows)/4;}
 
-function startGame(){
+function startGame(opt){opt=(opt&&opt.story!==undefined)?opt:{};
  audioInit();
  const name=($('nm').value||'').trim().slice(0,16)||'Доктор';
  S={t:0,mobs:[],proj:[],eproj:[],fx:[],parts:[],texts:[],drops:[],tele:[],marks:[],boss:null,bossRespawn:0,bossKills:0,kills:0,paused:false,spawnT:2,cleanT:0,hintCD:{},quizQ:[],primary:'bpo',attack:null,attackHold:false,hurt:0,banner:0,lastZone:'',hudT:0,blockT:0,hover:null,
-  smooth:[],sp:1,rank:{},acdMax:{},tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
+  smooth:[],sp:1,rank:{},acdMax:{},mode:'free',chap:null,flags:{},stars:3,startPos:[300,300],pop:null,chDone:false,kills0:0,tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
   p:{x:300,y:300,tx:null,ty:null,name,gender:sel.g,age:sel.a,hp:0,maxhp:0,lvl:1,xp:0,dir:1,walk:0,moving:false,ang:0.8,cd:{},un:{bpo:true,ada:true,aza:true},deb:{},liver:0,ret:[],bep:2,dead:0}};
  recalcHP(true);
  for(const zid in POP) for(const type in POP[zid]) for(let i=0;i<POP[zid][type];i++) spawnMob(type,zid,true);
@@ -559,7 +637,8 @@ function startGame(){
  buildCluster();drawPortrait();
  $('joy').classList.add('on');
  let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
- if(!tutDone) tutStart();
+ if(opt.story){}
+ else if(!tutDone) tutStart();
  else{toast('Ходите джойстиком слева внизу. Заклинания справа внизу, баффы в колонке справа, ✎ меняет ячейки местами','hint');
   setTimeout(()=>toast('Бензоилпероксид бьёт точечно, адапален и азелаиновая кислота накрывают группу. Ищите комбо'),2400);}
 }
@@ -768,7 +847,7 @@ function useAbility(id){
     const vasc=m.type==='rosacea'||m.type==='steroid';const dmg=(vasc?80*(1+0.15*rk('vlaser')):m.type==='boss'?20:14)*dmgScale();
     m.hp-=dmg;m.flash=0.15;m.lastHitT=S.t;if(vasc) m.infl=0;ftext(m.x,m.y,Math.round(dmg),vasc?'#ffe07a':'#ffffff',vasc);if(m.hp<=0) killMob(m);}
    for(const k of S.marks){if(Math.hypot(k.x-cx,k.y-cy)>R+k.r) continue;
-    if(k.k==='red'||k.k==='tel'){k.life=0;cleared++;burst(k.x,k.y,'#ffb43a',8,90,true);}
+    if(k.k==='red'||k.k==='tel'){if(k.k==='tel') S.flags.tel=(S.flags.tel||0)+1;k.life=0;cleared++;burst(k.x,k.y,'#ffb43a',8,90,true);}
     else if(k.k==='brown'){k.life-=k.max*0.6;light++;burst(k.x,k.y,'#ffd28a',5,70,true);}}
    addSmooth(cx,cy,R*0.95,'even');
    sfx('laser');S.fx.push({k:'vfield',x:cx,y:cy,r:R,t:0,max:.8,col:'#ffb43a'});
@@ -828,7 +907,7 @@ function tryCast(sid,target,noAuto,pt){
  }
  if(sk.retinoid){p.ret.push(S.t);p.ret=p.ret.filter(t=>S.t-t<5);if(p.ret.length>=6){addDeb('retder',6);p.ret=[];toast('Ретиноидный дерматит: шелушение и жжение, скорость снижена','bad');}}
  if(sid==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Декспантенол (F) поможет','bad');addDeb('cheil',10);}
- if(sid==='mtx'){p.liver+=14;if(p.liver>=100){p.liver=60;addDeb('transam',8);toast('Трансаминазы выросли в 3 раза: пауза в терапии. Фолиевая кислота снижает нагрузку','bad');}}
+ if(sid==='mtx'){p.liver+=14;if(p.liver>=100){p.liver=60;addDeb('transam',8);S.flags.transam=true;toast('Трансаминазы выросли в 3 раза: пауза в терапии. Фолиевая кислота снижает нагрузку','bad');}}
  if(sid==='efl') S.fx.push({k:'ring',x:p.x,y:p.y,r:70,t:0,max:.5,col:sk.col});
  if(sk.type!=='aura') S.primary=sid;
  return true;
@@ -903,6 +982,7 @@ function aggravate(m,sk,base,k){
  hint(m.type,sk.id);
 }
 function mutate(m){
+ if(S.mode==='story'){S.flags.bad=true;S.flags.akrRos=true;}
  const d=MOB.steroid;
  Object.assign(m,{type:'steroid',hp:d.hp,maxhp:d.hp,r:d.r,flash:.3,infl:0,shoot:1});
  burst(m.x,m.y,'#ff4060',22);
@@ -936,6 +1016,8 @@ const DEATHCOL={comedo:'#3a261c',papule:'#d4505a',pustule:'#f3e39a',nodule:'#8e2
 function killMob(m){
  if(m.dead) return;
  m.dead=true;S.kills++;sfx('kill');
+ if(m.type==='steroid') S.flags.sterKills=(S.flags.sterKills||0)+1;
+ if(m.title) S.flags.giant=true;
  burst(m.x,m.y,DEATHCOL[m.type],m.type==='boss'?80:14,m.type==='boss'?320:160);
  gainXP(MOB[m.type].xp);
  if(m.type!=='boss') S.zk[m.zone]=(S.zk[m.zone]||0)+(m.type==='steroid'||m.type==='pore'?2:1);
@@ -980,6 +1062,7 @@ function onLevel(){
 function damagePlayer(n,quiet){
  const p=S.p;if(p.dead>0||S.paused||p.inv>0) return;
  if(S.tut>=0&&S.tut<4) n*=0.3;
+ n*=Math.min(1,0.55+0.09*p.lvl);
  if(S.buff.spf>0) n*=Math.max(0.25,0.5-0.05*rk('spf'));
  else if(p.deb.photo) n*=1.25;
  if(S.dry>0) n*=1+S.dry/100*0.4;
@@ -988,7 +1071,7 @@ function damagePlayer(n,quiet){
   $('dtxt').textContent='Возвращение на Лоб через несколько секунд. Опыт сохранён';}
 }
 function respawn(){
- const p=S.p;p.x=300;p.y=300;p.tx=null;recalcHP(true);p.deb={};p.liver=0;p.dead=0;
+ const p=S.p;p.x=S.startPos[0];p.y=S.startPos[1];p.tx=null;recalcHP(true);p.deb={};p.liver=0;p.dead=0;
  $('death').classList.remove('on');
  if(S.boss){const b=S.boss;b.x=1960;b.y=1960;b.hp=b.maxhp;b.engaged=false;b.enraged=false;}
  S.tele=[];S.eproj=[];
@@ -1097,7 +1180,8 @@ function update(dt){
   if(p.dashT>0){p.dashT-=dt;mvx=Math.cos(p.dashA);mvy=Math.sin(p.dashA);moving=true;S.parts.push({x:p.x,y:p.y,z:rnd(10,50),vx:0,vy:0,vz:0,life:.35,max:.35,col:'#fff1d6',s:rnd(2,4),glow:true});}
   if(moving){
    const sp=(p.dashT>0?1150:speed()*mag)*dt;let nx=clamp(p.x+mvx*sp,20,WORLD-20),ny=clamp(p.y+mvy*sp,20,WORLD-20);
-   if(!canEnter()&&inElbows(nx,ny)){
+   if(S.mode==='story'){const z=ZM[S.chap.zone];nx=clamp(nx,z.x0+25,z.x1-25);ny=clamp(ny,z.y0+25,z.y1-25);}
+   else if(!canEnter()&&inElbows(nx,ny)){
     if(!inElbows(nx,p.y)) ny=p.y;else if(!inElbows(p.x,ny)) nx=p.x;else{nx=p.x;ny=p.y;}
     if(S.t>S.blockT){S.blockT=S.t+4;toast('Локти: тяжёлый псориаз. Вход с 5 уровня и с допуском к метотрексату','bad');}
    }
@@ -1131,6 +1215,7 @@ function update(dt){
   if(sk.id==='akn'){
    S.dry=Math.min(100,S.dry+(2+S.cum.akn*0.06)*dt);
    if(S.dry>=40) warnOnce('dry40','Ксероз: кожа сухая, барьер нарушен, урон по врачу растёт. Декспантенол смягчает сухость','bad');
+   if(S.dry>=80){S.flags.dry80=true;}
    if(S.dry>=80) warnOnce('dry80','Выраженная сухость кожи. Чем дольше курс изотретиноина, тем суше кожа','bad');
   }
  }
@@ -1155,6 +1240,7 @@ function update(dt){
    continue;
   }
   if(!alive) continue;
+  if(S.tut>=0&&S.tut<3) continue;
   const dp=dist(m,p),infl=m.infl>0;
   if(d.aura&&dp<d.aura.r+14){m.auraT-=dt;if(m.auraT<=0){m.auraT=0.5;damagePlayer(d.aura.dps*0.5*(infl?1.4:1),true);
    warnOnce('aura','Приливы: рядом с розацеа кожу жжёт. Лечите с дистанции','hint');}}
@@ -1214,11 +1300,12 @@ function update(dt){
  // новые высыпания
  S.spawnT-=dt;
  if(S.spawnT<=0){S.spawnT=2.5;
-  for(const zid in POP){const f=Math.max(0.15,1-zoneClean(zid)*0.85);
-   for(const type in POP[zid]){const want=Math.round(POP[zid][type]*f);
+  const PP=S.pop||POP;
+  for(const zid in PP){const f=Math.max(0.15,1-zoneClean(zid)*0.85);
+   for(const type in PP[zid]){const want=Math.round(PP[zid][type]*f);
     const have=S.mobs.filter(m=>m.zone===zid&&(m.type===type||(type==='rosacea'&&m.type==='steroid'))&&!m.kob).length;
     if(have<want) spawnMob(type,zid,false);}}}
- if(!S.boss){S.bossRespawn-=dt;if(S.bossRespawn<=0){spawnBoss();toast('Обострение: бляшечный псориаз вернулся на Локти','boss');}}
+ if(!S.boss&&S.mode!=='story'){S.bossRespawn-=dt;if(S.bossRespawn<=0){spawnBoss();toast('Обострение: бляшечный псориаз вернулся на Локти','boss');}}
 
  const c=iso(p.x,p.y);const k=Math.min(1,dt*7);camX+=(c[0]-camX)*k;camY+=(c[1]-camY)*k;
  S.hudT-=dt;if(S.hudT<=0){S.hudT=0.1;updateHUD();}
@@ -1455,7 +1542,7 @@ function drawMob(m){
   if(m.hp<m.maxhp){const w=Math.max(26,r*2.2);ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(cx-w/2,top-4,w,4);ctx.fillStyle=d.elite?'#e9c17a':'#e2566a';ctx.fillRect(cx-w/2,top-4,w*Math.max(0,m.hp/m.maxhp),4);top-=6;}
   const st=Object.keys(m.st).filter(k=>m.st[k]>S.t);
   if(st.length){let x=cx-(st.length-1)*5;for(const k of st){ctx.fillStyle=STCOL[k];ctx.strokeStyle='rgba(0,0,0,.6)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,top-3,3.4,0,TAU);ctx.fill();ctx.stroke();x+=10;}top-=9;}
-  if(d.elite||m===S.hover){const label=d.name+(infl?' · воспаление':'');ctx.font=(d.elite?'bold ':'')+'11px Trebuchet MS,sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.75)';ctx.fillStyle=d.elite?'#e9c17a':'#fff';
+  if(d.elite||m===S.hover||m.title){const label=(m.title||d.name)+(infl?' · воспаление':'');ctx.font=(d.elite?'bold ':'')+'11px Trebuchet MS,sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.75)';ctx.fillStyle=d.elite?'#e9c17a':'#fff';
    ctx.strokeText(label,cx,top-6);ctx.fillText(label,cx,top-6);}
  }
  if(S.buff.scope>0&&Math.hypot(m.x-S.p.x,m.y-S.p.y)<720){
@@ -1918,7 +2005,9 @@ function updateHUD(){
  else if(S.boss) g='<b>Обострение!</b> Псориаз вернулся. Снова на Локти.';
  else g='<b>Ремиссия.</b> Обострение через '+Math.ceil(S.bossRespawn)+' с.';
  g+='<br>Комбо найдено: '+Object.keys(S.combos).length+' из '+COMBOS.length;
+ if(S.mode==='story') g=storyGoalsHTML();
  $('goal').innerHTML=g;
+ if(S.mode==='story') storyCheck();
  drawMinimap();
 }
 const mm=$('mm'),mg=mm.getContext('2d');
@@ -1981,7 +2070,7 @@ window.addEventListener('keydown',e=>{
 });
 window.addEventListener('keyup',e=>{keys[(e.key||'').toLowerCase()]=false;});
 window.addEventListener('blur',()=>{for(const k in keys) keys[k]=false;pointer.down=false;});
-function toggleHelp(){const h=$('help');const on=!h.classList.contains('on');h.classList.toggle('on',on);if(S&&!quizOpen) S.paused=on;}
+function toggleHelp(){const h=$('help');const on=!h.classList.contains('on');$('tocamp').style.display=S&&S.mode==='story'?'block':'none';h.classList.toggle('on',on);if(S&&!quizOpen) S.paused=on;}
 $('helpbtn').addEventListener('pointerdown',e=>{e.stopPropagation();toggleHelp();});
 $('sndbtn').addEventListener('pointerdown',e=>{e.stopPropagation();audioInit();setSound(!SND.on);});
 setSound(SND.on);
@@ -2048,7 +2137,12 @@ function pollPad(dt){
   if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: заклинания, L1/R1: панель заклинаний, крестовина: баффы, нажатие левого стика: страница баффов, Create: выбрать процедуру, R3: выполнить, R2: рывок, L2: декспантенол','good');S.hudT=0;}}
  pad.navT-=dt;
  const navY=(B(12)||pad.ly<-0.6)?-1:((B(13)||pad.ly>0.6)?1:0);
- if($('start').classList.contains('on')){
+ const ovs=['dlg','res','camp'].filter(id=>$(id).classList.contains('on'));
+ if(ovs.length){
+  pad.lx=pad.ly=0;const bs=Array.prototype.slice.call($(ovs[0]).querySelectorAll('button:not(:disabled)'));
+  if(navY&&pad.navT<=0&&bs.length){pad.navT=0.22;qFocus=(qFocus+navY+bs.length)%bs.length;bs.forEach((b,i)=>b.classList.toggle('focus',i===qFocus));}
+  if(P(0)&&bs.length){const b=bs[Math.min(qFocus,bs.length-1)];qFocus=0;b.click();}
+ }else if($('start').classList.contains('on')){
   if(P(0)||P(9)) startGame();
   else if(P(2)) setG(sel.g==='boy'?'girl':'boy');
   else if(P(3)) setA(sel.a==='teen'?'adult':'teen');
@@ -2094,6 +2188,210 @@ function pollPad(dt){
  jb.addEventListener('pointerup',end);jb.addEventListener('pointercancel',end);
 })();
 
+/* ---------- сюжет ---------- */
+const STORY_KEY='dq_story_v1';
+let STORY={};try{STORY=JSON.parse(localStorage.getItem(STORY_KEY)||'{}')||{};}catch(_){STORY={};}
+function saveStory(){try{localStorage.setItem(STORY_KEY,JSON.stringify(STORY));}catch(_){}}
+const CAST={
+ prof:{name:'Профессор Лев Аркадьевич',role:'Наставник, заведующий кафедрой',d:{skin:'#efc9a8',hair:'#d8d8dc',beard:true,glasses:true,coat:'#f4f4f2'}},
+ anya:{name:'Аня, 16 лет',role:'Пациентка',d:{skin:'#f3cfb0',hair:'#6b3b22',long:true,acne:1,coat:'#e07aa0'}},
+ mom:{name:'Мама Ани',role:'',d:{skin:'#efc6a4',hair:'#3b2a20',long:true,coat:'#7a5a8a'}},
+ irina:{name:'Ирина, 42 года',role:'Пациентка',d:{skin:'#f1c4ad',hair:'#b9863c',long:true,red:1,coat:'#6a8fb0'}},
+ sergey:{name:'Сергей, 35 лет',role:'Пациент',d:{skin:'#e9bf9c',hair:'#2a2a2a',beard:true,plaque:1,coat:'#55606a'}},
+};
+function drawFace(g,d,W){
+ g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,W,W);g.save();g.scale(W/100,W/100);
+ const bg=g.createRadialGradient(50,40,10,50,50,72);bg.addColorStop(0,'#3a2a30');bg.addColorStop(1,'#140d10');g.fillStyle=bg;g.fillRect(0,0,100,100);
+ if(d.long){g.fillStyle=d.hair;rr(g,25,24,50,62,22);g.fill();}
+ g.fillStyle=d.coat||'#3f87b5';g.beginPath();g.ellipse(50,110,42,32,0,0,TAU);g.fill();
+ if(d.coat==='#f4f4f2'){g.fillStyle='#3f87b5';g.beginPath();g.moveTo(42,80);g.lineTo(58,80);g.lineTo(50,92);g.closePath();g.fill();}
+ g.fillStyle=d.skin;g.fillRect(43,66,14,16);
+ const hg=g.createRadialGradient(44,40,4,50,48,30);hg.addColorStop(0,'#fff0e4');hg.addColorStop(0.3,d.skin);hg.addColorStop(1,shade(d.skin,-0.18));
+ g.fillStyle=hg;g.beginPath();g.ellipse(50,48,21,25,0,0,TAU);g.fill();
+ g.fillStyle=d.hair;g.beginPath();g.ellipse(50,31,22.5,12,0,Math.PI,TAU);g.fill();
+ g.beginPath();g.moveTo(29,33);g.quadraticCurveTo(44,23,71,33);g.lineTo(71,29);g.quadraticCurveTo(50,15,29,29);g.closePath();g.fill();
+ if(d.red){g.fillStyle='rgba(225,70,80,.38)';g.beginPath();g.ellipse(37,56,8,6,0,0,TAU);g.ellipse(63,56,8,6,0,0,TAU);g.ellipse(50,53,4,7,0,0,TAU);g.fill();}
+ g.fillStyle='#2a1a14';g.beginPath();g.arc(42,48,2.3,0,TAU);g.arc(58,48,2.3,0,TAU);g.fill();
+ g.strokeStyle=shade(d.hair,-0.15);g.lineWidth=1.8;g.beginPath();g.moveTo(37,42.5);g.lineTo(46,41.5);g.moveTo(54,41.5);g.lineTo(63,42.5);g.stroke();
+ g.strokeStyle='rgba(120,70,50,.55)';g.lineWidth=1.3;g.beginPath();g.moveTo(50,50);g.lineTo(48,58);g.lineTo(51,58.5);g.stroke();
+ g.strokeStyle='#a0524a';g.lineWidth=1.8;g.beginPath();g.moveTo(44,64);g.quadraticCurveTo(50,67,56,64);g.stroke();
+ if(d.glasses){g.strokeStyle='#2b2b2b';g.lineWidth=1.3;g.beginPath();g.arc(42,48,6,0,TAU);g.moveTo(64,48);g.arc(58,48,6,0,TAU);g.moveTo(48,48);g.lineTo(52,48);g.stroke();}
+ if(d.beard){g.fillStyle=d.hair;g.globalAlpha=0.9;g.beginPath();g.moveTo(30,52);g.quadraticCurveTo(32,77,50,79);g.quadraticCurveTo(68,77,70,52);g.quadraticCurveTo(66,66,57,66);g.quadraticCurveTo(50,62,43,66);g.quadraticCurveTo(34,66,30,52);g.fill();g.globalAlpha=1;}
+ if(d.acne) for(const [x,y,r] of [[36,58,2.2],[62,57,2],[45,34,1.8],[57,36,2],[40,62,1.6],[60,63,1.8],[53,33,1.5]]){g.fillStyle='rgba(205,55,65,.9)';g.beginPath();g.arc(x,y,r,0,TAU);g.fill();g.fillStyle='rgba(255,255,255,.5)';g.beginPath();g.arc(x-0.6,y-0.6,r*0.35,0,TAU);g.fill();}
+ if(d.plaque){g.fillStyle='rgba(215,105,115,.85)';g.beginPath();g.ellipse(62,95,14,7,0,0,TAU);g.fill();g.fillStyle='rgba(255,255,255,.85)';g.fillRect(55,93,13,2);g.fillRect(58,96,9,1.5);}
+ g.restore();
+}
+/* диалоги */
+let DLG=null;
+function dialog(lines,done){DLG={lines:lines.slice(),i:0,done};if(S) S.paused=true;qFocus=0;$('dlg').classList.add('on');showLine();}
+function showLine(){
+ const ln=DLG.lines[DLG.i],c=CAST[ln.who];drawFace($('dlgface').getContext('2d'),c.d,200);
+ $('dlgname').textContent=c.name;$('dlgrole').textContent=c.role||'';$('dlgtext').textContent=ln.t;
+ const box=$('dlgch');box.innerHTML='';
+ if(ln.ch){$('dlghint').style.display='block';ln.ch.forEach(o=>{const b=document.createElement('button');b.className='qo';b.textContent=o.t;
+  b.onclick=()=>pickChoice(o);box.appendChild(b);});}
+ else{$('dlghint').style.display='none';const b=document.createElement('button');b.className='big';b.textContent=DLG.i<DLG.lines.length-1?'Дальше':'К делу';b.onclick=()=>{sfx('click');nextLine();};box.appendChild(b);}
+}
+function pickChoice(o){sfx(o.ok?'good':'bad');if(!o.ok){S.stars--;S.flags.wrong=(S.flags.wrong||0)+1;}if(o.fx) o.fx();DLG.lines.splice(DLG.i+1,0,...(o.reply||[]));nextLine();}
+function nextLine(){DLG.i++;if(DLG.i>=DLG.lines.length){const d=DLG.done;DLG=null;$('dlg').classList.remove('on');if(S&&!quizOpen) S.paused=false;if(d) d();}else{qFocus=0;showLine();}}
+/* главы */
+const PCT=z=>Math.round((S.zc[z]||0)*100);
+const CH={
+ acne1:{line:'acne',title:'Глава 1. Первый приём',zone:'forehead',lvl:1,start:[300,300],pop:{forehead:{comedo:12,papule:6,pustule:3,pore:3}},
+  intro:[
+   {who:'prof',t:'Коллега, добро пожаловать в отделение. Первый пациент уже ждёт. Посмотрим, чему вас научили.'},
+   {who:'mom',t:'Доктор, у Ани прыщи на лбу уже полгода. Старшая сестра говорит мазать на ночь зубной пастой, она же подсушивает. Так можно?',
+    ch:[{t:'Пасту не используем: она раздражает кожу, воспаления станет больше. Назначу бензоилпероксид и адапален',ok:true,
+         reply:[{who:'prof',t:'Верно. Комбинация бензоилпероксида и адапалена: первая линия при лёгком акне. Начинайте.'}]},
+        {t:'Можно попробовать, паста правда подсушивает',ok:false,fx:()=>{S.pop.forehead.papule=11;S.flags.paste=true;},
+         reply:[{who:'prof',t:'Коллега, в пасте ментол, лаурилсульфат натрия и фториды. Раздражение даст новые папулы. Теперь разгребайте последствия.'}]}]},
+   {who:'anya',t:'А это надолго? Мне в сентябре на фото для выпускного...'},
+  ],
+  goals:[{t:'Вылечите 15 высыпаний',c:()=>S.kills-S.kills0>=15,p:()=>Math.min(15,S.kills-S.kills0)+'/15'},
+         {t:'Найдите комбо препаратов',c:()=>Object.keys(S.combos).length>0},
+         {t:'Чистота лба 50%',c:()=>PCT('forehead')>=50,p:()=>PCT('forehead')+'%'}],
+  outro:st=>[{who:'anya',t:st>=3?'Лоб почти чистый! Мама даже разрешила не надевать чёлку.':'Стало лучше, но ещё есть что лечить.'},
+             {who:'prof',t:st>=3?'Отличный первый приём. Пациентка вернётся к нам через полгода, акне любит возвращаться.':'Неплохо для первого раза. В следующий раз меньше экспериментов.'}]},
+ acne2:{line:'acne',title:'Глава 2. Через полгода',zone:'chin',lvl:4,start:[300,1700],pop:{chin:{comedo:6,papule:6,pustule:6,nodule:3}},
+  setup:()=>{spawnMob('nodule','chin',true,760,2000,{maxhp:900,hp:900,r:44,title:'Гигантский узел'});},
+  intro:[
+   {who:'anya',t:'Доктор, я снова к вам. На подбородке появились огромные болезненные шишки. Можно я их просто выдавлю перед выпускным?',
+    ch:[{t:'Узлы выдавливать нельзя: воспаление уйдёт глубже и останутся рубцы. Обсудим изотретиноин',ok:true,
+         reply:[{who:'prof',t:'Правильно. Узловое акне: показание к системному изотретиноину. Получите допуск, нажав на заблокированный изотретиноин в колонке баффов.'}]},
+        {t:'Аккуратно чистыми руками можно',ok:false,fx:()=>{for(const m of S.mobs) if(ACNE_TYPES[m.type]) m.infl=12;},
+         reply:[{who:'prof',t:'Коллега! После такого совета воспаление по всему подбородку. Каждый раздражённый узел оставит рубец. Действуйте быстро.'}]}]},
+  ],
+  goals:[{t:'Получите допуск к изотретиноину',c:()=>!!S.p.un.akn},
+         {t:'Вылечите гигантский узел',c:()=>!!S.flags.giant},
+         {t:'Чистота подбородка 50%',c:()=>PCT('chin')>=50,p:()=>PCT('chin')+'%'}],
+  outro:st=>[{who:'anya',t:'Шишки ушли! Только губы сохнут, но вы предупреждали.'},
+             {who:'prof',t:'Рубцов: '+Math.max(0,S.scars-S.scarsFixed)+'. '+(Math.max(0,S.scars-S.scarsFixed)<=3?'Узлы вовремя погашены, рубцов почти нет.':'Рубцов многовато: часть узлов лечили слишком поздно. Фракционный лазер поможет.')}]},
+ acne3:{line:'acne',title:'Глава 3. Курс изотретиноина',zone:'chin',lvl:5,un:['akn'],start:[300,1700],pop:{chin:{comedo:8,papule:8,pustule:6,nodule:3,pore:3}},
+  intro:[
+   {who:'anya',t:'Третий месяц на изотретиноине. Губы трескаются, кожа сухая и шелушится. Может, бросить?',
+    ch:[{t:'Курс продолжаем: сухость ожидаема. Губы и кожу защищаем декспантенолом и эмолентами',ok:true,
+         reply:[{who:'prof',t:'Да. Хейлит и ксероз: частые спутники изотретиноина, их ведут уходом. Следите за шкалой сухости.'}]},
+        {t:'Если так плохо, давай остановимся',ok:false,fx:()=>{S.p.un.akn=false;},
+         reply:[{who:'prof',t:'Брошенный курс: высокий риск рецидива. Пришлось заново оформлять допуск. Вернитесь к изотретиноину.'}]}]},
+  ],
+  goals:[{t:'Проведите 3 курса изотретиноина',c:()=>(S.cum.akn||0)>=40,p:()=>Math.min(3,Math.floor((S.cum.akn||0)/13.4))+'/3'},
+         {t:'Чистота подбородка 70%',c:()=>PCT('chin')>=70,p:()=>PCT('chin')+'%'}],
+  outro:st=>[{who:'anya',t:'Я на выпускном была без единого прыща. Спасибо вам!'},
+             {who:'prof',t:(S.flags.dry80?'Сухость кожи доходила до выраженной: декспантенол нужно давать раньше. ':'Сухость держали под контролем. ')+'Линия акне пройдена, коллега.'}]},
+ ros1:{line:'ros',title:'Глава 1. Гормональная мазь',zone:'cheeks',lvl:3,start:[1700,300],pop:{cheeks:{rosacea:9}},
+  setup:()=>{for(let i=0;i<5;i++) spawnMob('steroid','cheeks',true);
+   for(let i=0;i<6;i++) S.marks.push({x:rnd(1550,2300),y:rnd(150,1250),k:'tel',r:22,life:600,max:600,zone:'cheeks',seed:Math.random()});},
+  intro:[
+   {who:'irina',t:'Косметолог дал мне гормональную мазь. Первую неделю лицо было идеальным, а теперь горит, красное, высыпания. Мазать дальше?',
+    ch:[{t:'Мазь отменяем. Будет короткое обострение, его ведём метронидазолом и азелаиновой кислотой',ok:true,
+         reply:[{who:'prof',t:'Верно, стероидный дерматит. Бетаметазон на розацеа больше не применяйте ни в коем случае.'}]},
+        {t:'Мажьте пока, потом разберёмся',ok:false,fx:()=>{for(let i=0;i<4;i++) spawnMob('steroid','cheeks',false);},
+         reply:[{who:'prof',t:'Продолжение стероида поддерживает дерматит. Очагов стало больше. Отменяйте.'}]}]},
+  ],
+  goals:[{t:'Вылечите очаги стероидного дерматита',c:()=>(S.flags.sterKills||0)>=5,p:()=>Math.min(5,S.flags.sterKills||0)+'/5'},
+         {t:'Уберите сосуды сосудистым лазером',c:()=>(S.flags.tel||0)>=3,p:()=>Math.min(3,S.flags.tel||0)+'/3'},
+         {t:'Чистота щёк 40%',c:()=>PCT('cheeks')>=40,p:()=>PCT('cheeks')+'%'}],
+  outro:st=>[{who:'irina',t:'Лицо спокойное, сосудов почти не видно. К косметологу больше ни ногой.'},
+             {who:'prof',t:S.flags.akrRos?'Вы применили стероид на розацеа и получили новый дерматит. Запомните это навсегда.':'Розацеа под контролем, стероид отменён. Чистая работа.'}]},
+ pso1:{line:'pso',title:'Глава 1. PASI 24',zone:'elbows',lvl:6,start:[1580,1580],pop:{elbows:{plaque:5}},boss:true,
+  intro:[
+   {who:'sergey',t:'Десять лет мажу мази, бляшки по всему телу, на работе стесняюсь закатать рукава. Может, на диете станет лучше?',
+    ch:[{t:'Питание важно для общего здоровья. При таком псориазе нужна системная терапия: начнём с метотрексата',ok:true,
+         reply:[{who:'prof',t:'Правильно, PASI 24 требует системной терапии. Перед метотрексатом: допуск, и не забудьте про фолиевую кислоту и печень.'}]},
+        {t:'Попробуйте сначала диету месяца три',ok:false,fx:()=>{S.flags.diet=true;},
+         reply:[{who:'prof',t:'Три месяца без лечения при PASI 24? Бляшки уже разрослись. Начинайте системную терапию немедленно.'}]}]},
+  ],
+  goals:[{t:'Получите допуск к метотрексату',c:()=>!!S.p.un.mtx},
+         {t:'Победите тяжёлый бляшечный псориаз',c:()=>S.bossKills>0}],
+  outro:st=>[{who:'sergey',t:'Я впервые за десять лет пошёл летом в футболке.'},
+             {who:'prof',t:(S.flags.transam?'Трансаминазы поднимались: фолиевую кислоту и контроль печени нельзя пропускать. ':'Печень в порядке, контроль соблюдён. ')+'Ремиссия достигнута.'}]},
+};
+for(const k in CH) CH[k].id=k;
+const LINES=[
+ {id:'acne',name:'Акне',who:'anya',desc:'Аня, 16 лет. От первых комедонов до курса изотретиноина',ch:['acne1','acne2','acne3']},
+ {id:'ros',name:'Розацеа',who:'irina',desc:'Ирина, 42 года. Гормональная мазь «от косметолога»',ch:['ros1']},
+ {id:'pso',name:'Псориаз',who:'sergey',desc:'Сергей, 35 лет. Тяжёлый бляшечный псориаз',ch:['pso1']},
+ {id:'ad',name:'Атопический дерматит',who:null,desc:'Миша, 5 лет, и мама, которая боится гормонов. Эмоленты, топические стероиды, такролимус, дупилумаб и босс «Зуд»',ch:[],soon:true},
+];
+function starsStr(n){return '★'.repeat(n)+'☆'.repeat(3-n);}
+function openCamp(){renderCamp();qFocus=0;$('camp').classList.add('on');}
+function renderCamp(){
+ const box=$('clist');box.innerHTML='';
+ for(const L of LINES){
+  const d=document.createElement('div');d.className='cl'+(L.soon?' soon':'');
+  const top=document.createElement('div');top.className='cltop';
+  if(L.who){const cv2=document.createElement('canvas');cv2.width=120;cv2.height=120;cv2.className='clface';drawFace(cv2.getContext('2d'),CAST[L.who].d,120);top.appendChild(cv2);}
+  const tx=document.createElement('div');tx.innerHTML='<div class="cln">'+L.name+(L.soon?' <span class="soonb">в разработке</span>':'')+'</div><div class="cld">'+L.desc+'</div>';top.appendChild(tx);d.appendChild(top);
+  L.ch.forEach((cid,i)=>{const c=CH[cid],st=STORY[cid],open=i===0||(STORY[L.ch[i-1]]&&STORY[L.ch[i-1]].done);
+   const b=document.createElement('button');b.className='clb'+(st&&st.done?' done':'');b.disabled=!open;
+   b.innerHTML='<span>'+c.title+'</span><span class="cls">'+(st&&st.done?starsStr(st.stars):(open?'Начать':'Закрыто'))+'</span>';
+   b.onclick=()=>{$('camp').classList.remove('on');startStory(cid);};d.appendChild(b);});
+  box.appendChild(d);
+ }
+}
+$('cback').onclick=()=>{$('camp').classList.remove('on');$('start').classList.add('on');};
+function startStory(cid){
+ const ch=CH[cid];
+ startGame({story:true});
+ S.mode='story';S.chap=ch;S.flags={};S.stars=3;S.startPos=ch.start.slice();
+ S.pop=JSON.parse(JSON.stringify(ch.pop));
+ S.mobs=[];S.boss=null;S.marks=[];
+ const p=S.p;p.lvl=ch.lvl;p.x=ch.start[0];p.y=ch.start[1];p.xp=0;recalcHP(true);
+ p.un={bpo:true,ada:true,aza:true};for(const sk of SKILLS) if(!sk.quiz&&sk.lvl<=ch.lvl) p.un[sk.id]=true;
+ if(ch.un) for(const u of ch.un) p.un[u]=true;
+ S.sp=1+Math.max(0,ch.lvl-1)*2;
+ for(const zid in S.pop) for(const type in S.pop[zid]) for(let i=0;i<S.pop[zid][type];i++) spawnMob(type,zid,true);
+ if(ch.boss) spawnBoss();
+ if(ch.setup) ch.setup();
+ const c=iso(p.x,p.y);camX=c[0];camY=c[1];
+ S.kills0=S.kills;drawPortrait();buildSlots();computeClean();updateHUD();
+ dialog(ch.intro,()=>{
+  let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
+  if(cid==='acne1'&&!tutDone) tutStart();
+  else toast(ch.title+'. Цели в панели справа','hint');
+ });
+}
+function storyGoalsHTML(){
+ let h='<b>'+S.chap.title+'</b>';
+ for(const gl of S.chap.goals){const ok=gl.c();h+='<br>'+(ok?'✅ ':'▫️ ')+gl.t+(gl.p&&!ok?' ('+gl.p()+')':'');}
+ return h;
+}
+function storyCheck(){
+ if(S.chDone||S.paused||DLG) return;
+ if(S.chap.goals.every(gl=>gl.c())){S.chDone=true;setTimeout(finishChapter,900);}
+}
+function finishChapter(){
+ if(!S) return;const ch=S.chap;
+ const scars=Math.max(0,S.scars-S.scarsFixed);let st=S.stars;
+ if(scars>3) st--;if(S.flags.bad||S.flags.transam||S.flags.dry80) st--;
+ st=clamp(st,1,3);S.finalStars=st;
+ const prev=STORY[ch.id];STORY[ch.id]={done:true,stars:Math.max(st,prev&&prev.stars||0)};saveStory();
+ sfx('level');
+ dialog(ch.outro(st),()=>showResult(st));
+}
+function showResult(st){
+ const ch=S.chap;S.paused=true;
+ $('rtitle').textContent=ch.title;$('rstars').textContent=starsStr(st);
+ $('rgrade').textContent=['','Удовлетворительно','Хорошо','Отлично'][st];
+ const scars=Math.max(0,S.scars-S.scarsFixed);
+ const rows=['Чистота кожи в зоне: '+PCT(ch.zone)+'%','Рубцов: '+scars+(S.scarsFixed?' (сглажено '+S.scarsFixed+')':''),'Неверных решений в диалогах: '+(S.flags.wrong||0)];
+ if(S.flags.akrRos) rows.push('Стероид на розацеа: да');
+ if(S.flags.transam) rows.push('Повышение трансаминаз: было');
+ if(S.flags.dry80) rows.push('Выраженная сухость кожи: была');
+ $('rrows').innerHTML=rows.map(r=>'<div>'+r+'</div>').join('');
+ const L=LINES.find(l=>l.id===ch.line);const idx=L.ch.indexOf(ch.id);const nx=L.ch[idx+1];
+ $('rnext').style.display=nx?'block':'none';$('rnext').onclick=()=>{$('res').classList.remove('on');startStory(nx);};
+ qFocus=0;$('res').classList.add('on');
+}
+function exitToCamp(){
+ ['res','help','dlg','skills','layout','quiz'].forEach(id=>$(id).classList.remove('on'));
+ DLG=null;quizOpen=null;if(S&&S.tut>=0) tutFinish();
+ $('hud').classList.remove('on');S=null;openCamp();
+}
+$('rcamp').onclick=exitToCamp;
+$('rstay').onclick=()=>{$('res').classList.remove('on');if(S) S.paused=false;};
+$('tocamp').onclick=exitToCamp;
+
 /* ---------- стартовый экран ---------- */
 function perkText(){$('perk').textContent=sel.a==='teen'?'Подросток: +8% к скорости бега':'Взрослый: +15 к здоровью';}
 function setG(v){sel.g=v;document.querySelectorAll('[data-g]').forEach(x=>x.classList.toggle('on',x.dataset.g===v));}
@@ -2104,7 +2402,7 @@ perkText();
 /* ---------- сохранение прогресса ---------- */
 const SAVE_KEY='dq_save_v1';
 function saveGame(){
- if(!S) return;const p=S.p;
+ if(!S||S.mode==='story') return;const p=S.p;
  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,name:p.name,gender:p.gender,age:p.age,lvl:p.lvl,xp:p.xp,un:p.un,bep:p.bep,primary:S.primary,
   bossKills:S.bossKills,zk:S.zk,scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,warn:S.warn,zdone:S.zdone,kills:S.kills,res:S.res,cum:S.cum,dry:S.dry,sp:S.sp,rank:S.rank,smooth:S.smooth.filter(q=>q.k==='smooth').map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone}))}));}catch(_){}
 }
@@ -2126,14 +2424,25 @@ window.addEventListener('pagehide',saveGame);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden') saveGame();});
 (function(){
  const sv=loadSave();const b=$('cont');
- if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);$('go').textContent='Новая игра';$('go').classList.add('sec');}
+ if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);$('free').textContent='Новая свободная игра';}
  // подсказка по установке на айфоне
  const ios=typeof navigator!=='undefined'&&/iPhone|iPad|iPod/.test(navigator.userAgent||'');
  const standalone=(typeof navigator!=='undefined'&&navigator.standalone)||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches);
  const tip=$('install');if(tip&&ios&&!standalone) tip.style.display='block';
+ // экран установки при первом открытии в браузере
+ let seen=false;try{seen=sessionStorage.getItem('dq_inst')==='1';}catch(_){}
+ const instOv=$('inst');
+ const showInst=mode=>{if(seen||standalone) return;$('inst_ios').style.display=mode==='ios'?'block':'none';$('inst_and').style.display=mode==='and'?'block':'none';instOv.classList.add('on');};
+ const closeInst=()=>{instOv.classList.remove('on');try{sessionStorage.setItem('dq_inst','1');}catch(_){}};
+ $('inst_close').onclick=closeInst;$('inst_ok').onclick=closeInst;
+ if(ios&&!standalone) showInst('ios');
+ let deferred=null;
+ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;showInst('and');});
+ $('inst_btn').onclick=async()=>{if(!deferred){closeInst();return;}try{deferred.prompt();await deferred.userChoice;}catch(_){}deferred=null;closeInst();};
  if(typeof navigator!=='undefined'&&'serviceWorker' in navigator&&location.protocol==='https:'){try{navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(_){}}
 })();
-$('go').onclick=startGame;
+$('go').onclick=()=>{$('start').classList.remove('on');openCamp();};
+$('free').onclick=()=>startGame();
 $('nm').addEventListener('keydown',e=>{if(e.key==='Enter') startGame();});
 const pv=$('prev'),pg=pv.getContext('2d');let pvT=0;
 function drawPreview(){pvT+=1/60;pg.setTransform(1,0,0,1,0,0);pg.clearRect(0,0,pv.width,pv.height);pg.save();pg.translate(150,262);pg.scale(2.2,2.2);
@@ -2150,7 +2459,7 @@ function loop(ts){
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
