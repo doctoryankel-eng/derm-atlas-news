@@ -36,6 +36,22 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 #resb i{background:linear-gradient(#9ff0ff,#2f9db8)}
 #dryb i{background:linear-gradient(#f3e2b8,#b98f4e)}#lvb i{background:linear-gradient(#ffe07a,#c99a1c)}
 #debuffs{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+#spbtn{pointer-events:auto;margin-top:6px;background:#261b20;border:1px solid rgba(233,193,122,.45);color:var(--gold);border-radius:9px;padding:4px 9px;font-size:12px;cursor:pointer}
+#spbtn b{display:inline-block;min-width:16px;padding:0 4px;margin-left:3px;border-radius:8px;background:#3a2a1c;color:#ffe9bf}
+#spbtn.has{animation:pulse2 1.2s infinite;border-color:var(--gold)}
+@keyframes pulse2{50%{box-shadow:0 0 0 3px rgba(233,193,122,.45)}}
+.skh{font-family:Georgia,serif;color:var(--gold);font-size:14px;margin:10px 0 4px}
+.skr{display:flex;align-items:center;gap:10px;padding:6px 6px;border-radius:9px;background:rgba(255,255,255,.03);margin-bottom:5px}
+.skr.off{opacity:.45}
+.skic{width:38px;height:38px;flex:none}
+.skm{flex:1;min-width:0}
+.skn{font-size:13.5px}
+.skd{font-size:11.5px;color:var(--muted);margin-top:2px}
+.pips{margin-left:6px;white-space:nowrap}
+.pips i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;background:#3a2c30;border:1px solid rgba(233,193,122,.5);vertical-align:middle}
+.pips i.on{background:var(--gold)}
+.skp{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--gold);background:#3a2a1c;color:#ffe9bf;font-size:20px;cursor:pointer}
+.skp:disabled{opacity:.3;cursor:default}
 .chip{font-size:10px;padding:2px 6px;border-radius:9px;border:1px solid;background:rgba(0,0,0,.35)}
 #zone{position:absolute;left:50%;top:12px;transform:translateX(-50%);text-align:center;white-space:nowrap}
 #zname{font-size:22px;color:var(--gold);text-shadow:0 2px 8px #000}
@@ -220,6 +236,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <div class="bar" id="resb"><i></i><span></span></div>
    <div class="bar" id="dryb"><i></i><span></span></div>
    <div id="debuffs"></div>
+   <button id="spbtn">★ Прокачка <b id="spn">1</b></button>
   </div>
  </div>
  <div id="zone"><div id="zname" class="serif">Лоб</div><div id="zsub"></div></div>
@@ -278,6 +295,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   </ul>
   <h3>Навыки врача</h3>
   <ul>
+   <li>★ Прокачка под портретом (клавиша K, кнопка PS на геймпаде): очки навыков за уровень и босса тратятся на ранги заклинаний. Ранг усиливает урон, площадь, радиус ауры или длительность и ускоряет перезарядку</li>
    <li>Рывок: короткий бросок вперёд</li>
    <li>Меню процедур внизу (клавиши C, V, B, N; на телефоне кнопка «Процедуры»): чистка, дерматоскопия, сосудистый и фракционный лазер</li>
    <li>Дерматоскопия: над высыпаниями видно препарат выбора</li>
@@ -353,6 +371,15 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <div id="lgrid"></div>
   <button class="big sec" id="lreset">Вернуть как было</button>
   <button class="big" id="lclose" style="margin-top:8px">Готово</button>
+ </div>
+</div>
+<div id="skills" class="ov">
+ <div class="card panel">
+  <h3 class="serif" style="color:var(--gold);font-size:20px;margin-bottom:4px">Прокачка заклинаний</h3>
+  <div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">Очки навыков: <b id="spleft" style="color:var(--gold)">0</b>. За каждый уровень +2, за победу над боссом +2. У каждого заклинания пять рангов.</div>
+  <div id="sklist"></div>
+  <button class="big sec" id="skreset">Сбросить ранги и вернуть очки</button>
+  <button class="big" id="skclose" style="margin-top:8px">Готово</button>
  </div>
 </div>
 <div id="death" class="ov"><div class="card panel"><h2>Вы выбыли</h2><div id="dtxt">Возвращение в ординаторскую...</div></div></div>
@@ -521,7 +548,7 @@ function startGame(){
  audioInit();
  const name=($('nm').value||'').trim().slice(0,16)||'Доктор';
  S={t:0,mobs:[],proj:[],eproj:[],fx:[],parts:[],texts:[],drops:[],tele:[],marks:[],boss:null,bossRespawn:0,bossKills:0,kills:0,paused:false,spawnT:2,cleanT:0,hintCD:{},quizQ:[],primary:'bpo',attack:null,attackHold:false,hurt:0,banner:0,lastZone:'',hudT:0,blockT:0,hover:null,
-  smooth:[],tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
+  smooth:[],sp:1,rank:{},acdMax:{},tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
   p:{x:300,y:300,tx:null,ty:null,name,gender:sel.g,age:sel.a,hp:0,maxhp:0,lvl:1,xp:0,dir:1,walk:0,moving:false,ang:0.8,cd:{},un:{bpo:true,ada:true,aza:true},deb:{},liver:0,ret:[],bep:2,dead:0}};
  recalcHP(true);
  for(const zid in POP) for(const type in POP[zid]) for(let i=0;i<POP[zid][type];i++) spawnMob(type,zid,true);
@@ -639,6 +666,49 @@ function musicTick(){
 window.addEventListener('pointerdown',()=>{if(S) audioInit();},true);
 window.addEventListener('keydown',()=>{if(S) audioInit();},true);
 
+/* ---------- очки навыков и ранги ---------- */
+const MAXR=5;
+function rk(id){return (S&&S.rank&&S.rank[id])||0;}
+function cdK(id){return 1-0.08*rk(id);}
+function setCd(id,base){const p=S.p;const v=base*cdK(id);p.cd[id]=v;p.cdMax=p.cdMax||{};p.cdMax[id]=v;}
+function durOf(id,base){return base+1.5*rk(id);}
+function radOf(sk){return sk.rad*(1+0.1*rk(sk.id));}
+function auraROf(sk){return sk['aura'+'R']*(1+0.08*rk(sk.id));}
+function motivK(){return 1.35+0.05*rk('motiv');}
+function rankText(id){
+ if(SK[id]){const sk=SK[id];
+  if(sk.type==='aura') return 'Сила +15%, радиус +8%, длительность +1,5 с, перезарядка -8%';
+  if(sk.type==='area') return 'Урон +15%, площадь +10%, перезарядка -8%';
+  return 'Урон +15%, перезарядка -8%';}
+ return {dash:'Перезарядка -8%',scope:'Длительность +1,5 с, перезарядка -8%',extr:'Радиус +10%, перезарядка -8%',
+  spf:'Защита +5%, длительность +1,5 с, перезарядка -8%',motiv:'Бонус к урону +5%, длительность +1,5 с, перезарядка -8%',
+  vlaser:'Поле +10%, урон по розацеа +15%, перезарядка -8%',flaser:'Поле +10%, перезарядка -8%'}[id]||'';
+}
+function isUnl(id){return SK[id]?!!S.p.un[id]:S.p.lvl>=AB[id].lvl;}
+function openSkills(){if(!S) return;renderSkills();$('skills').classList.add('on');S.paused=true;}
+function closeSkills(){$('skills').classList.remove('on');if(S&&!quizOpen) S.paused=false;S.hudT=0;}
+function renderSkills(){
+ $('spleft').textContent=S.sp;
+ const box=$('sklist');box.innerHTML='';
+ const groups=[['Препараты',SKILLS.filter(s=>s.type!=='aura').map(s=>s.id)],['Системные баффы и защита',['doxy','akn','spf','motiv']],['Процедуры и рывок',['extr','scope','vlaser','flaser','dash']]];
+ for(const [title,ids] of groups){
+  const h=document.createElement('div');h.className='skh';h.textContent=title;box.appendChild(h);
+  for(const id of ids){const inf=actInfo(id),r=rk(id),un=isUnl(id);
+   const row=document.createElement('div');row.className='skr'+(un?'':' off');
+   const ic=actIcon(id);ic.className='skic';row.appendChild(ic);
+   const mid=document.createElement('div');mid.className='skm';
+   let pips='';for(let i=0;i<MAXR;i++) pips+='<i class="'+(i<r?'on':'')+'"></i>';
+   mid.innerHTML='<div class="skn">'+inf.name+' <span class="pips">'+pips+'</span></div><div class="skd">'+(un?(r<MAXR?'Следующий ранг: '+rankText(id):'Максимальный ранг'):'Откроется на '+inf.lvl+' уровне')+'</div>';
+   row.appendChild(mid);
+   const bt=document.createElement('button');bt.className='skp';bt.textContent='+';bt.disabled=!(un&&r<MAXR&&S.sp>0);
+   bt.onclick=()=>{if(!(isUnl(id)&&rk(id)<MAXR&&S.sp>0)) return;S.rank[id]=rk(id)+1;S.sp--;sfx('level');renderSkills();saveGame();};
+   row.appendChild(bt);box.appendChild(row);}
+ }
+}
+$('skclose').onclick=closeSkills;
+$('skreset').onclick=()=>{if(!S) return;let n=0;for(const k in S.rank) n+=S.rank[k];S.rank={};S.sp+=n;renderSkills();};
+$('spbtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openSkills();});
+
 /* ---------- сообщения ---------- */
 const recent={};
 function toast(msg,kind){
@@ -676,12 +746,12 @@ function useAbility(id){
  const a=AB[id],p=S.p;if(!a||p.dead>0||S.paused) return;
  if(p.lvl<a.lvl){toast(a.name+': откроется на '+a.lvl+' уровне','bad');return;}
  if((S.acd[id]||0)>0) return;
- S.acd[id]=a.cd;
+ S.acd[id]=a.cd*cdK(id);S.acdMax[id]=S.acd[id];
  switch(id){
   case 'dash':sfx('dash');p.dashA=p.moving?S.moveAng:p.ang;p.dashT=0.17;p.inv=0.3;burst(p.x,p.y,'#fff1d6',12,140,true);rumble(0.25,80);break;
-  case 'scope':S.buff.scope=a.dur;warnOnce('scope','Дерматоскопия: над высыпаниями видно препарат выбора');burst(p.x,p.y,'#96f0ff',14,120,true);break;
+  case 'scope':S.buff.scope=durOf('scope',a.dur);warnOnce('scope','Дерматоскопия: над высыпаниями видно препарат выбора');burst(p.x,p.y,'#96f0ff',14,120,true);break;
   case 'extr':{
-   const R=115;let n=0,bad=0;
+   const R=115*(1+0.1*rk('extr'));let n=0,bad=0;
    for(const m of S.mobs){if(m.dead||m.type==='boss') continue;if(dist(m,p)>R+m.r) continue;
     if(m.type==='comedo'){killMob(m);n++;}
     else if(m.type==='pore'){m.hp-=m.maxhp*0.25;m.lastHitT=S.t;m.flash=0.15;if(m.hp<=0) killMob(m);n++;}
@@ -690,12 +760,12 @@ function useAbility(id){
    if(n) ftext(p.x,p.y,'Чистка: '+n,'#ffffff');
    if(bad) warnOnce('extr','Воспалённые элементы не выдавливают: они воспаляются сильнее и чаще оставляют рубцы','bad');
    break;}
-  case 'spf':sfx('good');S.buff.spf=a.dur;warnOnce('spf','Солнцезащитный крем: урон по врачу вдвое меньше, новые пятна не темнеют','good');break;
-  case 'motiv':sfx('good');S.buff.motiv=a.dur;warnOnce('motiv','Комплаенс: пациент мазать не бросает, все препараты бьют на 35% сильнее','good');burst(p.x,p.y,'#ffd25a',18,160,true);break;
+  case 'spf':sfx('good');S.buff.spf=durOf('spf',a.dur);warnOnce('spf','Солнцезащитный крем: урон по врачу вдвое меньше, новые пятна не темнеют','good');break;
+  case 'motiv':sfx('good');S.buff.motiv=durOf('motiv',a.dur);warnOnce('motiv','Комплаенс: пациент мазать не бросает, все препараты бьют на 35% сильнее','good');burst(p.x,p.y,'#ffd25a',18,160,true);break;
   case 'vlaser':{
-   const tg=laserTarget(['red','tel','brown'],['rosacea','steroid']);const cx=tg[0],cy=tg[1],R=120;let cleared=0,light=0;
+   const tg=laserTarget(['red','tel','brown'],['rosacea','steroid']);const cx=tg[0],cy=tg[1],R=120*(1+0.1*rk('vlaser'));let cleared=0,light=0;
    for(const m of S.mobs){if(m.dead) continue;if(Math.hypot(m.x-cx,m.y-cy)>R+m.r) continue;
-    const vasc=m.type==='rosacea'||m.type==='steroid';const dmg=(vasc?80:m.type==='boss'?20:14)*dmgScale();
+    const vasc=m.type==='rosacea'||m.type==='steroid';const dmg=(vasc?80*(1+0.15*rk('vlaser')):m.type==='boss'?20:14)*dmgScale();
     m.hp-=dmg;m.flash=0.15;m.lastHitT=S.t;if(vasc) m.infl=0;ftext(m.x,m.y,Math.round(dmg),vasc?'#ffe07a':'#ffffff',vasc);if(m.hp<=0) killMob(m);}
    for(const k of S.marks){if(Math.hypot(k.x-cx,k.y-cy)>R+k.r) continue;
     if(k.k==='red'||k.k==='tel'){k.life=0;cleared++;burst(k.x,k.y,'#ffb43a',8,90,true);}
@@ -706,7 +776,7 @@ function useAbility(id){
    warnOnce('vlaser','Сосудистый лазер 595 нм: поле убирает красные пятна и расширенные сосуды, коричневые пятна светлеют, розацеа получает сильный урон','good');
    computeClean();break;}
   case 'flaser':{
-   const tg=laserTarget(['scar','brown'],['pore']);const cx=tg[0],cy=tg[1],R=125;let fixed=0,pores=0;
+   const tg=laserTarget(['scar','brown'],['pore']);const cx=tg[0],cy=tg[1],R=125*(1+0.1*rk('flaser'));let fixed=0,pores=0;
    for(const k of S.marks){if(Math.hypot(k.x-cx,k.y-cy)>R+k.r) continue;
     if(k.k==='scar'){k.life=0;fixed++;S.marks.push({x:k.x,y:k.y,k:'red',r:k.r*1.2,life:20,max:20,zone:k.zone,seed:k.seed});}
     else if(k.k==='brown'){k.life-=k.max*0.5;}}
@@ -749,7 +819,7 @@ function tryCast(sid,target,noAuto,pt){
  else if(pointer.has){const w=pointerWorld();ang=Math.atan2(w[1]-p.y,w[0]-p.x);const d=Math.min(sk.range,Math.hypot(w[0]-p.x,w[1]-p.y));tx=p.x+Math.cos(ang)*d;ty=p.y+Math.sin(ang)*d;}
  else{ang=p.ang;tx=p.x+Math.cos(ang)*220;ty=p.y+Math.sin(ang)*220;}
  if(sk.type==='area'){const d=Math.hypot(tx-p.x,ty-p.y);if(d>sk.range){tx=p.x+Math.cos(ang)*sk.range;ty=p.y+Math.sin(ang)*sk.range;}}
- p.ang=ang;p.cd[sid]=sk.cd;
+ p.ang=ang;setCd(sid,sk.cd);
  const sx=Math.cos(ang)-Math.sin(ang);if(Math.abs(sx)>0.05) p.dir=sx>0?1:-1;
  if(sk.type==='area'){
   sfx('lob');S.proj.push({lob:true,sx:p.x,sy:p.y,tx,ty,x:p.x,y:p.y,t:0,dur:clamp(Math.hypot(tx-p.x,ty-p.y)/900,0.18,0.45),sk,trail:[]});
@@ -765,21 +835,21 @@ function tryCast(sid,target,noAuto,pt){
 }
 function castAura(sk){
  const p=S.p;if((S.buff[sk.id]||0)>0) return false;
- p.cd[sk.id]=sk.cd;S.buff[sk.id]=sk.dur;
- S.fx.push({k:'ring',x:p.x,y:p.y,r:sk.auraR,t:0,max:.6,col:sk.col});sfx('aura');burst(p.x,p.y,sk.col,26,220,true);rumble(0.35,160);
+ setCd(sk.id,sk.cd);S.buff[sk.id]=durOf(sk.id,sk.dur);
+ S.fx.push({k:'ring',x:p.x,y:p.y,r:auraROf(sk),t:0,max:.6,col:sk.col});sfx('aura');burst(p.x,p.y,sk.col,26,220,true);rumble(0.35,160);
  if(sk.id==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Декспантенол (F) поможет','bad');addDeb('cheil',sk.dur+4);warnOnce('aknaura','Изотретиноин работает системно: всё воспалённое вокруг врача гаснет. Самая сильная аура против акне','good');}
  if(sk.id==='doxy'){addDeb('photo',sk.dur);warnOnce('doxy','Доксициклин: аура гасит воспаление вокруг. Фоточувствительность: урон по врачу +25%, солнцезащитный крем снимает эффект. Антибиотик растит резистентность, бензоилпероксид её сдерживает','hint');}
  S.hudT=0;return true;
 }
 function areaHit(x,y,sk){
  sfx('area');
- S.fx.push({k:'ring',x,y,r:sk.rad,t:0,max:.45,col:sk.col});
- S.fx.push({k:'puddle',x,y,r:sk.rad,t:0,max:1.2,col:sk.col});
+ S.fx.push({k:'ring',x,y,r:radOf(sk),t:0,max:.45,col:sk.col});
+ S.fx.push({k:'puddle',x,y,r:radOf(sk),t:0,max:1.2,col:sk.col});
  burst(x,y,sk.col,16,150,true);
- S.fx.push({k:'ring',x,y,r:sk.rad*0.65,t:-0.12,max:.45,col:sk.col});
- for(const m of S.mobs) if(!m.dead&&Math.hypot(m.x-x,m.y-y)<sk.rad+m.r*0.6) hitMob(m,sk,sk.dmg);
+ S.fx.push({k:'ring',x,y,r:radOf(sk)*0.65,t:-0.12,max:.45,col:sk.col});
+ for(const m of S.mobs) if(!m.dead&&Math.hypot(m.x-x,m.y-y)<radOf(sk)+m.r*0.6) hitMob(m,sk,sk.dmg);
  if(sk.id==='aza'){let n=0,other=0;
-  for(const k of S.marks){if(Math.hypot(k.x-x,k.y-y)<sk.rad+k.r){
+  for(const k of S.marks){if(Math.hypot(k.x-x,k.y-y)<radOf(sk)+k.r){
    if(k.k==='brown'){k.life-=k.max*0.4;n++;}else if(k.k==='red'){k.life-=k.max*0.5;n++;}
    else if(k.k==='tel'||k.k==='scar') other++;
    if(k.k==='brown'||k.k==='red'){for(let i=0;i<6;i++) S.parts.push({x:k.x+rnd(-k.r,k.r),y:k.y+rnd(-k.r,k.r),z:2,vx:0,vy:0,vz:rnd(60,120),life:rnd(.5,.9),max:.9,col:'#fff6c8',s:rnd(1.5,3),glow:true});}}}
@@ -818,7 +888,7 @@ function hitMob(m,sk,base){
   S.texts.push({x:m.x,y:m.y,txt:'КОМБО ×'+combo.m,col:'#ffd23f',big:true,t:1.2,dy:18});
   if(!S.combos[combo.name]){S.combos[combo.name]=true;toast('Открыто комбо: '+combo.name+' ('+Object.keys(S.combos).length+' из '+COMBOS.length+')','good');}
  }
- const dmg=base*dmgScale()*mult*rnd(0.9,1.1)*(S.buff.motiv>0?1.35:1);
+ const dmg=base*dmgScale()*mult*rnd(0.9,1.1)*(1+0.15*rk(sk.id))*(S.buff.motiv>0?motivK():1);
  m.hp-=dmg;m.flash=0.12;sfx(combo?'combo':'hit');
  ftext(m.x,m.y,Math.round(dmg),mult>=1.4?'#ffe07a':(mult<0.35?'#9a9a9a':'#ffffff'),mult>=1.4);
  if(e<0.35) hint(m.type,sk.id);
@@ -877,7 +947,7 @@ function killMob(m){
  if(m===S.attack) S.attack=null;
  if(m===S.hover) S.hover=null;
  if(m.type==='boss'){
-  S.boss=null;S.bossRespawn=45;S.bossKills++;
+  S.boss=null;S.bossRespawn=45;S.bossKills++;S.sp+=2;setTimeout(()=>toast('+2 очка навыков за победу над боссом','good'),1500);
   for(let i=0;i<3;i++){S.drops.push({k:'bep',x:m.x+rnd(-50,50),y:m.y+rnd(-50,50),t:0});S.drops.push({k:'folic',x:m.x+rnd(-50,50),y:m.y+rnd(-50,50),t:0});}
   for(const o of S.mobs) if(o.kob&&!o.dead){o.dead=true;burst(o.x,o.y,'#f2f2f8',8);}
   S.tele=[];
@@ -897,7 +967,8 @@ function gainXP(n){
 function onLevel(){
  const p=S.p;recalcHP(true);burst(p.x,p.y,'#e9c17a',34,200);sfx('level');rumble(0.3,250);
  S.fx.push({k:'ring',x:p.x,y:p.y,r:120,t:0,max:.6,col:'#e9c17a'});S.fx.push({k:'pillar',x:p.x,y:p.y,t:0,max:1.1,col:'#ffe7a8'});
- toast('Уровень '+p.lvl+': '+rankTitle(p.lvl)+(LOOK[p.lvl]?'. Новый облик: '+LOOK[p.lvl]:''),'good');
+ S.sp+=2;
+ toast('Уровень '+p.lvl+': '+rankTitle(p.lvl)+(LOOK[p.lvl]?'. Новый облик: '+LOOK[p.lvl]:'')+'. +2 очка навыков','good');
  for(const a of ABIL) if(a.lvl===p.lvl) setTimeout(()=>{toast('Новый навык: '+a.name+(a.id==='dash'?'':' ('+locOf(a.id)+')')+'. '+a.desc,'good');},900);
  for(const sk of SKILLS) if(sk.lvl===p.lvl&&!p.un[sk.id]){
   if(sk.quiz) S.quizQ.push(sk.quiz);
@@ -909,7 +980,7 @@ function onLevel(){
 function damagePlayer(n,quiet){
  const p=S.p;if(p.dead>0||S.paused||p.inv>0) return;
  if(S.tut>=0&&S.tut<4) n*=0.3;
- if(S.buff.spf>0) n*=0.5;
+ if(S.buff.spf>0) n*=Math.max(0.25,0.5-0.05*rk('spf'));
  else if(p.deb.photo) n*=1.25;
  if(S.dry>0) n*=1+S.dry/100*0.4;
  p.hp-=n;S.hurt=Math.min(0.5,S.hurt+(quiet?0.06:0.18));if(!quiet) sfx('hurt');if(!quiet) rumble(n>=20?0.9:0.45,n>=20?220:110);if(!quiet) ftext(p.x,p.y,'-'+Math.round(n),'#ff5a6a');
@@ -937,7 +1008,7 @@ const TUT=[
  {t:'Кнопка 2: адапален, бьёт по площади. Нанесите бензоилпероксид, затем адапален на ту же группу в течение 4 секунд: получится комбо.',hl:'slot1',done:()=>Object.keys(S.combos).length>0},
  {t:'Вылечите ещё 5 высыпаний. Золотые цифры значат препарат выбора, серые значат, что препарат работает слабо.',hl:null,done:()=>S.kills-S.tutKills0>=5},
  {t:'После лечения на коже остаются пятна. Кнопка 3: азелаиновая кислота, она осветляет постакне. Нажмите её.',hl:'slot2',done:()=>(S.tutCast.aza||0)>0},
- {t:'Справа колонка баффов, внизу меню процедур (лазеры, чистка, дерматоскопия), стрелки ◀ ▶ листают панели заклинаний, ✎ меняет ячейки местами, ? открывает справку. На 5 уровне откроется путь к боссу на Локтях. Удачи, доктор!',hl:'buffs',done:null,last:true},
+ {t:'Справа колонка баффов, внизу меню процедур (лазеры, чистка, дерматоскопия), стрелки ◀ ▶ листают панели заклинаний, ✎ меняет ячейки местами, ★ под портретом тратит очки навыков на прокачку, ? открывает справку. На 5 уровне откроется путь к боссу на Локтях. Удачи, доктор!',hl:'buffs',done:null,last:true},
 ];
 function tutStart(){S.tut=0;S.tutMoved=0;S.tutCast={};S.tutKills0=S.kills;$('hud').classList.add('tutOn');renderTut();}
 function tutFinish(){S.tut=-1;try{localStorage.setItem(TUT_KEY,'1');}catch(_){}$('hud').classList.remove('tutOn');tutHL(null);$('tut').style.display='none';}
@@ -1042,12 +1113,12 @@ function update(dt){
 
  // системные ауры: доксициклин, изотретиноин
  let calmR=0;
- if(p.dead<=0) for(const sk of SKILLS){if(sk.type!=='aura'||!((S.buff[sk.id]||0)>0)) continue;calmR=Math.max(calmR,sk.auraR);
-  for(const m of S.mobs){if(m.dead) continue;if(dist(m,p)>sk.auraR+m.r) continue;
+ if(p.dead<=0) for(const sk of SKILLS){if(sk.type!=='aura'||!((S.buff[sk.id]||0)>0)) continue;calmR=Math.max(calmR,auraROf(sk));
+  for(const m of S.mobs){if(m.dead) continue;if(dist(m,p)>auraROf(sk)+m.r) continue;
    const e=EFF[m.type][sk.id];if(!(e>0)) continue;
    if(m.infl>0){m.infl=0;ftext(m.x,m.y,'Воспаление ушло','#a6f0c0');}
    const resK=sk.id==='doxy'?Math.max(0.15,1-S.res/100*0.8):1;
-   const dmg=sk.dps*e*resK*dmgScale()*(S.buff.motiv>0?1.35:1)*dt;m.hp-=dmg;m.lastHit=sk.id;m.lastHitT=S.t;m.sysAcc=(m.sysAcc||0)+dmg;
+   const dmg=sk.dps*e*resK*dmgScale()*(1+0.15*rk(sk.id))*(S.buff.motiv>0?motivK():1)*dt;m.hp-=dmg;m.lastHit=sk.id;m.lastHitT=S.t;m.sysAcc=(m.sysAcc||0)+dmg;
    m.sysT=(m.sysT||0)-dt;if(m.sysT<=0){m.sysT=0.7;if(m.sysAcc>=1){ftext(m.x,m.y,Math.round(m.sysAcc),sk.col);m.sysAcc=0;}m.flash=0.06;}
    if(m.hp<=0) killMob(m);}
   S.cum[sk.id]=(S.cum[sk.id]||0)+dt;
@@ -1468,7 +1539,7 @@ function drawPlayer(){
  if(p.deb.retder){ctx.fillStyle='rgba(199,166,255,.25)';ctx.beginPath();ctx.ellipse(ix,iy,24,11,0,0,TAU);ctx.fill();}
  if(S.buff.motiv>0){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='rgba(255,210,90,'+(0.5+0.2*Math.sin(S.t*8))+')';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(ix,iy,34,15,0,0,TAU);ctx.stroke();ctx.restore();}
  for(const sk of SKILLS){if(sk.type!=='aura'||!((S.buff[sk.id]||0)>0)) continue;
-  const R=sk.auraR,fade=Math.min(1,S.buff[sk.id]/1.5);ctx.save();ctx.globalCompositeOperation='lighter';
+  const R=auraROf(sk),fade=Math.min(1,S.buff[sk.id]/1.5);ctx.save();ctx.globalCompositeOperation='lighter';
   const ag=ctx.createRadialGradient(ix,iy,R*0.3,ix,iy,R*1.41);const c=hexRgb(sk.col).join(',');
   ag.addColorStop(0,'rgba('+c+',0)');ag.addColorStop(0.85,'rgba('+c+','+(0.10*fade)+')');ag.addColorStop(1,'rgba('+c+',0)');
   ctx.fillStyle=ag;ctx.beginPath();ctx.ellipse(ix,iy,R*1.41,R*0.707,0,0,TAU);ctx.fill();
@@ -1496,7 +1567,7 @@ function drawProj(pr){
  const [ix,iy]=iso(pr.x,pr.y);const c=pr.sk.col;
  if(pr.lob){
   const h=pr.h||10;const [tx,ty]=iso(pr.tx,pr.ty);
-  ctx.strokeStyle=c;ctx.globalAlpha=0.35;ctx.lineWidth=1.5;ctx.setLineDash([4,6]);ctx.beginPath();ctx.ellipse(tx,ty,pr.sk.rad*1.41,pr.sk.rad*0.707,0,0,TAU);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+  ctx.strokeStyle=c;ctx.globalAlpha=0.35;ctx.lineWidth=1.5;ctx.setLineDash([4,6]);ctx.beginPath();ctx.ellipse(tx,ty,radOf(pr.sk)*1.41,radOf(pr.sk)*0.707,0,0,TAU);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
   ctx.fillStyle='rgba(0,0,0,.2)';ctx.beginPath();ctx.ellipse(ix,iy,8,4,0,0,TAU);ctx.fill();
   ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(ix,iy-h,1,ix,iy-h,18);g.addColorStop(0,'#fff');g.addColorStop(0.3,c);g.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle=g;ctx.beginPath();ctx.arc(ix,iy-h,18,0,TAU);ctx.fill();ctx.globalCompositeOperation='source-over';return;
@@ -1525,7 +1596,7 @@ function drawLighting(){
  const R0=Math.max(W,H)*0.5;
  if(S){
   const pp=toScreen(S.p.x,S.p.y,30);hole(pp[0],pp[1],R0*(1+0.02*Math.sin(S.t*3)),1);
-  for(const pr of S.proj){const q=toScreen(pr.x,pr.y,pr.lob?(pr.h||10):22);hole(q[0],q[1],(pr.sk.splash||pr.sk.rad?110:70)*Z,0.8);}
+  for(const pr of S.proj){const q=toScreen(pr.x,pr.y,pr.lob?(pr.h||10):22);hole(q[0],q[1],(pr.sk.splash||radOf(pr.sk)?110:70)*Z,0.8);}
   for(const f of S.fx){if(f.t<0) continue;if(f.k==='beam'){for(let i=0;i<=4;i++){const q=toScreen(f.x+(f.x2-f.x)*i/4,f.y+(f.y2-f.y)*i/4,20);hole(q[0],q[1],110*Z,0.8*(1-f.t/f.max));}}
   if(f.k==='ring'||f.k==='pillar'||f.k==='frac'||f.k==='vfield'){const q=toScreen(f.x,f.y,0);hole(q[0],q[1],(f.r||90)*1.6*Z,0.7*(1-f.t/f.max));}}
   for(const d of S.drops){const q=toScreen(d.x,d.y,12);hole(q[0],q[1],50*Z,0.6);}
@@ -1748,8 +1819,8 @@ function buildSlots(){
 function updSlot(b,id,key){
   const p=S.p;let un,ready=false,cdr=0,act=false,lk='';
   if(!id){un=true;}
-  else if(SK[id]){const sk=SK[id];un=!!p.un[id];ready=!un&&p.lvl>=sk.lvl;cdr=(p.cd[id]||0)/sk.cd;act=(S.buff[id]||0)>0;if(id==='mtx'&&p.deb.transam) cdr=1;lk=ready?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;}
-  else{const a=AB[id];un=p.lvl>=a.lvl;cdr=(S.acd[id]||0)/a.cd;act=(S.buff[id]||0)>0;lk='🔒<br>ур. '+a.lvl;}
+  else if(SK[id]){const sk=SK[id];un=!!p.un[id];ready=!un&&p.lvl>=sk.lvl;cdr=(p.cd[id]||0)/((p.cdMax&&p.cdMax[id])||sk.cd);act=(S.buff[id]||0)>0;if(id==='mtx'&&p.deb.transam) cdr=1;lk=ready?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;}
+  else{const a=AB[id];un=p.lvl>=a.lvl;cdr=(S.acd[id]||0)/((S.acdMax&&S.acdMax[id])||a.cd);act=(S.buff[id]||0)>0;lk='🔒<br>ур. '+a.lvl;}
   b.classList.toggle('locked',!un);b.classList.toggle('ready',ready);b.classList.toggle('primary',!!id&&un&&S.primary===id);b.classList.toggle('act',act);
   const l=b.querySelector('.lk');if(l&&l.innerHTML!==lk) l.innerHTML=lk;
   const c=b.querySelector('.cdv');if(c) c.style.height=(Math.min(1,cdr)*100)+'%';
@@ -1763,13 +1834,13 @@ function updateCluster(){
  for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];
   let un,ready=false,cdr=0,act=false,lk='';
   if(!id){un=true;}
-  else if(SK[id]){const sk=SK[id];un=!!p.un[id];ready=!un&&p.lvl>=sk.lvl;cdr=(p.cd[id]||0)/sk.cd;act=(S.buff[id]||0)>0;if(id==='mtx'&&p.deb.transam) cdr=1;lk=ready?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;}
-  else{const a=AB[id];un=p.lvl>=a.lvl;cdr=(S.acd[id]||0)/a.cd;act=(S.buff[id]||0)>0;lk='🔒<br>ур. '+a.lvl;}
+  else if(SK[id]){const sk=SK[id];un=!!p.un[id];ready=!un&&p.lvl>=sk.lvl;cdr=(p.cd[id]||0)/((p.cdMax&&p.cdMax[id])||sk.cd);act=(S.buff[id]||0)>0;if(id==='mtx'&&p.deb.transam) cdr=1;lk=ready?'Допуск<br>нажмите':'🔒<br>ур. '+sk.lvl;}
+  else{const a=AB[id];un=p.lvl>=a.lvl;cdr=(S.acd[id]||0)/((S.acdMax&&S.acdMax[id])||a.cd);act=(S.buff[id]||0)>0;lk='🔒<br>ур. '+a.lvl;}
   b.classList.toggle('locked',!un);b.classList.toggle('ready',ready);b.classList.toggle('primary',un&&S.primary===id);b.classList.toggle('act',act);
   const l=b.querySelector('.lk');if(l&&l.innerHTML!==lk) l.innerHTML=lk;
   const c=b.querySelector('.cdv');if(c) c.style.height=(Math.min(1,cdr)*100)+'%';
   const k=b.querySelector('.ky');if(k) k.textContent=pad.active?SLOT_GLYPH[i]:String(i+1);}
- const d=$('slotdash');if(d){d.querySelector('.cdv').style.height=((S.acd.dash||0)/AB.dash.cd*100)+'%';d.querySelector('.ky').textContent=pad.active?'R2':'Пробел';}
+ const d=$('slotdash');if(d){d.querySelector('.cdv').style.height=((S.acd.dash||0)/((S.acdMax&&S.acdMax.dash)||AB.dash.cd)*100)+'%';d.querySelector('.ky').textContent=pad.active?'R2':'Пробел';}
  const bp=$('slotbep');if(bp) bp.querySelector('.ky').textContent=pad.active?'L2':'F';
  const bc=$('bepct');if(bc) bc.textContent=p.bep;
 }
@@ -1823,6 +1894,7 @@ function onSkill(sid){
 function updateHUD(){
  const p=S.p;
  $('plvl').textContent='Уровень '+p.lvl+' · '+rankTitle(p.lvl);
+ $('spn').textContent=S.sp;$('spbtn').classList.toggle('has',S.sp>0);
  $('hpb').firstElementChild.style.width=(p.hp/p.maxhp*100)+'%';$('hpb').lastElementChild.textContent=Math.ceil(p.hp)+' / '+p.maxhp;
  const nx=need(p.lvl);$('xpb').firstElementChild.style.width=(p.xp/nx*100)+'%';$('xpb').lastElementChild.textContent=p.xp+' / '+nx+' опыта';
  const lv=$('lvb');if(p.un.mtx){lv.style.display='block';lv.firstElementChild.style.width=Math.min(100,p.liver)+'%';lv.lastElementChild.textContent='Печень: '+Math.round(p.liver)+'%';}
@@ -1893,7 +1965,8 @@ window.addEventListener('keydown',e=>{
  const k=(e.key||'').toLowerCase();keys[k]=true;if(k===' '&&S) e.preventDefault();
  if(!S) return;
  if(k==='h'||k==='р'){toggleHelp();return;}
- if(k==='escape'){if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
+ if(k==='k'||k==='л'){if($('skills').classList.contains('on')) closeSkills();else openSkills();return;}
+ if(k==='escape'){if($('skills').classList.contains('on')){closeSkills();return;}if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
  if(S.paused) return;
  if(k>='1'&&k<='4'){useSlot(+k-1);e.preventDefault();}
  if(k>='5'&&k<='8'){useBuffSlot(+k-5);e.preventDefault();}
@@ -1983,6 +2056,9 @@ function pollPad(dt){
   pad.lx=pad.ly=0;
   if(navY&&pad.navT<=0){pad.navT=0.22;const n=qButtons().length||1;qFocus=(qFocus+navY+n)%n;setQFocus();}
   if(P(0)){if($('qc').style.display==='block') $('qc').click();else{const b=qButtons()[qFocus];if(b) b.click();}}
+ }else if($('skills').classList.contains('on')){
+  pad.lx=pad.ly=0;
+  if(P(1)||P(9)) closeSkills();
  }else if($('layout').classList.contains('on')){
   pad.lx=pad.ly=0;
   if(P(0)||P(1)||P(9)) closeLayout();
@@ -1996,6 +2072,7 @@ function pollPad(dt){
    if(P(5)) setPage(PAGE+1);
    [12,15,13,14].forEach((btn,i)=>{if(P(btn)) useBuffSlot(i);});
    if(P(10)) setBPage(BPAGE+1);
+   if(P(16)) openSkills();
    if(P(8)){PSEL=(PSEL+1)%4;const id=LAYOUT[POFF+PSEL];ftext(S.p.x,S.p.y,'Процедура: '+(id?actInfo(id).name:'пусто'),'#9fe8ff');S.hudT=0;}
    if(P(11)||P(17)) useProcSlot(PSEL);
    [0,2,3,1].forEach((btn,i)=>{const id=LAYOUT[PAGE*4+i];if(!id) return;if(SK[id]){if(B(btn)&&(S.p.un[id]||P(btn))) padCast(id,false);}else if(P(btn)) useAbility(id);});
@@ -2029,7 +2106,7 @@ const SAVE_KEY='dq_save_v1';
 function saveGame(){
  if(!S) return;const p=S.p;
  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,name:p.name,gender:p.gender,age:p.age,lvl:p.lvl,xp:p.xp,un:p.un,bep:p.bep,primary:S.primary,
-  bossKills:S.bossKills,zk:S.zk,scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,warn:S.warn,zdone:S.zdone,kills:S.kills,res:S.res,cum:S.cum,dry:S.dry,smooth:S.smooth.filter(q=>q.k==='smooth').map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone}))}));}catch(_){}
+  bossKills:S.bossKills,zk:S.zk,scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,warn:S.warn,zdone:S.zdone,kills:S.kills,res:S.res,cum:S.cum,dry:S.dry,sp:S.sp,rank:S.rank,smooth:S.smooth.filter(q=>q.k==='smooth').map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone}))}));}catch(_){}
 }
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&s.v===1?s:null;}catch(_){return null;}}
 function continueGame(sv){
@@ -2040,7 +2117,7 @@ function continueGame(sv){
  recalcHP(true);
  if(sv.primary&&p.un[sv.primary]) S.primary=sv.primary;
  S.bossKills=sv.bossKills|0;S.zk=Object.assign(S.zk,sv.zk||{});S.scars=sv.scars|0;S.scarsFixed=sv.scarsFixed|0;
- S.combos=sv.combos||{};S.warn=sv.warn||{};S.zdone=sv.zdone||{};S.kills=sv.kills|0;S.res=+sv.res||0;S.cum=Object.assign({doxy:0,akn:0},sv.cum||{});S.dry=+sv.dry||0;S.smooth=(sv.smooth||[]).map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone,k:'smooth',life:Infinity,max:Infinity,seed:Math.random()}));
+ S.combos=sv.combos||{};S.warn=sv.warn||{};S.zdone=sv.zdone||{};S.kills=sv.kills|0;S.res=+sv.res||0;S.cum=Object.assign({doxy:0,akn:0},sv.cum||{});S.dry=+sv.dry||0;S.rank=sv.rank||{};S.sp=sv.sp!=null?sv.sp|0:1+2*(p.lvl-1);S.smooth=(sv.smooth||[]).map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone,k:'smooth',life:Infinity,max:Infinity,seed:Math.random()}));
  if(S.tut>=0) tutFinish();
  computeClean();drawPortrait();updateHUD();
  toast('С возвращением! Уровень '+p.lvl+': '+rankTitle(p.lvl),'good');
