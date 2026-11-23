@@ -438,6 +438,9 @@ def main():
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {site}/sitemap.xml\n", encoding="utf-8")
     if config.get("cname"):
         (DIST / "CNAME").write_text(config["cname"] + "\n", encoding="utf-8")
+    game_src = ROOT / "game"
+    if game_src.is_dir():
+        shutil.copytree(game_src, DIST / "game")
 
     print(f"Собрано карточек: {len(cards)}. Результат в {DIST}")
     return 0

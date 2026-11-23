@@ -1,0 +1,17 @@
+{
+  "name": "ДермаКвест: Хроники ремиссии",
+  "short_name": "ДермаКвест",
+  "description": "Игра для дерматологов: лечите акне, розацеа и псориаз, собирайте комбо препаратов и прокачивайте врача",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#120d10",
+  "theme_color": "#120d10",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
