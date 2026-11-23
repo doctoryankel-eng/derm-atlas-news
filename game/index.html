@@ -89,6 +89,11 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-touch-cal
 .slot .ic{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:64%;height:64%}
 .slot .nm{position:relative;z-index:3;font-size:7.5px;line-height:1.02;margin-bottom:5px;text-shadow:0 1px 2px #000;white-space:normal;text-align:center;max-width:80%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow-wrap:break-word}
 .slot.s0 .nm{font-size:9px;margin-bottom:8px;max-width:76%}
+#proc{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;pointer-events:none}
+#proctg{pointer-events:auto;font-size:11px;color:#9fe8ff;background:rgba(18,12,15,.88);border:1px solid rgba(159,232,255,.45);border-radius:12px;padding:5px 9px;cursor:default;font-family:Georgia,serif}
+#procs{display:flex;gap:6px;pointer-events:auto}
+.slot.pr{position:relative;width:56px;height:56px;left:auto;top:auto;flex:none;border-color:rgba(159,232,255,.55);background:radial-gradient(circle at 50% 32%,#24363e,#0f171b)}
+.slot.sel{box-shadow:0 0 0 3px var(--gold)}
 .slot.ab .nm{display:-webkit-box;position:relative;right:auto;top:auto;transform:none;background:none;padding:0;border-radius:0;font-size:7.5px;white-space:normal}
 .slot .ky{position:absolute;top:5px;left:0;right:0;text-align:center;font-size:10px;color:var(--muted);z-index:3}
 .slot.fixed .ky{font-size:8px;top:3px}
@@ -176,6 +181,13 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  #bossbar{top:118px;width:72vw}
  #joy{bottom:22px;left:14px;width:116px;height:116px}
  #cluster{transform:scale(.78)}
+ #proc{left:8px;bottom:242px;transform:none}
+ #proctg{cursor:pointer;padding:6px 9px}
+ #proctg::after{content:' ▸'}
+ #proc.open #proctg::after{content:' ◂'}
+ #procs{display:none}
+ #proc.open #procs{display:flex;gap:4px}
+ .slot.pr{width:46px;height:46px}.slot.pr .nm{font-size:6.5px;margin-bottom:4px}
  #sndbtn{left:8px;right:auto;top:auto;bottom:196px;width:34px;height:34px;font-size:14px}
  #tut{top:222px;padding:9px 11px}#tuttxt{font-size:12.5px}
  #hud.tutOn #toasts{top:360px}
@@ -221,6 +233,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  <div id="toasts"></div>
  <div id="cluster"></div>
  <div id="buffs"></div>
+ <div id="proc"><div id="proctg">Процедуры</div><div id="procs"></div></div>
  <div id="helpbtn" class="panel serif">?</div>
  <div id="sndbtn" class="panel">🔊</div>
  <div id="tut" class="panel"><div id="tutstep"></div><div id="tuttxt"></div><div class="tutb"><button id="tutnext">Дальше ›</button><button id="tutskip">Пропустить обучение</button></div></div>
@@ -265,10 +278,14 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   </ul>
   <h3>Навыки врача</h3>
   <ul>
-   <li>Рывок: короткий бросок вперёд. Дерматоскопия: над высыпаниями видно препарат выбора</li>
+   <li>Рывок: короткий бросок вперёд</li>
+   <li>Меню процедур внизу (клавиши C, V, B, N; на телефоне кнопка «Процедуры»): чистка, дерматоскопия, сосудистый и фракционный лазер</li>
+   <li>Дерматоскопия: над высыпаниями видно препарат выбора</li>
    <li>Чистка комедонов и пробок пор. Воспалённое давить нельзя</li>
    <li>Солнцезащитный крем: урон по врачу вдвое меньше и пятна не темнеют. Комплаенс: препараты сильнее на 35%</li>
-   <li>Сосудистый лазер 595 нм по сосудам и красным пятнам. Фракционный лазер по рубцам</li>
+   <li>Сосудистый лазер 595 нм: поле в точке, убирает красные пятна и сосуды, осветляет коричневые, бьёт по розацеа</li>
+   <li>Фракционный лазер: поле в точке, сглаживает рубцы, сужает поры, кожа становится гладкой и там почти не появляются новые высыпания</li>
+   <li>Лазеры сами наводятся на ближайшие пятна, рубцы и поры рядом с врачом</li>
    <li>Навыки открываются с уровнем. С каждым уровнем меняется и облик врача, от ординатора до академика</li>
   </ul>
   <h3>Геймпад (PS5 DualSense и другие)</h3>
@@ -277,6 +294,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <li>✕ □ △ ○: четыре слота текущей панели, препараты бьют очередью при удержании</li>
    <li>L1 / R1: сменить панель заклинаний</li>
    <li>Крестовина ↑ → ↓ ←: четыре баффа из колонки справа, нажатие левого стика: страница баффов</li>
+   <li>Create: выбрать процедуру, R3 или тачпад: выполнить</li>
    <li>R2: рывок, L2: декспантенол, Options: справка и пауза</li>
    <li>Вопросы допуска: крестовина вверх и вниз, ✕ выбрать</li>
   </ul>
@@ -373,17 +391,17 @@ const inElbows=(x,y)=>x>=MID&&y>=MID;
    type 'proj' : точечно, снаряд летит в цель
    type 'area' : по площади, капля падает в точку и накрывает группу */
 const SKILLS=[
- {id:'bpo',key:'1',name:'Бензоил­пероксид',inn:'5%, гель: точечно и быстро',lvl:1,cd:0.35,dmg:11,range:430,type:'proj',speed:820,col:'#ffffff',r:7,tags:['bpo']},
- {id:'ada',key:'2',name:'Адапален',inn:'0,1%, гель: по площади',lvl:1,cd:2.0,dmg:15,range:420,type:'area',rad:120,col:'#c7a6ff',retinoid:true,tags:['ada']},
- {id:'aza',key:'3',name:'Азелаи­новая кислота',inn:'20%, крем: по площади, осветляет пятна',lvl:1,cd:1.6,dmg:11,range:420,type:'area',rad:95,col:'#f2e3a0',tags:['aza']},
- {id:'clin',key:'4',name:'Клинда­мицин',inn:'1%, раствор: точечно. В монотерапии растит резистентность',lvl:2,cd:0.5,dmg:12,range:430,type:'proj',speed:720,col:'#7fe0ff',r:7,tags:['clin']},
- {id:'metr',key:'5',name:'Метро­нидазол',inn:'1%, крем: точечно, препарат для розацеа',lvl:2,cd:0.5,dmg:12,range:430,type:'proj',speed:700,col:'#ff9fc0',r:7},
- {id:'akr',key:'6',name:'Бетаме­тазон',inn:'топический стероид: точечно',lvl:2,cd:0.8,dmg:14,range:400,type:'proj',speed:560,col:'#9fd3ff',r:8},
- {id:'eff',key:'7',name:'Адапален + бензоил­пероксид',inn:'фиксированная комбинация: по площади',lvl:3,cd:1.8,dmg:22,range:440,type:'area',rad:130,col:'#e8e0ff',retinoid:true,tags:['bpo','ada']},
- {id:'doxy',key:'',name:'Доксици­клин',inn:'таблетки: системная аура вокруг врача, гасит воспаление',lvl:3,cd:30,dur:12,auraR:170,dps:11,type:'aura',col:'#7fe0a0',range:0},
- {id:'akn',key:'8',name:'Изотре­тиноин',inn:'системно: мощная аура, бьёт по всем формам акне и порам',lvl:4,cd:36,dur:14,auraR:235,dps:17,type:'aura',col:'#ff9f43',range:0,quiz:'akn'},
- {id:'mtx',key:'9',name:'Метотре­ксат',inn:'подкожно',lvl:5,cd:1.8,dmg:46,range:460,type:'proj',speed:760,col:'#ffd23f',r:9,syringe:true,quiz:'mtx'},
- {id:'efl',key:'0',name:'Нетаки­маб',inn:'генно-инженерный биопрепарат, ингибитор интерлейкина-17',lvl:6,cd:18,dmg:170,range:520,type:'proj',speed:480,col:'#8f7bff',r:20,splash:120,quiz:'efl'},
+ {id:'bpo',key:'1',name:'Бензоил­пероксид',inn:'5%, гель: точечно и быстро',lvl:1,cd:0.3,dmg:11,range:430,type:'proj',speed:820,col:'#ffffff',r:7,tags:['bpo']},
+ {id:'ada',key:'2',name:'Адапален',inn:'0,1%, гель: по площади',lvl:1,cd:1.2,dmg:15,range:420,type:'area',rad:120,col:'#c7a6ff',retinoid:true,tags:['ada']},
+ {id:'aza',key:'3',name:'Азелаи­новая кислота',inn:'20%, крем: по площади, осветляет пятна',lvl:1,cd:1.0,dmg:11,range:420,type:'area',rad:95,col:'#f2e3a0',tags:['aza']},
+ {id:'clin',key:'4',name:'Клинда­мицин',inn:'1%, раствор: точечно. В монотерапии растит резистентность',lvl:2,cd:0.4,dmg:12,range:430,type:'proj',speed:720,col:'#7fe0ff',r:7,tags:['clin']},
+ {id:'metr',key:'5',name:'Метро­нидазол',inn:'1%, крем: точечно, препарат для розацеа',lvl:2,cd:0.4,dmg:12,range:430,type:'proj',speed:700,col:'#ff9fc0',r:7},
+ {id:'akr',key:'6',name:'Бетаме­тазон',inn:'топический стероид: точечно',lvl:2,cd:0.6,dmg:14,range:400,type:'proj',speed:560,col:'#9fd3ff',r:8},
+ {id:'eff',key:'7',name:'Адапален + бензоил­пероксид',inn:'фиксированная комбинация: по площади',lvl:3,cd:1.1,dmg:22,range:440,type:'area',rad:130,col:'#e8e0ff',retinoid:true,tags:['bpo','ada']},
+ {id:'doxy',key:'',name:'Доксици­клин',inn:'таблетки: системная аура вокруг врача, гасит воспаление',lvl:3,cd:18,dur:12,auraR:170,dps:11,type:'aura',col:'#7fe0a0',range:0},
+ {id:'akn',key:'8',name:'Изотре­тиноин',inn:'системно: мощная аура, бьёт по всем формам акне и порам',lvl:4,cd:22,dur:14,auraR:235,dps:17,type:'aura',col:'#ff9f43',range:0,quiz:'akn'},
+ {id:'mtx',key:'9',name:'Метотре­ксат',inn:'подкожно',lvl:5,cd:1.2,dmg:46,range:460,type:'proj',speed:760,col:'#ffd23f',r:9,syringe:true,quiz:'mtx'},
+ {id:'efl',key:'0',name:'Нетаки­маб',inn:'генно-инженерный биопрепарат, ингибитор интерлейкина-17',lvl:6,cd:10,dmg:170,range:520,type:'proj',speed:480,col:'#8f7bff',r:20,splash:120,quiz:'efl'},
 ];
 const SK={};SKILLS.forEach(s=>SK[s.id]=s);
 
@@ -459,13 +477,13 @@ const QUIZ={
 
 /* ---------- навыки врача ---------- */
 const ABIL=[
- {id:'dash',keys:[' '],label:'Пробел',name:'Рывок',lvl:1,cd:4,desc:'Быстрый рывок по направлению движения, неуязвимость на мгновение'},
- {id:'scope',keys:['q','й'],label:'Q',name:'Дерматоскопия',lvl:2,cd:14,dur:8,desc:'Над каждым высыпанием видно препарат выбора'},
- {id:'extr',keys:['e','у'],label:'E',name:'Чистка',lvl:2,cd:7,desc:'Удаляет комедоны и пробки пор рядом. Воспалённые элементы давить нельзя'},
- {id:'spf',keys:['r','к'],label:'R',name:'Солнцезащитный крем',lvl:3,cd:22,dur:10,desc:'Урон по врачу вдвое меньше, новые пятна не темнеют'},
- {id:'motiv',keys:['t','е'],label:'T',name:'Комплаенс',lvl:4,cd:28,dur:10,desc:'Пациент не бросает лечение: урон всех препаратов +35%'},
- {id:'vlaser',keys:['y','н'],label:'Y',name:'Сосудистый лазер',lvl:6,cd:16,desc:'Луч 595 нм: убирает расширенные сосуды и красные пятна, бьёт по розацеа'},
- {id:'flaser',keys:['u','г'],label:'U',name:'Фракционный лазер',lvl:7,cd:20,desc:'Сглаживает атрофические рубцы и осветляет пятна в области'},
+ {id:'dash',keys:[' '],label:'Пробел',name:'Рывок',lvl:1,cd:2.5,desc:'Быстрый рывок по направлению движения, неуязвимость на мгновение'},
+ {id:'scope',keys:['q','й'],label:'Q',name:'Дермато­скопия',lvl:2,cd:8,dur:8,desc:'Над каждым высыпанием видно препарат выбора'},
+ {id:'extr',keys:['e','у'],label:'E',name:'Чистка',lvl:2,cd:4,desc:'Удаляет комедоны и пробки пор рядом. Воспалённые элементы давить нельзя'},
+ {id:'spf',keys:['r','к'],label:'R',name:'Солнцезащитный крем',lvl:3,cd:14,dur:10,desc:'Урон по врачу вдвое меньше, новые пятна не темнеют'},
+ {id:'motiv',keys:['t','е'],label:'T',name:'Комплаенс',lvl:4,cd:16,dur:10,desc:'Пациент не бросает лечение: урон всех препаратов +35%'},
+ {id:'vlaser',keys:['y','н'],label:'Y',name:'Сосу­дистый лазер',lvl:3,cd:6,desc:'Поле 595 нм в выбранной точке: убирает красные пятна и сосуды, осветляет коричневые, бьёт по розацеа'},
+ {id:'flaser',keys:['u','г'],label:'U',name:'Фракци­онный лазер',lvl:4,cd:8,desc:'Поле в выбранной точке: сглаживает рубцы, сужает поры, кожа становится гладкой'},
 ];
 const AB={};ABIL.forEach(a=>AB[a.id]=a);
 const BEST={};
@@ -492,7 +510,8 @@ function computeClean(){
  for(const k of S.marks){const w=MARK[k.k].w;if(w) pen[k.zone]+=w*Math.min(1,k.life/k.max*((k.k==='red'||k.k==='brown')?1:1.5));}
  for(const z of ZONES){
   let c=z.id==='elbows'?Math.min(1,S.zk.elbows/z.quota)*0.4+(S.bossKills>0?0.6:0):Math.min(1,S.zk[z.id]/z.quota);
-  S.zc[z.id]=clamp(c-Math.min(0.3,pen[z.id]),0,1);
+  const sm=S.smooth?S.smooth.filter(q=>q.zone===z.id&&q.k==='smooth').length:0;
+  S.zc[z.id]=clamp(c-Math.min(0.3,pen[z.id])+Math.min(0.12,sm*0.03),0,1);
  }
 }
 function zoneClean(zid){return S.zc[zid]||0;}
@@ -502,7 +521,7 @@ function startGame(){
  audioInit();
  const name=($('nm').value||'').trim().slice(0,16)||'Доктор';
  S={t:0,mobs:[],proj:[],eproj:[],fx:[],parts:[],texts:[],drops:[],tele:[],marks:[],boss:null,bossRespawn:0,bossKills:0,kills:0,paused:false,spawnT:2,cleanT:0,hintCD:{},quizQ:[],primary:'bpo',attack:null,attackHold:false,hurt:0,banner:0,lastZone:'',hudT:0,blockT:0,hover:null,
-  tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
+  smooth:[],tut:-1,tutMoved:0,tutCast:{},tutKills0:0,acd:{},buff:{},cum:{doxy:0,akn:0},dry:0,selAb:'scope',scarsFixed:0,moveAng:0.8,zk:{forehead:0,chin:0,cheeks:0,elbows:0},zc:{forehead:0,chin:0,cheeks:0,elbows:0},zdone:{},res:0,resWarn:false,scars:0,combos:{},warn:{},
   p:{x:300,y:300,tx:null,ty:null,name,gender:sel.g,age:sel.a,hp:0,maxhp:0,lvl:1,xp:0,dir:1,walk:0,moving:false,ang:0.8,cd:{},un:{bpo:true,ada:true,aza:true},deb:{},liver:0,ret:[],bep:2,dead:0}};
  recalcHP(true);
  for(const zid in POP) for(const type in POP[zid]) for(let i=0;i<POP[zid][type];i++) spawnMob(type,zid,true);
@@ -530,6 +549,7 @@ function findSpot(type,zid,initial){
   if(Math.hypot(x-300,y-300)<260) continue;
   if(zid==='elbows'&&Math.hypot(x-1960,y-1960)<170) continue;
   if(S.mobs.some(m=>Math.hypot(m.x-x,m.y-y)<m.r+r+(type==='pore'||m.type==='pore'?60:10))) continue;
+  if(S.smooth&&inSmooth(x,y)) continue;
   return [x,y];
  }
  return null;
@@ -673,30 +693,45 @@ function useAbility(id){
   case 'spf':sfx('good');S.buff.spf=a.dur;warnOnce('spf','Солнцезащитный крем: урон по врачу вдвое меньше, новые пятна не темнеют','good');break;
   case 'motiv':sfx('good');S.buff.motiv=a.dur;warnOnce('motiv','Комплаенс: пациент мазать не бросает, все препараты бьют на 35% сильнее','good');burst(p.x,p.y,'#ffd25a',18,160,true);break;
   case 'vlaser':{
-   const ang=aimAngle(560);p.ang=ang;const L=560,Wd=46;const x2=p.x+Math.cos(ang)*L,y2=p.y+Math.sin(ang)*L;
-   let hit=0,cleared=0;
-   for(const m of S.mobs){if(m.dead) continue;if(segDist(m.x,m.y,p.x,p.y,x2,y2)>Wd+m.r) continue;
-    const vasc=m.type==='rosacea'||m.type==='steroid';const dmg=(vasc?75:m.type==='boss'?20:14)*dmgScale();
-    m.hp-=dmg;m.flash=0.15;m.lastHitT=S.t;ftext(m.x,m.y,Math.round(dmg),vasc?'#ffe07a':'#ffffff',vasc);hit++;if(m.hp<=0) killMob(m);}
-   for(const k of S.marks){if((k.k==='tel'||k.k==='red')&&segDist(k.x,k.y,p.x,p.y,x2,y2)<Wd+k.r){k.life=0;cleared++;burst(k.x,k.y,'#ffb43a',6,80,true);}}
-   sfx('laser');S.fx.push({k:'beam',x:p.x,y:p.y,x2,y2,t:0,max:.35,col:'#ffb43a'});
-   if(cleared) ftext(p.x,p.y,'Сосуды и пятна убраны: '+cleared,'#ffd28a');
-   warnOnce('vlaser','Сосудистый лазер 595 нм: убирает расширенные сосуды и красные пятна, работает по розацеа','good');
+   const tg=laserTarget(['red','tel','brown'],['rosacea','steroid']);const cx=tg[0],cy=tg[1],R=120;let cleared=0,light=0;
+   for(const m of S.mobs){if(m.dead) continue;if(Math.hypot(m.x-cx,m.y-cy)>R+m.r) continue;
+    const vasc=m.type==='rosacea'||m.type==='steroid';const dmg=(vasc?80:m.type==='boss'?20:14)*dmgScale();
+    m.hp-=dmg;m.flash=0.15;m.lastHitT=S.t;if(vasc) m.infl=0;ftext(m.x,m.y,Math.round(dmg),vasc?'#ffe07a':'#ffffff',vasc);if(m.hp<=0) killMob(m);}
+   for(const k of S.marks){if(Math.hypot(k.x-cx,k.y-cy)>R+k.r) continue;
+    if(k.k==='red'||k.k==='tel'){k.life=0;cleared++;burst(k.x,k.y,'#ffb43a',8,90,true);}
+    else if(k.k==='brown'){k.life-=k.max*0.6;light++;burst(k.x,k.y,'#ffd28a',5,70,true);}}
+   addSmooth(cx,cy,R*0.95,'even');
+   sfx('laser');S.fx.push({k:'vfield',x:cx,y:cy,r:R,t:0,max:.8,col:'#ffb43a'});
+   if(cleared||light) ftext(cx,cy,(cleared?'Пятен и сосудов убрано: '+cleared:'')+(cleared&&light?', ':'')+(light?'осветлено: '+light:''),'#ffd28a',true);
+   warnOnce('vlaser','Сосудистый лазер 595 нм: поле убирает красные пятна и расширенные сосуды, коричневые пятна светлеют, розацеа получает сильный урон','good');
    computeClean();break;}
   case 'flaser':{
-   let best=null,bd=320;for(const k of S.marks){if(k.k!=='scar') continue;const d=Math.hypot(k.x-p.x,k.y-p.y);if(d<bd){bd=d;best=k;}}
-   const cx=best?best.x:p.x,cy=best?best.y:p.y,R=125;let fixed=0;
+   const tg=laserTarget(['scar','brown'],['pore']);const cx=tg[0],cy=tg[1],R=125;let fixed=0,pores=0;
    for(const k of S.marks){if(Math.hypot(k.x-cx,k.y-cy)>R+k.r) continue;
-    if(k.k==='scar'){k.life=0;fixed++;S.marks.push({x:k.x,y:k.y,k:'red',r:k.r*1.2,life:30,max:30,zone:k.zone,seed:k.seed});}
+    if(k.k==='scar'){k.life=0;fixed++;S.marks.push({x:k.x,y:k.y,k:'red',r:k.r*1.2,life:20,max:20,zone:k.zone,seed:k.seed});}
     else if(k.k==='brown'){k.life-=k.max*0.5;}}
-   S.scarsFixed+=fixed;
+   for(const m of S.mobs){if(m.dead||m.type!=='pore') continue;if(Math.hypot(m.x-cx,m.y-cy)>R+m.r) continue;killMob(m);pores++;}
+   S.scarsFixed+=fixed;addSmooth(cx,cy,R,'smooth');
    sfx('laser');S.fx.push({k:'frac',x:cx,y:cy,r:R,t:0,max:.7,col:'#9fe8ff'});
-   if(fixed){ftext(cx,cy,'Рубцов сглажено: '+fixed,'#9fe8ff',true);warnOnce('flaser','Фракционный лазер: рубец сглажен, на его месте временная эритема');}
-   else ftext(cx,cy,'Рубцов рядом нет','#c8c8c8');
+   ftext(cx,cy,(fixed?'Рубцов сглажено: '+fixed:'')+(fixed&&pores?', ':'')+(pores?'пор сужено: '+pores:'')+(!fixed&&!pores?'Кожа выровнена':''),'#9fe8ff',true);
+   warnOnce('flaser','Фракционный лазер: рубцы сглаживаются, поры сужаются, кожа в поле становится гладкой. На месте рубца временная эритема');
    computeClean();break;}
  }
  S.hudT=0;
 }
+function laserTarget(markKinds,mobTypes){
+ const p=S.p,R=320;let best=null,bd=R;
+ for(const k of S.marks){if(!markKinds.includes(k.k)) continue;const d=Math.hypot(k.x-p.x,k.y-p.y);if(d<bd){bd=d;best=[k.x,k.y];}}
+ for(const m of S.mobs){if(m.dead||!mobTypes.includes(m.type)) continue;const d=Math.hypot(m.x-p.x,m.y-p.y);if(d<bd){bd=d;best=[m.x,m.y];}}
+ if(best) return best;
+ if(pointer.has&&!IS_TOUCH){const w=pointerWorld();const d=Math.min(R,Math.hypot(w[0]-p.x,w[1]-p.y)),a=Math.atan2(w[1]-p.y,w[0]-p.x);return [p.x+Math.cos(a)*d,p.y+Math.sin(a)*d];}
+ return [p.x,p.y];
+}
+function addSmooth(x,y,r,k){
+ S.smooth.push({x,y,r,k,zone:zoneAt(x,y).id,life:k==='even'?45:Infinity,max:k==='even'?45:Infinity,seed:Math.random()});
+ if(S.smooth.length>60) S.smooth.splice(S.smooth.findIndex(q=>q.k==='even')>=0?S.smooth.findIndex(q=>q.k==='even'):0,1);
+}
+function inSmooth(x,y){for(const q of S.smooth) if(q.k==='smooth'&&Math.hypot(q.x-x,q.y-y)<q.r*0.9) return true;return false;}
 function nearestSpot(range){const p=S.p;let b=null,bd=range;for(const k of S.marks){if(k.k!=='brown'&&k.k!=='red') continue;const d=Math.hypot(k.x-p.x,k.y-p.y);if(d<bd){bd=d;b=k;}}return b;}
 function tryCast(sid,target,noAuto,pt){
  const p=S.p,sk=SK[sid];
@@ -721,7 +756,7 @@ function tryCast(sid,target,noAuto,pt){
  }else{
   sfx('proj');S.proj.push({x:p.x+Math.cos(ang)*18,y:p.y+Math.sin(ang)*18,vx:Math.cos(ang)*sk.speed,vy:Math.sin(ang)*sk.speed,ang,sk,tgt:tg||null,trav:0,hit:new Set(),pierce:1,trail:[]});
  }
- if(sk.retinoid){p.ret.push(S.t);p.ret=p.ret.filter(t=>S.t-t<5);if(p.ret.length>=4){addDeb('retder',6);p.ret=[];toast('Ретиноидный дерматит: шелушение и жжение, скорость снижена','bad');}}
+ if(sk.retinoid){p.ret.push(S.t);p.ret=p.ret.filter(t=>S.t-t<5);if(p.ret.length>=6){addDeb('retder',6);p.ret=[];toast('Ретиноидный дерматит: шелушение и жжение, скорость снижена','bad');}}
  if(sid==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Декспантенол (F) поможет','bad');addDeb('cheil',10);}
  if(sid==='mtx'){p.liver+=14;if(p.liver>=100){p.liver=60;addDeb('transam',8);toast('Трансаминазы выросли в 3 раза: пауза в терапии. Фолиевая кислота снижает нагрузку','bad');}}
  if(sid==='efl') S.fx.push({k:'ring',x:p.x,y:p.y,r:70,t:0,max:.5,col:sk.col});
@@ -902,11 +937,11 @@ const TUT=[
  {t:'Кнопка 2: адапален, бьёт по площади. Нанесите бензоилпероксид, затем адапален на ту же группу в течение 4 секунд: получится комбо.',hl:'slot1',done:()=>Object.keys(S.combos).length>0},
  {t:'Вылечите ещё 5 высыпаний. Золотые цифры значат препарат выбора, серые значат, что препарат работает слабо.',hl:null,done:()=>S.kills-S.tutKills0>=5},
  {t:'После лечения на коже остаются пятна. Кнопка 3: азелаиновая кислота, она осветляет постакне. Нажмите её.',hl:'slot2',done:()=>(S.tutCast.aza||0)>0},
- {t:'Справа колонка баффов, стрелки ◀ ▶ листают панели заклинаний, ✎ меняет ячейки местами, ? открывает справку. На 5 уровне откроется путь к боссу на Локтях. Удачи, доктор!',hl:'buffs',done:null,last:true},
+ {t:'Справа колонка баффов, внизу меню процедур (лазеры, чистка, дерматоскопия), стрелки ◀ ▶ листают панели заклинаний, ✎ меняет ячейки местами, ? открывает справку. На 5 уровне откроется путь к боссу на Локтях. Удачи, доктор!',hl:'buffs',done:null,last:true},
 ];
 function tutStart(){S.tut=0;S.tutMoved=0;S.tutCast={};S.tutKills0=S.kills;$('hud').classList.add('tutOn');renderTut();}
 function tutFinish(){S.tut=-1;try{localStorage.setItem(TUT_KEY,'1');}catch(_){}$('hud').classList.remove('tutOn');tutHL(null);$('tut').style.display='none';}
-function tutHL(id){for(const x of ['joy','slot0','slot1','slot2','buffs']){const e=$(x);if(e&&e.classList) e.classList.toggle('tuthl',x===id);}}
+function tutHL(id){for(const x of ['joy','slot0','slot1','slot2','buffs','proc']){const e=$(x);if(e&&e.classList) e.classList.toggle('tuthl',x===id);}}
 function renderTut(){
  if(!S||S.tut<0) return;const st=TUT[S.tut];
  $('tut').style.display='block';$('tutstep').textContent='Обучение · шаг '+(S.tut+1)+' из '+TUT.length;$('tuttxt').textContent=st.t;
@@ -1095,6 +1130,7 @@ function update(dt){
  S.drops=S.drops.filter(d=>!d.got&&d.t<40);
 
  for(const k of S.marks) k.life-=dt;
+ for(const q of S.smooth) q.life-=dt;S.smooth=S.smooth.filter(q=>q.life>0);
  S.marks=S.marks.filter(k=>k.life>0);
  for(const f of S.fx) f.t+=dt;S.fx=S.fx.filter(f=>f.t<f.max);
  for(const q of S.parts){q.life-=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.vx*=0.94;q.vy*=0.94;q.vz-=420*dt;q.z=Math.max(0,q.z+q.vz*dt);}
@@ -1199,6 +1235,18 @@ function drawGround(){
  const edge=(x0,y0,x1,y1,w,h)=>{const e=ctx.createLinearGradient(x0,y0,x1,y1);e.addColorStop(0,'rgba(18,10,14,.85)');e.addColorStop(1,'rgba(18,10,14,0)');ctx.fillStyle=e;ctx.fillRect(Math.min(x0,x1),Math.min(y0,y1),w,h);};
  edge(0,0,140,0,140,WORLD);edge(WORLD,0,WORLD-140,0,140,WORLD);edge(0,0,0,140,WORLD,140);edge(0,WORLD,0,WORLD-140,WORLD,140);
  ctx.restore();
+}
+function drawSmooth(){
+ for(const q of S.smooth){
+  const [ix,iy]=iso(q.x,q.y);const z=ZM[q.zone]||ZONES[0];const f=q.max===Infinity?1:Math.min(1,q.life/q.max*1.6);
+  const base=mix(z.c1,[250,226,208],q.k==='smooth'?0.45:0.3);const rx=q.r*1.41,ry=q.r*0.707;
+  const gr=ctx.createRadialGradient(ix,iy,1,ix,iy,rx);
+  gr.addColorStop(0,'rgba('+base+','+(0.92*f)+')');gr.addColorStop(0.7,'rgba('+base+','+(0.8*f)+')');gr.addColorStop(1,'rgba('+base+',0)');
+  ctx.fillStyle=gr;ctx.save();ctx.scale(1,1);ctx.beginPath();ctx.ellipse(ix,iy,rx,ry,0,0,TAU);ctx.fill();
+  if(q.k==='smooth'){ctx.globalCompositeOperation='lighter';const sh=ctx.createRadialGradient(ix-rx*0.25,iy-ry*0.3,1,ix-rx*0.25,iy-ry*0.3,rx*0.6);
+   sh.addColorStop(0,'rgba(255,245,235,'+(0.22+0.05*Math.sin(S.t*1.5+q.seed*6))+')');sh.addColorStop(1,'rgba(255,245,235,0)');ctx.fillStyle=sh;ctx.beginPath();ctx.ellipse(ix,iy,rx,ry,0,0,TAU);ctx.fill();}
+  ctx.restore();
+ }
 }
 function drawMarks(){
  for(const k of S.marks){
@@ -1479,7 +1527,7 @@ function drawLighting(){
   const pp=toScreen(S.p.x,S.p.y,30);hole(pp[0],pp[1],R0*(1+0.02*Math.sin(S.t*3)),1);
   for(const pr of S.proj){const q=toScreen(pr.x,pr.y,pr.lob?(pr.h||10):22);hole(q[0],q[1],(pr.sk.splash||pr.sk.rad?110:70)*Z,0.8);}
   for(const f of S.fx){if(f.t<0) continue;if(f.k==='beam'){for(let i=0;i<=4;i++){const q=toScreen(f.x+(f.x2-f.x)*i/4,f.y+(f.y2-f.y)*i/4,20);hole(q[0],q[1],110*Z,0.8*(1-f.t/f.max));}}
-  if(f.k==='ring'||f.k==='pillar'||f.k==='frac'){const q=toScreen(f.x,f.y,0);hole(q[0],q[1],(f.r||90)*1.6*Z,0.7*(1-f.t/f.max));}}
+  if(f.k==='ring'||f.k==='pillar'||f.k==='frac'||f.k==='vfield'){const q=toScreen(f.x,f.y,0);hole(q[0],q[1],(f.r||90)*1.6*Z,0.7*(1-f.t/f.max));}}
   for(const d of S.drops){const q=toScreen(d.x,d.y,12);hole(q[0],q[1],50*Z,0.6);}
   if(S.boss&&S.boss.engaged){const q=toScreen(S.boss.x,S.boss.y,60);hole(q[0],q[1],220*Z,0.5);}
  }else{hole(W/2,H/2,R0,1);}
@@ -1502,6 +1550,7 @@ function render(){
  ctx.save();ctx.translate(W/2,H/2+H*0.06);ctx.scale(Z,Z);ctx.translate(-camX,-camY);
  drawGround();
  if(S){
+  drawSmooth();
   drawMarks();
   for(const f of S.fx){if(f.k!=='puddle') continue;const [ix,iy]=iso(f.x,f.y);const k=f.t/f.max;
    ctx.globalAlpha=0.28*(1-k);ctx.fillStyle=f.col;ctx.beginPath();ctx.ellipse(ix,iy,f.r*1.41,f.r*0.707,0,0,TAU);ctx.fill();ctx.globalAlpha=1;}
@@ -1530,6 +1579,13 @@ function render(){
    if(f.k==='beam'){const a=iso(f.x,f.y),b=iso(f.x2,f.y2);const k=1-f.t/f.max;
     ctx.lineCap='round';ctx.strokeStyle='rgba(255,170,60,'+(0.5*k)+')';ctx.lineWidth=26*k+4;ctx.beginPath();ctx.moveTo(a[0],a[1]-24);ctx.lineTo(b[0],b[1]-10);ctx.stroke();
     ctx.strokeStyle='rgba(255,240,200,'+k+')';ctx.lineWidth=5*k+1;ctx.beginPath();ctx.moveTo(a[0],a[1]-24);ctx.lineTo(b[0],b[1]-10);ctx.stroke();}
+   else if(f.k==='vfield'){const [ix,iy]=iso(f.x,f.y);const k=f.t/f.max;
+    const vg=ctx.createRadialGradient(ix,iy,1,ix,iy,f.r*1.41);vg.addColorStop(0,'rgba(255,190,90,'+(0.45*(1-k))+')');vg.addColorStop(1,'rgba(255,150,60,0)');
+    ctx.fillStyle=vg;ctx.beginPath();ctx.ellipse(ix,iy,f.r*1.41,f.r*0.707,0,0,TAU);ctx.fill();
+    ctx.strokeStyle='rgba(255,200,110,'+(0.85*(1-k))+')';ctx.lineWidth=1.4;
+    for(let gx=-f.r;gx<=f.r;gx+=26) for(let gy=-f.r;gy<=f.r;gy+=26){const ox=gx+((Math.round(gy/26)%2)?13:0);if(ox*ox+gy*gy>f.r*f.r) continue;
+     const q=iso(f.x+ox,f.y+gy);if(Math.hypot(ox,gy)/f.r>k*1.4+0.15) continue;ctx.beginPath();ctx.ellipse(q[0],q[1],15,7.5,0,0,TAU);ctx.stroke();}
+    ctx.strokeStyle='rgba(255,180,80,'+(1-k)+')';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(ix,iy,f.r*1.41,f.r*0.707,0,0,TAU);ctx.stroke();}
    else if(f.k==='frac'){const [ix,iy]=iso(f.x,f.y);const k=f.t/f.max;ctx.fillStyle='rgba(159,232,255,'+(0.8*(1-k))+')';
     for(let gx=-f.r;gx<=f.r;gx+=14) for(let gy=-f.r;gy<=f.r;gy+=14){if(gx*gx+gy*gy>f.r*f.r) continue;const q=iso(f.x+gx,f.y+gy);ctx.fillRect(q[0]-1.3,q[1]-1.3,2.6,2.6);}
     ctx.strokeStyle='rgba(159,232,255,'+(1-k)+')';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(ix,iy,f.r*1.41,f.r*0.707,0,0,TAU);ctx.stroke();}
@@ -1613,10 +1669,12 @@ function updateAbil(){
   b.classList.toggle('act',(S.buff[a.id]||0)>0);b.classList.toggle('sel',S.selAb===a.id&&pad.active);}
 }
 /* ---------- панели заклинаний: 4 панели по 4 слота ---------- */
-const DEF_LAYOUT=['bpo','ada','aza','eff','clin','metr','akr','extr','mtx','efl','scope','vlaser','flaser',null,null,null,
- 'doxy','akn','spf','motiv',null,null,null,null];
-const NP=4,NBP=2,BOFF=NP*4;
-const LAYOUT_KEY='dq_layout_v3';
+const DEF_LAYOUT=['bpo','ada','aza','eff','clin','metr','akr','mtx','efl',null,null,null,
+ 'doxy','akn','spf','motiv',null,null,null,null,
+ 'extr','scope','vlaser','flaser'];
+const NP=3,NBP=2,BOFF=NP*4,POFF=BOFF+NBP*4;
+const LAYOUT_KEY='dq_layout_v4';
+let PSEL=0;
 let BPAGE=0;
 let LAYOUT=DEF_LAYOUT.slice(),PAGE=0,pickCell=-1;
 (function(){try{const l=JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null');
@@ -1634,9 +1692,11 @@ function useSlot(i){
 }
 function setPage(n){PAGE=(n+NP)%NP;buildSlots();if(S){S.hudT=0;}}
 function setBPage(n){BPAGE=(n+NBP)%NBP;buildSlots();if(S){S.hudT=0;}}
+function useProcSlot(i){if(!S||S.paused) return;const id=LAYOUT[POFF+i];if(!id) return;PSEL=i;if(SK[id]) onSkill(id);else useAbility(id);}
 function useBuffSlot(i){if(!S||S.paused) return;const id=LAYOUT[BOFF+BPAGE*4+i];if(!id) return;if(SK[id]) onSkill(id);else useAbility(id);}
-function locOf(id){const i=LAYOUT.indexOf(id);if(i<0) return '';return i<BOFF?'панель '+(Math.floor(i/4)+1):'баффы справа, страница '+(Math.floor((i-BOFF)/4)+1);}
+function locOf(id){const i=LAYOUT.indexOf(id);if(i<0) return '';return i<BOFF?'панель '+(Math.floor(i/4)+1):i<POFF?'баффы справа, страница '+(Math.floor((i-BOFF)/4)+1):'меню процедур';}
 const BUFF_GLYPH=['↑','→','↓','←'];
+const PROC_KEYS=['C','V','B','N'];
 const CL={c:[230,230],r:108,big:84,small:62,fix:50};
 function polar(r,deg){const a=deg*Math.PI/180;return [CL.c[0]+Math.cos(a)*r,CL.c[1]+Math.sin(a)*r];}
 const SLOT_POS=[CL.c,polar(CL.r,180),polar(CL.r,225),polar(CL.r,270)];
@@ -1664,6 +1724,10 @@ function buildCluster(){
  bx.appendChild(bp);
  for(let i=0;i<4;i++){const b=document.createElement('div');b.className='slot bf';b.id='bslot'+i;
   b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useBuffSlot(i);});bx.appendChild(b);}
+ const pr=$('procs');pr.innerHTML='';
+ for(let i=0;i<4;i++){const b=document.createElement('div');b.className='slot pr';b.id='pslot'+i;
+  b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useProcSlot(i);});pr.appendChild(b);}
+ const tg=$('proctg');tg.onpointerdown=e=>{e.preventDefault();e.stopPropagation();$('proc').classList.toggle('open');};
  buildSlots();
 }
 function fillSlot(b,id,extra){const inf=actInfo(id);
@@ -1672,6 +1736,7 @@ function fillSlot(b,id,extra){const inf=actInfo(id);
   const ic=actIcon(id);ic.className='ic';b.insertBefore(ic,b.firstChild);}
 function buildSlots(){
  for(let i=0;i<4;i++){const b=$('bslot'+i);if(b) fillSlot(b,LAYOUT[BOFF+BPAGE*4+i],' bf');}
+ for(let i=0;i<4;i++){const b=$('pslot'+i);if(b) fillSlot(b,LAYOUT[POFF+i],' pr');}
  const bn=$('bpgn');if(bn) bn.textContent=(BPAGE+1)+'/'+NBP;
  for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];const inf=actInfo(id);
   b.className='slot'+(i===0?' s0':'')+(inf.kind==='ab'?' ab':'')+(inf.kind==='empty'?' empty':'');b.dataset.id=id;b.title=inf.name+': '+inf.desc;
@@ -1694,6 +1759,7 @@ function updSlot(b,id,key){
 function updateCluster(){
  if(!S) return;const p=S.p;
  for(let i=0;i<4;i++){const b=$('bslot'+i);if(b) updSlot(b,LAYOUT[BOFF+BPAGE*4+i],pad.active?BUFF_GLYPH[i]:String(i+5));}
+ for(let i=0;i<4;i++){const b=$('pslot'+i);if(b){updSlot(b,LAYOUT[POFF+i],pad.active?(i===PSEL?'R3':''):PROC_KEYS[i]);b.classList.toggle('sel',pad.active&&i===PSEL);}}
  for(let i=0;i<4;i++){const b=$('slot'+i);if(!b) continue;const id=LAYOUT[PAGE*4+i];
   let un,ready=false,cdr=0,act=false,lk='';
   if(!id){un=true;}
@@ -1715,6 +1781,7 @@ function renderLayout(){
  const gbox=$('lgrid');gbox.innerHTML='';
  const rows=[];for(let r=0;r<NP;r++) rows.push({label:'Панель '+(r+1),base:r*4,cur:r===PAGE,head:r===0?'Заклинания: веер справа внизу':null});
  for(let r=0;r<NBP;r++) rows.push({label:'Баффы '+(r+1),base:BOFF+r*4,cur:r===BPAGE,head:r===0?'Баффы: колонка справа':null});
+ rows.push({label:'Процедуры',base:POFF,cur:false,head:'Меню процедур: внизу'});
  for(const row of rows){
   if(row.head){const h=document.createElement('div');h.className='lhead';h.textContent=row.head;gbox.appendChild(h);}
   const lab=document.createElement('div');lab.className='lrow'+(row.cur?' cur':'');lab.textContent=row.label;gbox.appendChild(lab);
@@ -1831,6 +1898,7 @@ window.addEventListener('keydown',e=>{
  if(k>='1'&&k<='4'){useSlot(+k-1);e.preventDefault();}
  if(k>='5'&&k<='8'){useBuffSlot(+k-5);e.preventDefault();}
  if(k==='z'||k==='я') setBPage(BPAGE-1);
+ {const pi={'c':0,'с':0,'v':1,'м':1,'b':2,'и':2,'n':3,'т':3}[k];if(pi!=null){useProcSlot(pi);e.preventDefault();}}
  if(k==='x'||k==='ч') setBPage(BPAGE+1);
  if(k==='tab'){setPage(PAGE+(e.shiftKey?-1:1));e.preventDefault();}
  if(k==='q'||k==='й') setPage(PAGE-1);
@@ -1904,7 +1972,7 @@ function pollPad(dt){
  pad.lx=dz(g.axes[0]);pad.ly=dz(g.axes[1]);pad.rx=dz(g.axes[2]);pad.ry=dz(g.axes[3]);
  const any=g.buttons.some(x=>x&&x.pressed)||pad.lx||pad.ly||pad.rx||pad.ry;
  if(any){pad.active=true;pointer.has=false;
-  if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: заклинания, L1/R1: панель заклинаний, крестовина: баффы, нажатие левого стика: страница баффов, R2: рывок, L2: декспантенол','good');S.hudT=0;}}
+  if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: заклинания, L1/R1: панель заклинаний, крестовина: баффы, нажатие левого стика: страница баффов, Create: выбрать процедуру, R3: выполнить, R2: рывок, L2: декспантенол','good');S.hudT=0;}}
  pad.navT-=dt;
  const navY=(B(12)||pad.ly<-0.6)?-1:((B(13)||pad.ly>0.6)?1:0);
  if($('start').classList.contains('on')){
@@ -1928,6 +1996,8 @@ function pollPad(dt){
    if(P(5)) setPage(PAGE+1);
    [12,15,13,14].forEach((btn,i)=>{if(P(btn)) useBuffSlot(i);});
    if(P(10)) setBPage(BPAGE+1);
+   if(P(8)){PSEL=(PSEL+1)%4;const id=LAYOUT[POFF+PSEL];ftext(S.p.x,S.p.y,'Процедура: '+(id?actInfo(id).name:'пусто'),'#9fe8ff');S.hudT=0;}
+   if(P(11)||P(17)) useProcSlot(PSEL);
    [0,2,3,1].forEach((btn,i)=>{const id=LAYOUT[PAGE*4+i];if(!id) return;if(SK[id]){if(B(btn)&&(S.p.un[id]||P(btn))) padCast(id,false);}else if(P(btn)) useAbility(id);});
    if(P(7)) useAbility('dash');
    if(P(6)) useBep();
@@ -1959,7 +2029,7 @@ const SAVE_KEY='dq_save_v1';
 function saveGame(){
  if(!S) return;const p=S.p;
  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,name:p.name,gender:p.gender,age:p.age,lvl:p.lvl,xp:p.xp,un:p.un,bep:p.bep,primary:S.primary,
-  bossKills:S.bossKills,zk:S.zk,scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,warn:S.warn,zdone:S.zdone,kills:S.kills,res:S.res,cum:S.cum,dry:S.dry}));}catch(_){}
+  bossKills:S.bossKills,zk:S.zk,scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,warn:S.warn,zdone:S.zdone,kills:S.kills,res:S.res,cum:S.cum,dry:S.dry,smooth:S.smooth.filter(q=>q.k==='smooth').map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone}))}));}catch(_){}
 }
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return s&&s.v===1?s:null;}catch(_){return null;}}
 function continueGame(sv){
@@ -1970,7 +2040,7 @@ function continueGame(sv){
  recalcHP(true);
  if(sv.primary&&p.un[sv.primary]) S.primary=sv.primary;
  S.bossKills=sv.bossKills|0;S.zk=Object.assign(S.zk,sv.zk||{});S.scars=sv.scars|0;S.scarsFixed=sv.scarsFixed|0;
- S.combos=sv.combos||{};S.warn=sv.warn||{};S.zdone=sv.zdone||{};S.kills=sv.kills|0;S.res=+sv.res||0;S.cum=Object.assign({doxy:0,akn:0},sv.cum||{});S.dry=+sv.dry||0;
+ S.combos=sv.combos||{};S.warn=sv.warn||{};S.zdone=sv.zdone||{};S.kills=sv.kills|0;S.res=+sv.res||0;S.cum=Object.assign({doxy:0,akn:0},sv.cum||{});S.dry=+sv.dry||0;S.smooth=(sv.smooth||[]).map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone,k:'smooth',life:Infinity,max:Infinity,seed:Math.random()}));
  if(S.tut>=0) tutFinish();
  computeClean();drawPortrait();updateHUD();
  toast('С возвращением! Уровень '+p.lvl+': '+rankTitle(p.lvl),'good');
