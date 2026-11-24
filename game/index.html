@@ -210,6 +210,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 .iarrow{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:34px;color:#7fb2ff;animation:ibounce 1s infinite;text-shadow:0 0 12px rgba(127,178,255,.8)}
 @keyframes ibounce{50%{transform:translate(-50%,8px)}}
 .cabc{max-width:640px}
+.big.coopb{background:linear-gradient(180deg,#24406a,#152640);border-color:#7fb3ff;line-height:1.25}.big.coopb small{font-size:11.5px;color:#cfe0ff;font-family:Trebuchet MS,sans-serif}
 .big.daily{background:linear-gradient(180deg,#245a44,#14362a);border-color:#6fcf8e;line-height:1.25}.big.daily small{font-size:11.5px;color:#cfeedd;font-family:Trebuchet MS,sans-serif}
 .lghead{font-family:Georgia,serif;color:var(--gold);font-size:17px;margin:4px 0}
 .lgline{font-size:11px;text-align:center;margin:4px 0}.lgline.up{color:#9fe0b0}.lgline.dn{color:#ff9aa8}
@@ -394,6 +395,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <button id="cont" class="big"></button>
   <button id="dailystart" class="big daily"></button>
   <button id="go" class="big">Сюжет</button>
+  <button id="coopstart" class="big coopb">👥 Консилиум<br><small>До 5 врачей на одном поле, вживую</small></button>
   <button id="free" class="big sec">Свободная игра</button>
   <button id="cabstart" class="big sec">🏥 Кабинет врача</button>
   <button id="ratestart" class="big sec">🏆 Рейтинг врачей</button>
@@ -614,9 +616,21 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <button class="big sec" id="dres_close">В главное меню</button>
  </div>
 </div>
+<div id="coop" class="ov">
+ <div class="card panel cabc">
+  <div class="serif" style="font-size:22px;color:var(--gold)">👥 Консилиум</div>
+  <div class="cabhint">До 5 врачей лечат одну кожу вместе. Высыпаний больше и они крепче с каждым врачом. Опыт за вылеченное высыпание получает тот, кто его вылечил, остальные получают половину. Играете своим персонажем из свободной игры. Процедуры и ординаторы в консилиуме недоступны.</div>
+  <button class="big" id="cpcreate">Открыть свой консилиум</button>
+  <div style="display:flex;gap:6px;margin:8px 0"><input id="cpcode" inputmode="numeric" maxlength="4" placeholder="Код из 4 цифр" style="flex:1;background:#1d1418;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:9px;font-size:16px;user-select:text;-webkit-user-select:text"><button class="cbtn s" id="cpjoin">Войти по коду</button></div>
+  <div id="cpmsg" style="color:#ffcf8a;font-size:13px;min-height:16px"></div>
+  <div id="cplist"></div>
+  <button class="big sec" id="cpclose" style="margin-top:8px">Закрыть</button>
+ </div>
+</div>
 <div id="gmenu" class="ov">
  <div class="card panel" style="max-width:380px">
   <div class="serif" style="font-size:20px;color:var(--gold);margin-bottom:8px;text-align:center">Меню</div>
+  <button class="big" id="m_coop" style="display:none">👥 Позвать коллег</button>
   <button class="big" id="m_cab">🏥 Кабинет врача</button>
   <button class="big sec" id="m_rate">🏆 Рейтинг врачей</button>
   <button class="big sec" id="m_push">🔔 Включить напоминания</button>
@@ -854,11 +868,12 @@ function findSpot(type,zid,initial){
 function spawnMob(type,zid,initial,x,y,extra){
  const d=MOB[type];
  if(x==null){const sp=findSpot(type,zid,initial);if(!sp) return null;x=sp[0];y=sp[1];}
- const hk=(type==='boss'?1+0.05*((S.p?S.p.lvl:1)-1):tierK())*(type==='boss'?1+0.2*teamN():1+0.3*teamN());
+ const hk=(type==='boss'?1+0.05*((S.p?S.p.lvl:1)-1):tierK())*(type==='boss'?1+0.2*teamN():1+0.3*teamN())*(S&&S.coop?1+0.2*coopPeers():1);
  const m={type,zone:zid,x,y,hx:x,hy:y,r:d.r,hp:d.hp*hk,maxhp:d.hp*hk,flash:0,atk:0,shoot:rnd(0.5,2.5),auraT:0,infl:0,st:{},seed:Math.random(),dead:false,kob:false,lastHit:null};
  if(d.evolve) m.evo=rnd(d.evolve[0],d.evolve[1]);
  if(d.pore){m.plugT=rnd(6,14);m.lastHitT=-99;}
  if(extra) Object.assign(m,extra);
+ if(S.coop) m.nid=++MOBID;
  S.mobs.push(m);return m;
 }
 function spawnBoss(){S.boss=spawnMob('boss','elbows',true,1960,1960,{slamT:3,kobT:7,engaged:false,enraged:false});}
@@ -1084,6 +1099,7 @@ function aimAngle(range){
 function useAbility(id){
  const a=AB[id],p=S.p;if(!a||p.dead>0||S.paused) return;
  if(S.tut>=0&&!S.tutShow.has(id)&&!S.tutShow.has('all')){tutBlock();return;}
+ if(S.coop&&id!=='dash'&&id!=='spf'){toast('В консилиуме процедуры недоступны: лечим препаратами','hint');return;}
  if(a.eq&&!(S.eq&&S.eq[id])){toast(a.name.replace(/\u00ad/g,'')+': нужно оборудование. Его выбирают на юбилейных уровнях: 5, 10, 15, 20. Этот прибор с '+EQ[id].lvl+' уровня','bad');return;}
  if(p.lvl<a.lvl){toast(a.name+': откроется на '+a.lvl+' уровне','bad');return;}
  if((S.acd[id]||0)>0) return;
@@ -1181,8 +1197,10 @@ function tryCast(sid,target,noAuto,pt){
  const sx=Math.cos(ang)-Math.sin(ang);if(Math.abs(sx)>0.05) p.dir=sx>0?1:-1;
  if(sk.type==='area'){
   sfx('lob');S.proj.push({lob:true,sx:p.x,sy:p.y,tx,ty,x:p.x,y:p.y,t:0,dur:clamp(Math.hypot(tx-p.x,ty-p.y)/900,0.18,0.45),sk,trail:[]});
+  if(S.coop) coopCast({s:sid,l:1,x:Math.round(p.x),y:Math.round(p.y),tx:Math.round(tx),ty:Math.round(ty)});
  }else{
   sfx('proj');S.proj.push({x:p.x+Math.cos(ang)*18,y:p.y+Math.sin(ang)*18,vx:Math.cos(ang)*sk.speed,vy:Math.sin(ang)*sk.speed,ang,sk,tgt:tg||null,trav:0,hit:new Set(),pierce:1,trail:[]});
+  if(S.coop) coopCast({s:sid,x:Math.round(p.x+Math.cos(ang)*18),y:Math.round(p.y+Math.sin(ang)*18),a:Math.round(ang*1000)/1000,g:tg?tg.nid:null});
  }
  if(sk.retinoid){p.ret.push(S.t);if(sid==='ada'&&vr('ada')==='03') p.ret.push(S.t);p.ret=p.ret.filter(t=>S.t-t<5);if(p.ret.length>=6){addDeb('retder',6);p.ret=[];toast('Ретиноидный дерматит: шелушение и жжение, скорость снижена','bad');}}
  if(sid==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Декспантенол (F) поможет','bad');addDeb('cheil',10);}
@@ -1193,7 +1211,7 @@ function tryCast(sid,target,noAuto,pt){
 }
 function castAura(sk){
  const p=S.p;if((S.buff[sk.id]||0)>0) return false;
- setCd(sk.id,sk.cd);S.buff[sk.id]=durOf(sk.id,sk.dur);
+ setCd(sk.id,sk.cd);S.buff[sk.id]=durOf(sk.id,sk.dur);if(S.coop) coopCast({s:sk.id,au:1,d:Math.round(S.buff[sk.id]),x:Math.round(p.x),y:Math.round(p.y)});
  S.fx.push({k:'ring',x:p.x,y:p.y,r:auraROf(sk),t:0,max:.6,col:sk.col});sfx('aura');burst(p.x,p.y,sk.col,26,220,true);rumble(0.35,160);
  if(sk.id==='akn'){if(!p.deb.cheil) toast('Хейлит: губы трескаются, регенерация остановлена. Декспантенол (F) поможет','bad');addDeb('cheil',sk.dur+4);warnOnce('aknaura','Изотретиноин работает системно: всё воспалённое вокруг врача гаснет. Самая сильная аура против акне','good');}
  if(sk.id==='doxy'){addDeb('photo',sk.dur);warnOnce('doxy','Доксициклин: аура гасит воспаление вокруг. Фоточувствительность: урон по врачу +25%, солнцезащитный крем снимает эффект. Антибиотик растит резистентность, бензоилпероксид её сдерживает','hint');}
@@ -1205,7 +1223,7 @@ function areaHit(x,y,sk){
  S.fx.push({k:'puddle',x,y,r:radOf(sk),t:0,max:1.2,col:sk.col});
  burst(x,y,sk.col,16,150,true);
  S.fx.push({k:'ring',x,y,r:radOf(sk)*0.65,t:-0.12,max:.45,col:sk.col});
- for(const m of S.mobs) if(!m.dead&&(vis(m)||sk.retinoid)&&Math.hypot(m.x-x,m.y-y)<radOf(sk)+m.r*0.6) hitMob(m,sk,sk.dmg);
+ if(!isClient()) for(const m of S.mobs) if(!m.dead&&(vis(m)||sk.retinoid)&&Math.hypot(m.x-x,m.y-y)<radOf(sk)+m.r*0.6) hitMob(m,sk,sk.dmg*(S._k||1));
  if(sk.id==='aza'){let n=0,other=0;
   for(const k of S.marks){if(Math.hypot(k.x-x,k.y-y)<radOf(sk)+k.r){
    if(k.k==='brown'){k.life-=k.max*0.4;n++;}else if(k.k==='red'){k.life-=k.max*0.5;n++;}
@@ -1216,9 +1234,9 @@ function areaHit(x,y,sk){
   computeClean();}
 }
 function hitMob(m,sk,base){
- if(m.dead) return;
+ if(m.dead||isClient()) return;
  const e=EFF[m.type][sk.id];
- m.lastHit=sk.id;m.lastHitT=S.t;m.lastBy=S._by||null;
+ m.lastHit=sk.id;m.lastHitT=S.t;m.lastBy=S._by||null;m.lastPid=S._pid||null;
  if(e==='mutate'){mutate(m);return;}
  if(e<0){aggravate(m,sk,base,-e);return;}
  if(e===0){ftext(m.x,m.y,'0','#8a8a8a');hint(m.type,sk.id);return;}
@@ -1295,15 +1313,17 @@ function leaveMark(m){
 }
 const DEATHCOL={comedo:'#3a261c',papule:'#d4505a',pustule:'#f3e39a',nodule:'#8e2f45',rosacea:'#f08a96',steroid:'#e23a55',plaque:'#f2f2f8',boss:'#ffffff'};
 function killMob(m){
- if(m.dead) return;
+ if(m.dead||isClient()) return;
+ const coopShare=(!S.coop||!m.lastPid||m.lastPid===S.coop.me)?1:0.5;
+ if(S.coop&&m.nid!=null) rtB(S.coop.topic,'kill',{nid:m.nid,by:m.lastPid||S.coop.me,type:m.type,x:Math.round(m.x),y:Math.round(m.y)});
  m.dead=true;S.kills++;sfx('kill');
  if(m.type==='steroid') S.flags.sterKills=(S.flags.sterKills||0)+1;
  if(S.flags) S.flags['k_'+m.type]=(S.flags['k_'+m.type]|0)+1;
  if(m.title){S.flags.giant=true;S.flags.giants=(S.flags.giants|0)+1;}
  if(m.lastBy&&S.flags){S.flags['rk_'+m.lastBy]=(S.flags['rk_'+m.lastBy]|0)+1;S.flags.rk=(S.flags.rk|0)+1;}
  burst(m.x,m.y,DEATHCOL[m.type],m.type==='boss'?80:14,m.type==='boss'?320:160);
- gainXP(MOB[m.type].xp*tierK()*(1+0.1*((CAB.up&&CAB.up.couch)||0)));
- CAB.coins+=Math.max(1,Math.round(MOB[m.type].xp/4*tierK()));cabDirty();
+ gainXP(MOB[m.type].xp*tierK()*(1+0.1*((CAB.up&&CAB.up.couch)||0))*coopShare);
+ CAB.coins+=Math.max(1,Math.round(MOB[m.type].xp/4*tierK()*coopShare));cabDirty();
  if(S.team&&S.team.length) for(const t of S.team) resGain(t.r,MOB[m.type].xp*0.6*tierK());
  if(m.type!=='boss') S.zk[m.zone]=(S.zk[m.zone]||0)+(m.type==='steroid'||m.type==='pore'?2:1);
  if(m.type==='pore'){ftext(m.x,m.y,'Пора сузилась','#a6f0c0',true);warnOnce('pore','Пора сузилась. Ретиноиды и изотретиноин снижают выработку себума и сужают поры. Без лечения поры снова расширяются','good');}
@@ -1545,14 +1565,14 @@ function useKit(i){
  ftext(p.x,p.y,r.sh.replace(/\u00ad/g,''),'#6fcf8e');burst(p.x,p.y,r.col,14,100,true);updateKit();
 }
 /* меню ☰ */
-function openMenu(){$('gmenu').classList.add('on');if(S) S.paused=true;$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';$('m_exit').textContent=S&&S.dcase?'Завершить случай дня':S&&S.mode==='story'?'Выйти к сюжетам':'Сохранить и выйти в главное меню';}
+function openMenu(){$('gmenu').classList.add('on');if(S) S.paused=true;$('m_coop').style.display=S&&S.coop?'':'none';if(S&&S.coop) $('m_coop').textContent='👥 Позвать коллег в консилиум '+S.coop.code;$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';$('m_exit').textContent=S&&S.coop?'Выйти из консилиума':S&&S.dcase?'Завершить случай дня':S&&S.mode==='story'?'Выйти к сюжетам':'Сохранить и выйти в главное меню';}
 function closeMenu(){$('gmenu').classList.remove('on');if(S&&!quizOpen&&!DLG) S.paused=false;}
 $('menubtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openMenu();});
 $('m_close').onclick=closeMenu;
 $('m_cab').onclick=()=>{$('gmenu').classList.remove('on');openCab();};
 $('m_help').onclick=()=>{$('gmenu').classList.remove('on');toggleHelp();};
 $('m_snd').onclick=()=>{audioInit();setSound(!SND.on);$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';};
-$('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.dcase){finishDaily(true);return;}if(S&&S.mode==='story'){exitToCamp();return;}saveGame();saveCab();$('hud').classList.remove('on');S=null;
+$('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.coop){coopLeave();return;}if(S&&S.dcase){finishDaily(true);return;}if(S&&S.mode==='story'){exitToCamp();return;}saveGame();saveCab();$('hud').classList.remove('on');S=null;
  const sv=loadSave();const b=$('cont');if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);}$('start').classList.add('on');};
 $('cabstart').onclick=()=>openCab();
 
@@ -1565,8 +1585,8 @@ const RSPEC={
 };
 const TEAM_LV=[5,15,30,50],TEAM_COST=[300,800,1500,3000],RMAX=50;
 const RNAMES={boy:['Артём','Илья','Максим','Никита','Тимур','Глеб','Денис','Роман','Егор','Лев'],girl:['Мария','Алина','Полина','Вера','Дарья','Ксения','Софья','Анна','Ева','Таисия']};
-function teamN(){if(!S||S.tut>=0||S.dcase||(S.chap&&S.chap.dcase)) return 0;return Math.min(4,(CAB.team||[]).filter(r=>r.on).length);}
-function popK(){return 1+0.25*teamN();}
+function teamN(){if(!S||S.tut>=0||S.dcase||S.coop||(S.chap&&S.chap.dcase)) return 0;return Math.min(4,(CAB.team||[]).filter(r=>r.on).length);}
+function popK(){return 1+0.25*teamN()+(S&&S.coop?0.35*coopPeers():0);}
 function teamOK(req){if(!req) return true;const on=(CAB.team||[]).filter(r=>r.on);if(on.length<req.n) return false;return (req.spec||[]).every(sp=>on.some(r=>r.spec===sp));}
 function teamReqText(req){const sp=(req.spec||[]).map(k=>RSPEC[k].n.toLowerCase());return '👥 Нужна команда: '+req.n+' '+(req.n===1?'ординатор':req.n<5?'ординатора':'ординаторов')+(sp.length?', среди них по специализации: '+sp.join(', '):'');}
 function rneed(l){return Math.round(40*Math.pow(l,1.3));}
@@ -1593,7 +1613,7 @@ function teamHTML(){
 function drawResFaces(){document.querySelectorAll('.rface').forEach(c=>{const r=teamArr()[+c.dataset.i];if(!r) return;const g2=c.getContext('2d');g2.clearRect(0,0,70,80);g2.save();g2.translate(35,76);g2.scale(1,1);
  drawHero(g2,0,0,{gender:r.g,age:'adult',dir:1,walk:0,moving:false,t:1,hurt:0,lvl:resTier(r.lvl),grow:1,scrub:RSPEC[r.spec].scrub});g2.restore();});}
 function buildTeam(){
- if(!S||(S.mode!=='free'&&S.mode!=='story')||S.tut>=0||S.dcase||(S.chap&&S.chap.dcase)){if(S) S.team=[];return;}
+ if(!S||(S.mode!=='free'&&S.mode!=='story')||S.tut>=0||S.dcase||S.coop||(S.chap&&S.chap.dcase)){if(S) S.team=[];return;}
  const p=S.p;S.team=teamArr().filter(r=>r.on).slice(0,4).map((r,i)=>({r,x:p.x-30-i*20,y:p.y+30+i*15,walk:0,moving:false,dir:1,cd:1+i*0.3,heal:6}));
 }
 const FORM=[[-45,35],[35,-45],[-75,-10],[-10,-75]];
@@ -1772,6 +1792,166 @@ function renderPushBtn(){const b=$('m_push');if(b) b.textContent=PROF.push?'🔔
 async function pushResched(){if(!PROF.push||!netOn()||!PROF.reg) return;try{await rpc('dq_push_save',{p_id:PROF.id,p_secret:PROF.secret,p_sub:null,p_events:pushEvents()});}catch(_){}}
 $('m_push').onclick=()=>pushEnable();
 setTimeout(renderPushBtn,0);
+
+/* ---------- консилиум: до 5 врачей на одном поле ---------- */
+let RT=null,MOBID=0;
+function rtUrl(){return NET.url.replace(/^http/,'ws')+'/realtime/v1/websocket?apikey='+encodeURIComponent(NET.key)+'&vsn=1.0.0';}
+function rtConnect(){return new Promise((res,rej)=>{
+ if(RT&&RT.ws.readyState===1) return res(RT);
+ let ws;try{ws=new WebSocket(rtUrl());}catch(e){return rej(e);}
+ const r={ws,ref:0,h:{},open:false};RT=r;
+ ws.onopen=()=>{r.open=true;r.hb=setInterval(()=>rtSend('phoenix','heartbeat',{}),25000);res(r);};
+ ws.onerror=()=>{if(!r.open) rej(new Error('ws'));};
+ ws.onclose=()=>{clearInterval(r.hb);if(RT===r) RT=null;for(const t in r.h) try{r.h[t]({event:'_close',payload:{}});}catch(_){}};
+ ws.onmessage=ev=>{let d;try{d=JSON.parse(ev.data);}catch(_){return;}if(d.event==='phx_reply'&&r.jw&&r.jw[d.topic]){const f=r.jw[d.topic];delete r.jw[d.topic];f();}if(d.event==='broadcast'&&d.payload){const f=r.h[d.topic];if(f) try{f(d.payload);}catch(e){console.log('coop',e);}}};
+ setTimeout(()=>{if(!r.open) rej(new Error('timeout'));},9000);});}
+function rtSend(topic,event,payload){if(!RT||RT.ws.readyState!==1) return;RT.ws.send(JSON.stringify({topic,event,payload,ref:String(++RT.ref)}));}
+function rtJoin(name,h){const topic='realtime:'+name;RT.h[topic]=h;rtSend(topic,'phx_join',{config:{broadcast:{self:false,ack:false},presence:{key:''},private:false}});return topic;}
+function rtJoinW(name,h){const topic=rtJoin(name,h);const r=RT;return new Promise(res=>{if(!r.jw) r.jw={};r.jw[topic]=()=>res(topic);setTimeout(()=>res(topic),3000);});}
+function rtLeave(topic){if(!RT||!topic) return;rtSend(topic,'phx_leave',{});delete RT.h[topic];}
+function rtB(topic,ev,pl){rtSend(topic,'broadcast',{type:'broadcast',event:ev,payload:pl});}
+const MTYPES=Object.keys(MOB),MKS=['red','brown','tel','hypo','scar'];
+function isClient(){return !!(S&&S.coop&&S.coop.role==='client');}
+function coopPeers(){return S&&S.coop?Object.keys(S.coop.peers).length:0;}
+function mobByNid(n){if(n==null) return null;for(const m of S.mobs) if(m.nid===n&&!m.dead) return m;return null;}
+/* лобби */
+let LOBBY=null;
+async function openCoop(code){
+ $('coop').classList.add('on');$('cpmsg').textContent='';if(code) $('cpcode').value=code;
+ let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
+ if(!tutDone){$('cplist').innerHTML='<div class="cabhint">Сначала пройдите обучение в свободной игре или в первой главе сюжета.</div>';return;}
+ if(!netOn()){$('cplist').innerHTML='<div class="cabhint">Нет связи с сервером.</div>';return;}
+ $('cplist').innerHTML='<div class="cabhint">Ищем открытые консилиумы...</div>';
+ try{await rtConnect();}catch(_){$('cplist').innerHTML='<div class="cabhint">Не удалось подключиться к серверу консилиумов.</div>';return;}
+ LOBBY={rooms:{},topic:null};
+ LOBBY.topic=rtJoin('dq-lobby',m=>{if(m.event==='room'&&m.payload&&LOBBY){LOBBY.rooms[m.payload.code]=Object.assign({},m.payload,{seen:Date.now()});renderLobby();}});
+ renderLobby();LOBBY.int=setInterval(renderLobby,1500);
+}
+function closeCoop(){$('coop').classList.remove('on');if(LOBBY){clearInterval(LOBBY.int);if(!(S&&S.coop)) rtLeave(LOBBY.topic);LOBBY=null;}}
+function renderLobby(){if(!LOBBY) return;const now=Date.now();const rs=Object.values(LOBBY.rooms).filter(r=>now-r.seen<8000&&r.n<5);
+ let h='<div class="csub">Открытые консилиумы</div>';
+ if(!rs.length) h+='<div class="cabhint">Сейчас открытых нет. Создайте свой и позовите коллег ссылкой.</div>';
+ rs.forEach(r=>{h+='<div class="rrow" data-c="'+esc(r.code)+'"><span class="rpl">👥</span><span class="rnm"><b>'+esc(r.host)+'</b><br><small>код '+esc(r.code)+' · врачей '+(r.n|0)+' из 5 · ур. '+(r.lvl|0)+'</small></span><span class="rv">Войти</span></div>';});
+ $('cplist').innerHTML=h;$('cplist').querySelectorAll('.rrow').forEach(el=>el.onclick=()=>startCoop('client',el.dataset.c));}
+/* сессия */
+async function startCoop(role,code){
+ if(!PROF.reg){$('cpmsg').textContent='Сначала начните игру, чтобы закрепить имя';return;}
+ code=String(code||'').replace(/\D/g,'').slice(0,4);if(role==='client'&&code.length!==4){$('cpmsg').textContent='Код консилиума: 4 цифры';return;}
+ if(role==='host') code=String(1000+Math.floor(Math.random()*9000));
+ try{await rtConnect();}catch(_){$('cpmsg').textContent='Нет связи с сервером консилиумов';return;}
+ const C={role,code,me:PROF.id,peers:{},sendT:0,snapT:0,markT:0,lobT:0,epq:[],remAura:[],joined:role==='host',lastHost:Date.now()};
+ C.topic=await rtJoinW('dq-room-'+code,m=>coopMsg(C,m));
+ if(role==='client'){
+  $('cpmsg').textContent='Подключаемся к консилиуму '+code+'...';
+  rtB(C.topic,'hello',{id:PROF.id,name:PROF.name});
+  const ok=await new Promise(r=>{C.waitJoin=r;setTimeout(()=>r(C.joined?'ok':'none'),6000);});
+  if(ok!=='ok'){rtLeave(C.topic);$('cpmsg').textContent=ok==='full'?'В консилиуме уже 5 врачей':'Консилиум '+code+' не найден';return;}
+ }
+ closeCoop();$('start').classList.remove('on');
+ const sv=loadSave();if(sv) continueGame(sv);else startGame();
+ S.coop=C;S.team=[];
+ if(S.tut>=0) tutFinish();
+ S.mobs=S.mobs.filter(m=>m.type!=='boss');S.boss=null;
+ S.pop={forehead:POP.forehead,chin:POP.chin,cheeks:POP.cheeks};
+ if(role==='client'){S.mobs=[];S.marks=[];S.pop={};C.ghost={};}
+ else{for(const m of S.mobs) if(m.nid==null) m.nid=++MOBID;}
+ const p=S.p;p.x=300;p.y=300;S.startPos=[300,300];
+ toast(role==='host'?'Консилиум '+code+' открыт. Позовите коллег: код '+code+' или ссылка в меню ☰':'Вы в консилиуме '+code+'. Лечим вместе','good');
+ coopTick(1);
+}
+function coopLeave(silent){
+ if(!S||!S.coop) return;const C=S.coop;rtB(C.topic,'bye',{id:C.me});rtLeave(C.topic);if(LOBBY&&LOBBY.topic){rtLeave(LOBBY.topic);}
+ saveGame();saveCab();syncNow(true);S.coop=null;$('hud').classList.remove('on');S=null;
+ if(!silent) toast('Вы вышли из консилиума','hint');
+ $('start').classList.add('on');renderDailyBtn&&renderDailyBtn();
+}
+function coopMsg(C,m){
+ const d=m.payload||{},ev=m.event;
+ if(C.role==='client'&&!C.joined&&(ev==='welcome'||ev==='full')&&d.to===C.me){if(ev==='welcome') C.joined=true;if(C.waitJoin) C.waitJoin(ev==='welcome'?'ok':'full');return;}
+ if(!S||S.coop!==C){return;}
+ if(ev==='_close'){toast('Связь с консилиумом потеряна','bad');setTimeout(()=>coopLeave(true),300);return;}
+ if(d.to&&d.to!==C.me) return;
+ if(ev==='hello'&&C.role==='host'){const n=Object.keys(C.peers).length;rtB(C.topic,n>=4&&!C.peers[d.id]?'full':'welcome',{to:d.id,host:PROF.name});return;}
+ if(ev==='welcome'&&C.role==='client'){C.joined=true;if(C.waitJoin) C.waitJoin('ok');return;}
+ if(ev==='full'&&C.role==='client'){if(C.waitJoin) C.waitJoin('full');return;}
+ if(ev==='pl'){if(d.id===C.me) return;let pe=C.peers[d.id];
+  if(!pe){if(C.role==='host'&&Object.keys(C.peers).length>=4){rtB(C.topic,'full',{to:d.id});return;}pe=C.peers[d.id]={x:d.x,y:d.y,walk:0};toast(d.n+' присоединился к консилиуму','good');sfx('level');}
+  Object.assign(pe,{name:d.n,g:d.g,a:d.a,tx:d.x,ty:d.y,dir:d.dir,moving:d.mv,lvl:d.l,hp:d.hp,maxhp:d.mh,dead:d.dd,t:Date.now(),host:!!d.h});
+  if(d.h) C.lastHost=Date.now();return;}
+ if(ev==='bye'){const pe=C.peers[d.id];if(pe){toast(pe.name+' покинул консилиум','hint');delete C.peers[d.id];if(pe.host&&C.role==='client'){toast('Ведущий врач закрыл консилиум','bad');setTimeout(()=>coopLeave(true),800);}}return;}
+ if(ev==='cast'){if(d.id===C.me) return;coopRemoteCast(C,d);return;}
+ if(ev==='kill'){coopKill(C,d);return;}
+ if(C.role==='client'){
+  if(ev==='ms'){C.lastHost=Date.now();coopSnap(C,d);return;}
+  if(ev==='mk'){S.marks=(d.m||[]).map(a=>({x:a[0],y:a[1],k:MKS[a[2]],r:a[3],life:a[4],max:100,zone:zoneAt(a[0],a[1]).id,seed:(a[0]*0.37+a[1]*0.11)%1}));return;}
+ }
+}
+function coopSnap(C,d){
+ const seen={};const arr=d.m||[];
+ for(let i=0;i<arr.length;i+=7){const nid=arr[i],type=MTYPES[arr[i+1]],x=arr[i+2],y=arr[i+3];seen[nid]=1;let g=C.ghost[nid];
+  if(!g){g={type,zone:zoneAt(x,y).id,x,y,hx:x,hy:y,r:arr[i+6],hp:arr[i+4],maxhp:100,flash:0,atk:0,shoot:99,auraT:0,infl:0,st:{},seed:(nid*0.6180339)%1,dead:false,kob:false,lastHit:null,nid,ghost:true};C.ghost[nid]=g;S.mobs.push(g);}
+  if(g.hp>arr[i+4]) g.flash=0.12;g.tx=x;g.ty=y;g.hp=arr[i+4];g.infl=arr[i+5];g.r=arr[i+6];g.type=type;}
+ for(const k in C.ghost){if(!seen[k]){const g=C.ghost[k];g.dead=true;delete C.ghost[k];}}
+ S.mobs=S.mobs.filter(m=>!m.dead);
+ if(d.zc){S.zc={forehead:d.zc[0],chin:d.zc[1],cheeks:d.zc[2],elbows:d.zc[3]||0};}
+ if(d.ep) for(const e of d.ep) S.eproj.push({x:e[0],y:e[1],vx:e[2],vy:e[3],dmg:e[4],life:e[5],col:e[6],sz:e[7]});
+ if(d.hp) {const pe=C.peers[d.hp.id];if(pe) Object.assign(pe,{tx:d.hp.x,ty:d.hp.y,dir:d.hp.dir,moving:d.hp.mv,hp:d.hp.hp,maxhp:d.hp.mh,t:Date.now()});}
+}
+function coopDK(sid){return dmgScale()*(1+0.12*rk(sid))*(S.buff.motiv>0?motivK():1);}
+function coopCast(o){if(!S||!S.coop) return;o.id=S.coop.me;o.dk=Math.round(coopDK(o.s)*100)/100;rtB(S.coop.topic,'cast',o);}
+function coopRemoteCast(C,d){
+ const sk=SK[d.s];if(!sk) return;const pe=C.peers[d.id];const host=C.role==='host';const k=host?d.dk/coopDK(d.s):1;
+ if(d.au){const R=auraROf(sk);S.fx.push({k:'ring',x:pe?pe.x:d.x,y:pe?pe.y:d.y,r:R,t:0,max:.6,col:sk.col});if(host) C.remAura.push({id:d.id,sk,until:S.t+(d.d||sk.dur),k});else C.remAura.push({id:d.id,sk,until:S.t+(d.d||sk.dur),k:0});return;}
+ if(d.l){S.proj.push({lob:true,sx:d.x,sy:d.y,tx:d.tx,ty:d.ty,x:d.x,y:d.y,t:0,dur:clamp(Math.hypot(d.tx-d.x,d.ty-d.y)/900,0.18,0.45),sk,trail:[],pid:d.id,k});return;}
+ S.proj.push({x:d.x,y:d.y,vx:Math.cos(d.a)*sk.speed,vy:Math.sin(d.a)*sk.speed,ang:d.a,sk,tgt:mobByNid(d.g),trav:0,hit:new Set(),pierce:1,trail:[],pid:d.id,k});
+}
+function coopKill(C,d){
+ const mine=d.by===C.me,type=d.type;
+ if(C.role==='client'){const g=C.ghost[d.nid];if(g){g.dead=true;delete C.ghost[d.nid];burst(g.x,g.y,DEATHCOL[type]||'#fff',14,160);sfx('kill');}S.mobs=S.mobs.filter(m=>!m.dead);}
+ if(C.role==='client'||!d.self){if(!MOB[type]) return;const share=mine?1:0.5;gainXP(MOB[type].xp*tierK()*share);CAB.coins+=Math.max(mine?1:0,Math.round(MOB[type].xp/4*tierK()*share));cabDirty();if(mine) S.kills++;
+  if(!mine&&C.peers[d.by]) ftext(d.x,d.y,'+'+Math.round(MOB[type].xp*tierK()*share)+' опыта от '+C.peers[d.by].name,'#9fe0b0');}
+}
+function coopTarget(m){
+ if(!S.coop||S.coop.role!=='host') return null;let best=S.p.dead>0?null:S.p,bd=best?dist(m,S.p):1e9;
+ for(const id in S.coop.peers){const pe=S.coop.peers[id];if(pe.dead) continue;const dd=Math.hypot(m.x-pe.x,m.y-pe.y);if(dd<bd){bd=dd;best=pe;}}
+ return best;
+}
+function coopTick(dt){
+ const C=S.coop;if(!C) return;const p=S.p,now=Date.now();
+ for(const id in C.peers){const pe=C.peers[id];if(pe.tx!=null){const k=Math.min(1,dt*10);pe.x+=(pe.tx-pe.x)*k;pe.y+=(pe.ty-pe.y)*k;}pe.walk=(pe.walk||0)+(pe.moving?dt*10:0);
+  if(now-pe.t>7000){toast((pe.name||'Коллега')+' отключился','hint');delete C.peers[id];}}
+ if(C.role==='client'){
+  for(const g of Object.values(C.ghost||{})){if(g.tx!=null){const k=Math.min(1,dt*8);g.x+=(g.tx-g.x)*k;g.y+=(g.ty-g.y)*k;}g.flash-=dt;}
+  if(now-C.lastHost>8000){toast('Ведущий врач не отвечает, консилиум завершён','bad');coopLeave(true);return;}
+  if(p.dead<=0) for(const m of S.mobs){const d=MOB[m.type];if(!d||!d.aura) continue;if(dist(m,p)<d.aura.r+14){m.auraT-=dt;if(m.auraT<=0){m.auraT=0.5;damagePlayer(d.aura.dps*0.5*(m.infl?1.4:1),true);}}}
+ }
+ C.remAura=C.remAura.filter(a=>a.until>S.t);
+ if(C.role==='host'){
+  for(const a of C.remAura){const pe=C.peers[a.id];if(!pe) continue;
+   for(const m of S.mobs){if(m.dead) continue;if(Math.hypot(m.x-pe.x,m.y-pe.y)>auraROf(a.sk)+m.r) continue;const e=EFF[m.type][a.sk.id];if(!(e>0)) continue;
+    if(m.infl>0) m.infl=0;m.hp-=a.sk.dps*e*dmgScale()*(a.k||1)*dt;m.lastHit=a.sk.id;m.lastHitT=S.t;m.lastPid=a.id;if(m.hp<=0) killMob(m);}}
+  C.snapT-=dt;if(C.snapT<=0){C.snapT=0.2;const arr=[];
+   for(const m of S.mobs){if(m.dead) continue;if(m.nid==null) m.nid=++MOBID;arr.push(m.nid,MTYPES.indexOf(m.type),Math.round(m.x),Math.round(m.y),Math.max(1,Math.round(m.hp/m.maxhp*100)),m.infl>0?1:0,Math.round(m.r));}
+   rtB(C.topic,'ms',{m:arr,zc:[S.zc.forehead||0,S.zc.chin||0,S.zc.cheeks||0,S.zc.elbows||0].map(v=>Math.round(v*100)/100),ep:C.epq.splice(0,40),hp:{id:C.me,x:Math.round(p.x),y:Math.round(p.y),dir:p.dir,mv:p.moving?1:0,hp:Math.round(p.hp),mh:Math.round(p.maxhp)}});}
+  C.markT-=dt;if(C.markT<=0){C.markT=1.5;rtB(C.topic,'mk',{m:S.marks.slice(-120).map(k=>[Math.round(k.x),Math.round(k.y),MKS.indexOf(k.k),Math.round(k.r),Math.round(Math.max(0,k.life/k.max)*100)])});}
+  C.lobT-=dt;if(C.lobT<=0){C.lobT=3;if(!LOBBY||!LOBBY.topic){LOBBY={rooms:{},topic:rtJoin('dq-lobby',()=>{})};}rtB(LOBBY.topic,'room',{code:C.code,host:PROF.name,n:1+Object.keys(C.peers).length,lvl:p.lvl});}
+ }
+ C.sendT-=dt;if(C.sendT<=0){C.sendT=(p.moving&&C.role!=='host')?0.2:1;rtB(C.topic,'pl',{id:C.me,n:PROF.name,g:p.gender,a:p.age,x:Math.round(p.x),y:Math.round(p.y),dir:p.dir,mv:p.moving?1:0,l:p.lvl,hp:Math.round(p.hp),mh:Math.round(p.maxhp),dd:p.dead>0?1:0,h:C.role==='host'?1:0});}
+}
+function drawPeer(pe){const [ix,iy]=iso(pe.x,pe.y);
+ if(pe.dead){ctx.globalAlpha=0.4;}
+ drawHero(ctx,ix,iy,{gender:pe.g,age:pe.a,dir:pe.dir||1,walk:pe.walk||0,moving:!!pe.moving,t:S.t+1,hurt:0,lvl:tierOf(pe.lvl||1),grow:heroGrow(pe.lvl||1)});ctx.globalAlpha=1;
+ const sc=(pe.a==='teen'?0.88:1)*heroGrow(pe.lvl||1),ny=iy-80*sc;
+ ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.font='bold 11px Trebuchet MS,sans-serif';ctx.fillStyle='#bfe6ff';const tx=(pe.name||'')+' · '+(pe.lvl||1);ctx.strokeText(tx,ix,ny-8);ctx.fillText(tx,ix,ny-8);
+ const w=36,f=Math.max(0,Math.min(1,(pe.hp||0)/(pe.maxhp||1)));ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(ix-w/2,ny-3,w,4);ctx.fillStyle=f>0.4?'#6fcf8e':'#ff6a6a';ctx.fillRect(ix-w/2,ny-3,w*f,4);}
+function coopShare(){if(!S||!S.coop) return;const t='👥 Присоединяйтесь к консилиуму в ДермаКвесте! Код '+S.coop.code+'\nhttps://doctoryankel-eng.github.io/derm-atlas-news/game/?room='+S.coop.code;
+ (async()=>{try{if(navigator.share){await navigator.share({text:t});return;}}catch(_){}try{await navigator.clipboard.writeText(t);toast('Приглашение скопировано','good');}catch(_){prompt('Скопируйте приглашение',t);}})();}
+$('coopstart').onclick=()=>beforePlay(()=>openCoop());
+$('cpclose').onclick=closeCoop;
+$('cpcreate').onclick=()=>startCoop('host');
+$('cpjoin').onclick=()=>startCoop('client',$('cpcode').value);
+$('m_coop').onclick=()=>{$('gmenu').classList.remove('on');coopShare();};
+try{const rm=(location.search.match(/[?&]room=(\d{4})/)||[])[1];if(rm) setTimeout(()=>openCoop(rm),600);}catch(_){}
 
 /* ---------- рейтинг врачей: профиль, синхронизация, облачное сохранение ---------- */
 const NET={url:'https://lipjmlqhhunhezizqrmz.supabase.co',key:'sb_publishable_iahNNV_kY2VUkTfNsuiAVA_7-9kSVVj'};
@@ -2009,9 +2189,10 @@ $('qc').onclick=()=>{
 function showBanner(t,txt){$('btitle').textContent=t;$('btxt').textContent=txt;$('banner').classList.add('on');S.banner=4.5;}
 
 /* ---------- обновление ---------- */
-function fireAt(m,sh,infl){
- const p=S.p;const a=Math.atan2(p.y-m.y,p.x-m.x);
- S.eproj.push({x:m.x,y:m.y,vx:Math.cos(a)*sh.speed,vy:Math.sin(a)*sh.speed,dmg:sh.dmg*(infl?1.4:1),life:sh.range/sh.speed*1.25,col:sh.col,sz:sh.sz*(infl?1.25:1)});
+function fireAt(m,sh,infl,T){
+ const p=T||S.p;const a=Math.atan2(p.y-m.y,p.x-m.x);
+ const e={x:m.x,y:m.y,vx:Math.cos(a)*sh.speed,vy:Math.sin(a)*sh.speed,dmg:sh.dmg*(infl?1.4:1),life:sh.range/sh.speed*1.25,col:sh.col,sz:sh.sz*(infl?1.25:1)};S.eproj.push(e);
+ if(S.coop&&S.coop.role==='host'&&T&&T!==S.p) S.coop.epq.push([Math.round(e.x),Math.round(e.y),Math.round(e.vx),Math.round(e.vy),Math.round(e.dmg*10)/10,Math.round(e.life*100)/100,e.col,Math.round(e.sz)]);
 }
 function update(dt){
  S.t+=dt;const p=S.p;
@@ -2069,7 +2250,7 @@ function update(dt){
 
  // системные ауры: доксициклин, изотретиноин
  let calmR=0;
- if(p.dead<=0) for(const sk of SKILLS){if(sk.type!=='aura'||!((S.buff[sk.id]||0)>0)) continue;calmR=Math.max(calmR,auraROf(sk));
+ if(p.dead<=0) for(const sk of SKILLS){if(sk.type!=='aura'||!((S.buff[sk.id]||0)>0)) continue;calmR=Math.max(calmR,auraROf(sk));if(isClient()) continue;
   for(const m of S.mobs){if(m.dead) continue;if(dist(m,p)>auraROf(sk)+m.r) continue;
    const e=EFF[m.type][sk.id];if(!(e>0)) continue;
    if(m.infl>0){m.infl=0;ftext(m.x,m.y,'Воспаление ушло','#a6f0c0');}
@@ -2093,7 +2274,7 @@ function update(dt){
  }
  // высыпания
  const pz=zoneAt(p.x,p.y).id;const alive=p.dead<=0;
- for(const m of S.mobs){
+ if(!isClient()) for(const m of S.mobs){
   if(m.dead) continue;
   m.flash-=dt;m.atk-=dt;m.infl=Math.max(0,m.infl-dt);
   if(m.type==='boss'){bossAI(m,dt,pz);continue;}
@@ -2113,10 +2294,10 @@ function update(dt){
   }
   if(!alive) continue;
   if(S.tut>=0&&S.tut<TUT_PEACE) continue;
-  const dp=dist(m,p),infl=m.infl>0;
-  if(d.aura&&dp<d.aura.r+14){m.auraT-=dt;if(m.auraT<=0){m.auraT=0.5;damagePlayer(d.aura.dps*0.5*(infl?1.4:1),true);
+  const T=coopTarget(m)||p,dp=dist(m,T),infl=m.infl>0;
+  if(d.aura&&dp<d.aura.r+14&&T===p){m.auraT-=dt;if(m.auraT<=0){m.auraT=0.5;damagePlayer(d.aura.dps*0.5*(infl?1.4:1),true);
    warnOnce('aura','Приливы: рядом с розацеа кожу жжёт. Лечите с дистанции','hint');}}
-  if(d.shot&&dp<d.shot.range){m.shoot-=dt*(infl?1.6:1)*((calmR&&dp<calmR+m.r&&m.type!=='plaque')||m.calm>0?0.4:1);if(m.calm>0) m.calm-=dt;if(m.shoot<=0){m.shoot=d.shot.cd*rnd(0.85,1.15);fireAt(m,d.shot,infl);if(dp<340) sfx('eshot');}}
+  if(d.shot&&dp<d.shot.range){m.shoot-=dt*(infl?1.6:1)*((calmR&&dp<calmR+m.r&&m.type!=='plaque')||m.calm>0?0.4:1);if(m.calm>0) m.calm-=dt;if(m.shoot<=0){m.shoot=d.shot.cd*rnd(0.85,1.15);fireAt(m,d.shot,infl,T);if(dist(m,p)<340) sfx('eshot');}}
  }
 
  // снаряды
@@ -2124,7 +2305,7 @@ function update(dt){
   pr.trail.push([pr.x,pr.y]);if(pr.trail.length>6) pr.trail.shift();
   if(pr.lob){
    pr.t+=dt;const k=Math.min(1,pr.t/pr.dur);pr.x=pr.sx+(pr.tx-pr.sx)*k;pr.y=pr.sy+(pr.ty-pr.sy)*k;pr.h=Math.sin(k*Math.PI)*60+10*(1-k);
-   if(k>=1){pr.done=true;areaHit(pr.tx,pr.ty,pr.sk);}
+   if(k>=1){pr.done=true;S._pid=pr.pid||null;S._k=pr.k||1;areaHit(pr.tx,pr.ty,pr.sk);S._pid=null;S._k=1;}
    continue;
   }
   if(pr.tgt&&!pr.tgt.dead){const a=Math.atan2(pr.tgt.y-pr.y,pr.tgt.x-pr.x);const sp=pr.sk.speed;pr.vx+=(Math.cos(a)*sp-pr.vx)*Math.min(1,dt*10);pr.vy+=(Math.sin(a)*sp-pr.vy)*Math.min(1,dt*10);pr.ang=Math.atan2(pr.vy,pr.vx);}
@@ -2132,7 +2313,7 @@ function update(dt){
   for(const m of S.mobs){
    if(m.dead||pr.hit.has(m)||!vis(m)) continue;
    if(Math.hypot(m.x-pr.x,m.y-pr.y)<m.r+pr.sk.r){
-    pr.hit.add(m);S._by=pr.by||null;hitMob(m,pr.sk,pr.sk.dmg*(pr.k||1));S._by=null;
+    pr.hit.add(m);if(isClient()){m.flash=0.12;burst(pr.x,pr.y,pr.sk.col,7,110,true);pr.pierce=0;break;}S._by=pr.by||null;S._pid=pr.pid||null;hitMob(m,pr.sk,pr.sk.dmg*(pr.k||1));S._by=null;S._pid=null;
     if(pr.sk.splash){
      S.fx.push({k:'ring',x:pr.x,y:pr.y,r:pr.sk.splash,t:0,max:.35,col:pr.sk.col});
      for(const o of S.mobs) if(!o.dead&&o!==m&&Math.hypot(o.x-pr.x,o.y-pr.y)<pr.sk.splash+o.r) hitMob(o,pr.sk,pr.sk.dmg*0.6);
@@ -2167,23 +2348,23 @@ function update(dt){
  for(const t of S.texts) t.t-=dt*0.9;S.texts=S.texts.filter(t=>t.t>0);
  S.mobs=S.mobs.filter(m=>!m.dead);
 
- S.cleanT-=dt;if(S.cleanT<=0){S.cleanT=0.25;computeClean();for(const z of ZONES) checkZoneDone(z.id);}
+ S.cleanT-=dt;if(S.cleanT<=0&&!isClient()){S.cleanT=0.25;computeClean();for(const z of ZONES) checkZoneDone(z.id);}
 
  // новые высыпания
- S.spawnT-=dt;
+ S.spawnT-=dt;if(isClient()) S.spawnT=9;
  if(S.spawnT<=0){S.spawnT=2.5;
   const PP=S.pop||POP;
   for(const zid in PP){const f=Math.max(0.15,1-zoneClean(zid)*0.85);
    for(const type in PP[zid]){const want=Math.round(PP[zid][type]*f*popK());
     const have=S.mobs.filter(m=>m.zone===zid&&(m.type===type||(type==='rosacea'&&m.type==='steroid'))&&!m.kob).length;
     if(have<want) spawnMob(type,zid,false);}}}
- if(!S.boss&&S.mode!=='story'){S.bossRespawn-=dt;if(S.bossRespawn<=0){spawnBoss();toast('Обострение: бляшечный псориаз вернулся на Локти','boss');}}
+ if(!S.boss&&S.mode!=='story'&&!S.coop){S.bossRespawn-=dt;if(S.bossRespawn<=0){spawnBoss();toast('Обострение: бляшечный псориаз вернулся на Локти','boss');}}
 
  const c=iso(p.x,p.y);const k=Math.min(1,dt*7);camX+=(c[0]-camX)*k;camY+=(c[1]-camY)*k;
  S.hudT-=dt;if(S.hudT<=0){S.hudT=0.1;updateHUD();}
  S.saveT=(S.saveT||10)-dt;if(S.saveT<=0){S.saveT=10;saveGame();}
  if(cabSaveT>0){cabSaveT-=dt;if(cabSaveT<=0) saveCab();}
- cabSt().sec+=dt;updateTeam(dt);
+ cabSt().sec+=dt;updateTeam(dt);if(S.coop) coopTick(dt);
  if(S.dcase&&!S.paused&&!DLG&&!S.dEnded){S.dcaseT-=dt;if(S.dcaseT<=0) finishDaily();}
  if(S.mode==='story'&&S.chap&&S.chap.dot&&!S.paused&&S.p.dead<=0&&!DLG){const dd=S.chap.dot*(S.flags.dotK||1)*dt*(S.buff.emol>0?0.6:1);S.p.hp-=dd;if(S.p.hp<=0){S.p.hp=0.5;damagePlayer(5,true);}}S.netT=(S.netT||60)-dt;if(S.netT<=0){S.netT=60;syncNow(false);}
 }
@@ -2663,8 +2844,9 @@ function render(){
   for(const d of S.drops) drawDrop(d);
   const ents=S.mobs.filter(m=>!m.dead&&vis(m)).map(m=>({d:m.x+m.y,m}));ents.push({d:S.p.x+S.p.y,player:true});
   if(S.team) for(const t of S.team) ents.push({d:t.x+t.y,tm:t});
+  if(S.coop) for(const id in S.coop.peers){const pe=S.coop.peers[id];ents.push({d:pe.x+pe.y,peer:pe});}
   ents.sort((a,b)=>a.d-b.d);
-  for(const e of ents){if(e.player) drawPlayer();else if(e.tm) drawTeamMate(e.tm);else drawMob(e.m);}
+  for(const e of ents){if(e.player) drawPlayer();else if(e.tm) drawTeamMate(e.tm);else if(e.peer) drawPeer(e.peer);else drawMob(e.m);}
   if(S.attack&&!S.attack.dead){const m=S.attack;const [ix,iy]=iso(m.x,m.y);ctx.strokeStyle='rgba(233,193,122,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(ix,iy,m.r*1.5,m.r*0.75,0,0,TAU);ctx.stroke();}
   for(const pr of S.proj) drawProj(pr);
   for(const e of S.eproj){const [ix,iy]=iso(e.x,e.y);ctx.fillStyle='rgba(0,0,0,.18)';ctx.beginPath();ctx.ellipse(ix,iy,e.sz,e.sz*0.45,0,0,TAU);ctx.fill();blob(ix,iy-16,e.sz,e.sz*0.85,'#fff',e.col);}
@@ -3623,12 +3805,12 @@ function loop(ts){
  const dt=Math.min(0.05,last?(ts-last)/1000:0.016);last=ts;
  pollPad(dt);
  if(S) musicTick();
- if(S&&!S.paused) update(dt);
+ if(S&&(!S.paused||S.coop)) update(dt);
  render();
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
