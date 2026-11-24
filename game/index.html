@@ -210,6 +210,10 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 .iarrow{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:34px;color:#7fb2ff;animation:ibounce 1s infinite;text-shadow:0 0 12px rgba(127,178,255,.8)}
 @keyframes ibounce{50%{transform:translate(-50%,8px)}}
 .cabc{max-width:640px}
+.big.daily{background:linear-gradient(180deg,#245a44,#14362a);border-color:#6fcf8e;line-height:1.25}.big.daily small{font-size:11.5px;color:#cfeedd;font-family:Trebuchet MS,sans-serif}
+.lghead{font-family:Georgia,serif;color:var(--gold);font-size:17px;margin:4px 0}
+.lgline{font-size:11px;text-align:center;margin:4px 0}.lgline.up{color:#9fe0b0}.lgline.dn{color:#ff9aa8}
+.rrow.lup .rpl{color:#9fe0b0}.rrow.ldn .rpl{color:#ff9aa8}
 #nmnote{font-size:12px;color:#ffcf8a;text-align:center;min-height:0;margin:-4px 0 6px}
 #nm:disabled{opacity:.85;color:var(--gold)}
 .rrow{display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;border-radius:8px}
@@ -388,6 +392,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <div class="row"><span>Возраст</span><button class="opt" data-a="teen">Подросток</button><button class="opt on" data-a="adult">Взрослый</button></div>
   <div class="perk" id="perk"></div>
   <button id="cont" class="big"></button>
+  <button id="dailystart" class="big daily"></button>
   <button id="go" class="big">Сюжет</button>
   <button id="free" class="big sec">Свободная игра</button>
   <button id="cabstart" class="big sec">🏥 Кабинет врача</button>
@@ -585,7 +590,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 <div id="rate" class="ov">
  <div class="card panel cabc">
   <div class="serif" style="font-size:22px;color:var(--gold)">🏆 Рейтинг врачей</div>
-  <div class="ctabs"><button id="rt_xp">Опыт</button><button id="rt_boss">Боссы</button><button id="rt_stars">Сюжет</button><button id="rt_streak">Обходы</button><button id="rt_kills">Пациенты</button></div>
+  <div class="ctabs"><button id="rt_daily">🩺 Случай дня</button><button id="rt_league">🏅 Лига</button><button id="rt_xp">Опыт</button><button id="rt_boss">Боссы</button><button id="rt_stars">Сюжет</button><button id="rt_streak">Обходы</button><button id="rt_kills">Пациенты</button></div>
   <div id="rlist"></div><div id="rprof" style="display:none"></div>
   <div id="rfoot"></div>
   <button class="big sec" id="rclose" style="margin-top:8px">Закрыть</button>
@@ -598,11 +603,24 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <button class="big sec" id="admclose" style="margin-top:8px">Закрыть</button>
  </div>
 </div>
+<div id="dres" class="ov">
+ <div class="card panel" style="max-width:440px;text-align:center">
+  <div class="serif" style="font-size:20px;color:var(--gold)" id="dres_t"></div>
+  <div class="serif" style="font-size:34px;color:#ffe9bf;margin:6px 0" id="dres_s"></div>
+  <div style="color:#9fe0b0;margin-bottom:8px" id="dres_r"></div>
+  <div id="dres_rows" style="font-size:13px;line-height:1.6;color:var(--muted);margin-bottom:10px"></div>
+  <button class="big" id="dres_share">📤 Поделиться результатом</button>
+  <button class="big sec" id="dres_rate">🏆 Таблица дня</button>
+  <button class="big sec" id="dres_close">В главное меню</button>
+ </div>
+</div>
 <div id="gmenu" class="ov">
  <div class="card panel" style="max-width:380px">
   <div class="serif" style="font-size:20px;color:var(--gold);margin-bottom:8px;text-align:center">Меню</div>
   <button class="big" id="m_cab">🏥 Кабинет врача</button>
   <button class="big sec" id="m_rate">🏆 Рейтинг врачей</button>
+  <button class="big sec" id="m_push">🔔 Включить напоминания</button>
+  <div id="m_pushmsg" class="cabhint" style="text-align:center"></div>
   <button class="big sec" id="m_help">? Справка</button>
   <button class="big sec" id="m_snd">🔊 Звук</button>
   <button class="big sec" id="m_exit">Выйти в главное меню</button>
@@ -1485,14 +1503,14 @@ function cabAct(act,i,id){
  else if(act==='ron'){const T=teamArr(),r=T[i];if(!r.on&&T.filter(q=>q.on).length>=4){cabToast('В команде уже 4 ординатора');return;}r.on=!r.on;if(S) S.team=null;sfx('click');}
  else if(act==='rtrain'){const r=teamArr()[i],c=80*r.lvl;if(CAB.coins<c||r.lvl>=RMAX) return;CAB.coins-=c;r.xp=0;r.lvl++;sfx('level');cabToast(r.name+': уровень '+r.lvl);}
  else if(act==='rfire'){const T=teamArr();const r=T[i];if(!r) return;if(!r.fireAsk){r.fireAsk=true;cabToast('Нажмите «Отпустить» ещё раз, чтобы попрощаться с '+r.name);setTimeout(()=>{r.fireAsk=false;},4000);return;}T.splice(i,1);if(S) S.team=null;cabToast(r.name+' покинул(а) команду');}
- saveCab();renderCab();if(S) S.hudT=0;syncNow(false);
+ saveCab();renderCab();if(S) S.hudT=0;syncNow(false);if(['cult','plant','brew','collect','harvest','bottle'].includes(act)) pushResched();
 }
 function cabToast(t){const e=$('cabmsg');e.textContent=t;e.style.opacity='1';setTimeout(()=>{e.style.opacity='0';},2200);}
 $('cabdaily').onclick=()=>{const d=CAB.daily||{last:'',streak:0};if(d.last===today()) return;
  d.streak=d.last===yesterday()?(d.streak||0)+1:1;d.last=today();CAB.daily=d;
  const coins=50+10*Math.min(d.streak,10);CAB.coins+=coins;addProfileXP(100);
  const pool=['chamo','aloe','calend','centella','shea','ceram','zinc','panthenol','base'];const gift=pool[Math.floor(Math.random()*pool.length)];addInv(gift,2);
- sfx('level');cabToast('Обход: +'+coins+' ₽, +100 опыта, '+INGR[gift].n+' ×2. Серия: '+d.streak+' дн.');saveCab();renderCab();};
+ sfx('level');cabToast('Обход: +'+coins+' ₽, +100 опыта, '+INGR[gift].n+' ×2. Серия: '+d.streak+' дн.');saveCab();renderCab();if(typeof pushResched==='function') pushResched();};
 for(const t of ['lab','garden','brew','store','upg','team']) $('ct_'+t).onclick=()=>cabTab(t);
 $('cabclose').onclick=closeCab;
 /* аптечка в приёме */
@@ -1512,6 +1530,7 @@ function updateKit(full){
 function useKit(i){
  if(!S||S.paused) return;const p=S.p;if(p.dead>0) return;const id=CAB.kit[i];
  if(S.tut>=0&&!S.tutShow.has('bep')){tutBlock();return;}
+ if(S.dcase){toast('В случае дня аптечка недоступна: у всех равные условия','hint');return;}
  if(!id){toast('Ячейка аптечки пуста. Кремы варятся в кабинете врача','bad');return;}
  if(!(CAB.inv[id]>0)){toast(RC[id].n+' закончился. Сварите ещё в кабинете врача','bad');return;}
  CAB.inv[id]--;cabDirty();sfx('good');const r=RC[id];if(S.tutCast) S.tutCast.kit=(S.tutCast.kit||0)+1;
@@ -1526,14 +1545,14 @@ function useKit(i){
  ftext(p.x,p.y,r.sh.replace(/\u00ad/g,''),'#6fcf8e');burst(p.x,p.y,r.col,14,100,true);updateKit();
 }
 /* меню ☰ */
-function openMenu(){$('gmenu').classList.add('on');if(S) S.paused=true;$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';$('m_exit').textContent=S&&S.mode==='story'?'Выйти к сюжетам':'Сохранить и выйти в главное меню';}
+function openMenu(){$('gmenu').classList.add('on');if(S) S.paused=true;$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';$('m_exit').textContent=S&&S.dcase?'Завершить случай дня':S&&S.mode==='story'?'Выйти к сюжетам':'Сохранить и выйти в главное меню';}
 function closeMenu(){$('gmenu').classList.remove('on');if(S&&!quizOpen&&!DLG) S.paused=false;}
 $('menubtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openMenu();});
 $('m_close').onclick=closeMenu;
 $('m_cab').onclick=()=>{$('gmenu').classList.remove('on');openCab();};
 $('m_help').onclick=()=>{$('gmenu').classList.remove('on');toggleHelp();};
 $('m_snd').onclick=()=>{audioInit();setSound(!SND.on);$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';};
-$('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.mode==='story'){exitToCamp();return;}saveGame();saveCab();$('hud').classList.remove('on');S=null;
+$('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.dcase){finishDaily(true);return;}if(S&&S.mode==='story'){exitToCamp();return;}saveGame();saveCab();$('hud').classList.remove('on');S=null;
  const sv=loadSave();const b=$('cont');if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);}$('start').classList.add('on');};
 $('cabstart').onclick=()=>openCab();
 
@@ -1546,7 +1565,7 @@ const RSPEC={
 };
 const TEAM_LV=[5,15,30,50],TEAM_COST=[300,800,1500,3000],RMAX=50;
 const RNAMES={boy:['Артём','Илья','Максим','Никита','Тимур','Глеб','Денис','Роман','Егор','Лев'],girl:['Мария','Алина','Полина','Вера','Дарья','Ксения','Софья','Анна','Ева','Таисия']};
-function teamN(){if(!S||S.tut>=0) return 0;return Math.min(4,(CAB.team||[]).filter(r=>r.on).length);}
+function teamN(){if(!S||S.tut>=0||S.dcase||(S.chap&&S.chap.dcase)) return 0;return Math.min(4,(CAB.team||[]).filter(r=>r.on).length);}
 function popK(){return 1+0.25*teamN();}
 function teamOK(req){if(!req) return true;const on=(CAB.team||[]).filter(r=>r.on);if(on.length<req.n) return false;return (req.spec||[]).every(sp=>on.some(r=>r.spec===sp));}
 function teamReqText(req){const sp=(req.spec||[]).map(k=>RSPEC[k].n.toLowerCase());return '👥 Нужна команда: '+req.n+' '+(req.n===1?'ординатор':req.n<5?'ординатора':'ординаторов')+(sp.length?', среди них по специализации: '+sp.join(', '):'');}
@@ -1574,7 +1593,7 @@ function teamHTML(){
 function drawResFaces(){document.querySelectorAll('.rface').forEach(c=>{const r=teamArr()[+c.dataset.i];if(!r) return;const g2=c.getContext('2d');g2.clearRect(0,0,70,80);g2.save();g2.translate(35,76);g2.scale(1,1);
  drawHero(g2,0,0,{gender:r.g,age:'adult',dir:1,walk:0,moving:false,t:1,hurt:0,lvl:resTier(r.lvl),grow:1,scrub:RSPEC[r.spec].scrub});g2.restore();});}
 function buildTeam(){
- if(!S||(S.mode!=='free'&&S.mode!=='story')||S.tut>=0){if(S) S.team=[];return;}
+ if(!S||(S.mode!=='free'&&S.mode!=='story')||S.tut>=0||S.dcase||(S.chap&&S.chap.dcase)){if(S) S.team=[];return;}
  const p=S.p;S.team=teamArr().filter(r=>r.on).slice(0,4).map((r,i)=>({r,x:p.x-30-i*20,y:p.y+30+i*15,walk:0,moving:false,dir:1,cd:1+i*0.3,heal:6}));
 }
 const FORM=[[-45,35],[35,-45],[-75,-10],[-10,-75]];
@@ -1603,6 +1622,156 @@ function drawTeamMate(t){
  ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.font='bold 10px Trebuchet MS,sans-serif';ctx.fillStyle='#d7ffe3';
  const tx=r.name+' · '+r.lvl;ctx.strokeText(tx,ix,iy-66);ctx.fillText(tx,ix,iy-66);
 }
+
+/* ---------- случай дня ---------- */
+const DQS=[
+ {tp:'acne',q:'Пациентке 15 лет, на лбу и носу открытые и закрытые комедоны, воспалительных элементов почти нет. С чего начать?',o:['Топический ретиноид, например адапален','Доксициклин внутрь','Клиндамицин гель в монотерапии'],a:0,e:'При комедональном акне основа лечения: топический ретиноид, он нормализует ороговение в устье фолликула.'},
+ {tp:'acne',q:'Пациент хочет мазать только клиндамицин. Что нужно добавить, чтобы снизить риск резистентности C. acnes?',o:['Бензоилпероксид','Гидрокортизон','Салициловую кислоту 0,5%'],a:0,e:'Бензоилпероксид снижает риск резистентности. Топические антибиотики при акне не применяют в монотерапии.'},
+ {tp:'acne',q:'Среднетяжёлое папуло-пустулёзное акне, назначен доксициклин. Какая длительность курса обычно рекомендуется?',o:['Как можно короче, ориентир до 3-4 месяцев, вместе с наружной терапией','Не меньше года','Пока не исчезнут все комедоны'],a:0,e:'Системные антибиотики при акне ограничивают по длительности и сочетают с топическим ретиноидом или бензоилпероксидом.'},
+ {tp:'acne',q:'Пациент на изотретиноине. Какой препарат нельзя назначать одновременно?',o:['Доксициклин','Декспантенол','Солнцезащитный крем'],a:0,e:'Сочетание изотретиноина с тетрациклинами повышает риск доброкачественной внутричерепной гипертензии.'},
+ {tp:'acne',q:'Девушке 19 лет планируете изотретиноин. Что обязательно до старта?',o:['Тест на беременность и надёжная контрацепция','УЗИ щитовидной железы','Отмена всех средств ухода'],a:0,e:'Изотретиноин тератогенен. Контрацепция нужна до начала, во время курса и после окончания.'},
+ {tp:'acne',q:'Какие анализы контролируют на курсе изотретиноина?',o:['Липидный профиль и печёночные ферменты','Только общий анализ мочи','Гормоны щитовидной железы ежемесячно'],a:0,e:'На изотретиноине возможны гипертриглицеридемия и повышение трансаминаз, их контролируют до старта и в динамике.'},
+ {tp:'acne',q:'Акне у беременной. Какой наружный препарат из перечисленных можно рассматривать?',o:['Азелаиновую кислоту','Адапален','Тазаротен'],a:0,e:'Топические ретиноиды при беременности не используют. Азелаиновая кислота считается допустимым вариантом.'},
+ {tp:'acne',q:'После акне остались коричневые пятна. Что лучше всего поможет?',o:['Азелаиновая кислота и ежедневная фотозащита','Скраб с крупными частицами','Спиртовой лосьон'],a:0,e:'Поствоспалительная гиперпигментация бледнеет быстрее при осветляющих средствах и защите от солнца.'},
+ {tp:'ros',q:'У пациентки с розацеа после месяца гормональной мази усилились покраснение и папулы. Ваше решение?',o:['Отменить топический стероид и вести обострение','Перейти на более сильный стероид','Мазать дальше, пока не пройдёт'],a:0,e:'Топические стероиды на лице провоцируют стероидную розацеа. Стероид отменяют, обострение после отмены ведут наружными средствами.'},
+ {tp:'ros',q:'Какой наружный препарат при папулопустулёзной розацеа действует на клещей Demodex?',o:['Ивермектин 1% крем','Гидрохинон','Адапален'],a:0,e:'Ивермектин обладает противопаразитарным и противовоспалительным действием, его используют при папулопустулёзной розацеа.'},
+ {tp:'ros',q:'Стойкая эритема лица при розацеа без папул. Что уменьшит покраснение?',o:['Сосудосуживающий гель, например бримонидин, или сосудистый лазер','Бензоилпероксид','Скраб'],a:0,e:'Для стойкой эритемы используют альфа-адреномиметики местно и сосудистые лазеры или IPL.'},
+ {tp:'ros',q:'Чем особенна доза доксициклина 40 мг модифицированного высвобождения при розацеа?',o:['Действует противовоспалительно в субантимикробной дозе','Это доза для лечения инфекций кожи','Это доза только для детей'],a:0,e:'Субантимикробная доза снижает воспаление и почти не создаёт давления на чувствительность бактерий.'},
+ {tp:'ros',q:'У кого чаще развивается ринофима?',o:['У мужчин','У подростков','У женщин в пременопаузе'],a:0,e:'Фиматозные изменения при розацеа значительно чаще встречаются у мужчин.'},
+ {tp:'pso',q:'Как принимают метотрексат при псориазе?',o:['Один раз в неделю','Каждый день','Только во время обострений, по 3 дня'],a:0,e:'Метотрексат при псориазе назначают один раз в неделю. Ежедневный приём по ошибке опасен тяжёлой токсичностью.'},
+ {tp:'pso',q:'Что добавляют к метотрексату для снижения токсичности?',o:['Фолиевую кислоту','Высокие дозы витамина D','Омепразол ежедневно'],a:0,e:'Фолиевая кислота снижает частоту желудочно-кишечных побочек и повышения трансаминаз.'},
+ {tp:'pso',q:'Что обязательно сделать перед стартом генно-инженерной терапии псориаза?',o:['Скрининг на туберкулёз','Биопсию бляшки','Аллергопробы'],a:0,e:'Перед генно-инженерными препаратами исключают латентный туберкулёз.'},
+ {tp:'pso',q:'Почему системные глюкокортикостероиды не используют для лечения псориаза?',o:['На отмене возможно пустулёзное или эритродермическое обострение','Они не действуют на кожу','Они вызывают акне у всех пациентов'],a:0,e:'Системные стероиды при псориазе дают риск тяжёлого обострения при снижении дозы или отмене.'},
+ {tp:'pso',q:'У пациента псориаз ногтей. Что важно активно выяснить?',o:['Есть ли боли и скованность в суставах','Есть ли аллергия на орехи','Когда он последний раз был на море'],a:0,e:'Поражение ногтей связано с повышенным риском псориатического артрита, суставы нужно активно расспрашивать.'},
+ {tp:'pso',q:'Как часто обычно проводят узкополосную фототерапию 311 нм при псориазе?',o:['2-3 раза в неделю','Каждый день по часу','Раз в месяц'],a:0,e:'Стандартный режим узкополосной УФБ-терапии: 2-3 сеанса в неделю с постепенным повышением дозы.'},
+ {tp:'pso',q:'Какая наружная комбинация часто используется при бляшечном псориазе?',o:['Кальципотриол с бетаметазоном','Адапален с бензоилпероксидом','Метронидазол с ивермектином'],a:0,e:'Фиксированная комбинация аналога витамина D3 и топического стероида: одна из основ наружной терапии псориаза.'},
+ {tp:'skin',q:'Что является основой базисной терапии атопического дерматита?',o:['Регулярные эмоленты','Ежедневное мытьё с антибактериальным мылом','Полная элиминационная диета'],a:0,e:'Эмоленты восстанавливают кожный барьер и снижают частоту обострений.'},
+ {tp:'skin',q:'Атопический дерматит на веках у ребёнка. Что из перечисленного подходит для этой зоны?',o:['Такролимус мазь','Клобетазол','Салициловая мазь 10%'],a:0,e:'Топические ингибиторы кальциневрина не вызывают атрофию и подходят для лица и век.'},
+ {tp:'skin',q:'На что направлен дупилумаб?',o:['На рецептор ИЛ-4 альфа','На ФНО-альфа','На ИЛ-17А'],a:0,e:'Дупилумаб блокирует альфа-субъединицу рецептора ИЛ-4 и подавляет сигнал ИЛ-4 и ИЛ-13.'},
+ {tp:'skin',q:'Что означает буква E в правиле ABCDE для меланомы?',o:['Эволюция: изменение образования со временем','Эритема вокруг','Экзофитный рост только'],a:0,e:'Изменение размера, формы, цвета или появление симптомов: один из важнейших признаков.'},
+ {tp:'skin',q:'Какое свечение под лампой Вуда характерно для эритразмы?',o:['Кораллово-красное','Ярко-синее','Свечения нет никогда'],a:0,e:'Corynebacterium minutissimum даёт кораллово-красное свечение за счёт порфиринов.'},
+ {tp:'skin',q:'Пациент с изменёнными ногтями просит системный антимикотик. Что сделать до назначения?',o:['Подтвердить онихомикоз лабораторно','Сразу назначить на год','Удалить все ногти'],a:0,e:'Изменения ногтей бывают не только грибковыми. Системную терапию назначают после микроскопии или посева.'},
+ {tp:'skin',q:'Что из перечисленного применяют при себорейном дерматите волосистой части головы?',o:['Шампунь с кетоконазолом','Адапален','Метотрексат'],a:0,e:'Противогрибковые средства уменьшают колонизацию Malassezia и воспаление.'},
+ {tp:'skin',q:'Чесотка у одного члена семьи. Как правильно лечить?',o:['Обрабатывать всех контактных одновременно','Только заболевшего','Подождать, пока появится у остальных'],a:0,e:'Одновременная обработка всех контактных и обработка белья снижает риск повторного заражения.'},
+ {tp:'skin',q:'Сколько солнцезащитного крема нужно, чтобы получить защиту, указанную на упаковке?',o:['Около 2 мг на квадратный сантиметр кожи','Одну каплю на всё лицо','Количество не важно'],a:0,e:'SPF измеряют при 2 мг/см², на практике люди наносят в разы меньше.'},
+ {tp:'skin',q:'Для чего делают микроскопию соскоба с гидроксидом калия?',o:['Чтобы увидеть элементы гриба','Чтобы оценить уровень себума','Чтобы определить фототип'],a:0,e:'Гидроксид калия растворяет кератин и позволяет увидеть гифы и споры.'},
+];
+const DTPL={
+ acne:{zone:'chin',start:[300,1700],who:'anya',name:'Акне',pop:{chin:{comedo:8,papule:8,pustule:6,nodule:2}}},
+ ros:{zone:'cheeks',start:[1700,300],who:'irina',name:'Розацеа',pop:{cheeks:{rosacea:13}},tel:6},
+ pso:{zone:'elbows',start:[1580,1580],who:'sergey',name:'Псориаз',pop:{elbows:{plaque:11}}},
+ skin:{zone:'forehead',start:[300,300],who:'prof',name:'Общая дерматология',pop:{forehead:{comedo:9,papule:6,pustule:3,pore:3,micro:4}}},
+};
+const DKEY='dq_dcase_v1',DLEN=150,RND0=Math.random;
+function mskNow(){return new Date(Date.now()+3*3600e3);}
+function mskDay(){return mskNow().toISOString().slice(0,10);}
+function dNum(){return Math.floor((Date.now()+3*3600e3)/864e5)-Math.floor(Date.UTC(2026,10,24)/864e5)+1;}
+function dInfo(){const n=dNum();const q=DQS[((n-1)%DQS.length+DQS.length)%DQS.length];return {n,day:mskDay(),q,tpl:DTPL[q.tp]};}
+function dLoad(){try{return JSON.parse(localStorage.getItem(DKEY)||'{}');}catch(_){return {};}}
+function dSave(o){try{localStorage.setItem(DKEY,JSON.stringify(o));}catch(_){}}
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function dShuffle(q,n){const idx=q.o.map((_,i)=>i);const r=mulberry(n*7919);for(let i=idx.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}return idx;}
+function dScore(){
+ let k=0;for(const t in MOB) k+=(S.flags['k_'+t]|0)*(MOB[t].xp||0);
+ const parts={kills:Math.round(k),combo:Object.keys(S.combos||{}).length*60,clean:PCT(S.chap.zone)*6,q:S.flags.dq?200:0,scars:-25*SCARS(),worse:-20*(S.flags.worse|0)};
+ let tot=0;for(const x in parts) tot+=parts[x];return {tot:Math.max(0,tot),parts};
+}
+function startDaily(){
+ const D=dInfo(),q=D.q,t=D.tpl,ord=dShuffle(q,D.n);const st=dLoad();const first=!(st.day===D.day);
+ if(first){st.day=D.day;st.started=true;st.done=false;dSave(st);}
+ Math.random=mulberry(D.n*104729+17);
+ const cast=t.who;
+ const ch={line:'daily',dcase:true,first,diff:3,title:'Случай дня №'+D.n,zone:t.zone,lvl:10,eq:['scope','wood','vlaser','uvb','flaser'],un:['akn','mtx','efl'],start:t.start,pop:t.pop,goals:[],
+  setup:()=>{if(t.tel) for(let i=0;i<t.tel;i++) S.marks.push({x:rnd(1550,2300),y:rnd(150,1250),k:'tel',r:22,life:600,max:600,zone:'cheeks',seed:Math.random()});},
+  intro:[{who:'prof',t:'Случай дня №'+D.n+'. Тема: '+t.name.toLowerCase()+'. Один и тот же для всех врачей, в зачёт идёт первая попытка. Сначала клинический вопрос, потом 2,5 минуты приёма. Очки за вылеченные высыпания, комбо, чистоту кожи и верный ответ.'},
+   {who:cast,t:q.q,ch:ord.map(i=>({t:q.o[i],ok:i===q.a,fx:()=>{if(i===q.a) S.flags.dq=true;},reply:[{who:'prof',t:(i===q.a?'Верно. ':'Неверно. Правильный ответ: '+q.o[q.a].toLowerCase()+'. ')+q.e}]}))}]};
+ for(const k in CH) if(CH[k]===ch) delete CH[k];
+ startStory(ch);
+ S.dcase=true;S.dcaseT=DLEN;S.dfirst=first;S.dinfo=D;S.team=[];
+ if(!first) setTimeout(()=>toast('Тренировка: в зачёт идёт только первая попытка дня','hint'),1500);
+}
+function dGoalsHTML(){const t=Math.max(0,S.dcaseT),m=Math.floor(t/60),sc=Math.floor(t%60);const d=dScore();
+ return '<b>'+S.chap.title+(S.dfirst?'':' · тренировка')+'</b><br>⏱ '+m+':'+String(sc).padStart(2,'0')+' · очки: <b>'+d.tot+'</b><br>Чистота: '+PCT(S.chap.zone)+'% · комбо: '+Object.keys(S.combos||{}).length;}
+async function finishDaily(early){
+ if(!S||!S.dcase||S.dEnded) return;S.dEnded=true;S.paused=true;Math.random=RND0;
+ const D=S.dinfo,sc=dScore(),first=S.dfirst;sfx('level');
+ const st=dLoad();let res=null;
+ if(first){st.day=D.day;st.done=true;st.score=sc.tot;st.q=!!S.flags.dq;dSave(st);
+  if(netOn()&&PROF.reg){try{res=await rpc('dq_daily_submit',{p_id:PROF.id,p_secret:PROF.secret,p_day:D.day,p_score:sc.tot,p_stats:{q:S.flags.dq?1:0,clean:PCT(S.chap.zone),scars:SCARS(),combo:Object.keys(S.combos||{}).length,tp:D.q.tp}});if(res&&res.ok){st.rank=res.rank;st.total=res.total;dSave(st);}}catch(_){}
+   syncNow(true);}
+  CAB.coins+=Math.round(sc.tot/10);cabDirty();addProfileXP(sc.tot);}
+ const P=sc.parts;
+ $('dres_t').textContent=D.q&&S.chap.title;
+ $('dres_s').textContent=sc.tot+' очков';
+ $('dres_r').textContent=first?(res&&res.ok?'Место '+res.rank+' из '+res.total+' за сегодня':(netOn()?'Результат сохранён':'Сервер недоступен, результат сохранён на устройстве')):'Тренировка, в зачёт не идёт. Ваш результат дня: '+(st.score|0);
+ $('dres_rows').innerHTML=['Вылеченные высыпания: +'+P.kills,'Комбо: +'+P.combo,'Чистота кожи '+PCT(S.chap.zone)+'%: +'+P.clean,'Клинический вопрос: '+(P.q?'+200':'0'),'Рубцы: '+P.scars,'Ухудшения от неподходящих препаратов: '+P.worse].map(x=>'<div>'+x+'</div>').join('')+(first?'<div style="color:var(--gold)">Награда: +'+Math.round(sc.tot/10)+' ₽ и +'+sc.tot+' опыта</div>':'');
+ $('dres').classList.add('on');
+ S.dshare={n:D.n,tp:D.tpl.name,score:first?sc.tot:(st.score|0),q:first?!!S.flags.dq:!!st.q,clean:PCT(S.chap.zone),scars:SCARS(),rank:first?(res&&res.rank):st.rank,total:first?(res&&res.total):st.total};
+}
+function dShareText(o){
+ return '🩺 ДермаКвест · случай дня №'+o.n+'\nТема: '+o.tp.toLowerCase()+'\n⭐ '+o.score+' очков'+(o.rank?' · место '+o.rank+' из '+o.total:'')+'\n'+(o.q?'✅ Верный ответ на клинический вопрос':'❌ Ошибка в клиническом вопросе')+'\n🧴 Чистота кожи '+o.clean+'% · рубцов '+o.scars+'\nСможете лучше? https://doctoryankel-eng.github.io/derm-atlas-news/game/';
+}
+async function dShare(o){const t=dShareText(o);
+ try{if(navigator.share){await navigator.share({text:t});return;}}catch(_){}
+ try{await navigator.clipboard.writeText(t);toast('Результат скопирован, вставьте в Telegram','good');}catch(_){prompt('Скопируйте результат',t);}}
+$('dres_share').onclick=()=>{if(S&&S.dshare) dShare(S.dshare);};
+$('dres_close').onclick=()=>{$('dres').classList.remove('on');Math.random=RND0;$('hud').classList.remove('on');S=null;renderDailyBtn();$('start').classList.add('on');};
+$('dres_rate').onclick=()=>{$('dres').classList.remove('on');RATE.tab='daily';openRate();};
+function renderDailyBtn(){const b=$('dailystart');if(!b) return;const D=dInfo(),st=dLoad();
+ b.innerHTML='🩺 Случай дня №'+D.n+'<br><small>'+(st.day===D.day&&st.done?'Пройден: '+(st.score|0)+' очков'+(st.rank?', место '+st.rank+' из '+st.total:'')+'. Можно потренироваться':(st.day===D.day&&st.started?'Попытка начата. Её результат уже не изменить, можно тренироваться':'Тема: '+D.tpl.name.toLowerCase()+'. Один случай для всех, засчитывается первая попытка'))+'</small>';}
+$('dailystart').onclick=()=>beforePlay(()=>{$('start').classList.remove('on');startDaily();});
+renderDailyBtn();
+/* ---------- лиги ---------- */
+const TIERS_L=['','Ординатура','Поликлиника','Стационар','Кафедра','Академия'];
+function mskWeek(){const d=mskNow();const wd=(d.getUTCDay()+6)%7;const m=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-wd));return m.toISOString().slice(0,10);}
+function weekLeft(){const d=mskNow();const wd=(d.getUTCDay()+6)%7;const end=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-wd+7);const ms=end-d.getTime();const h=Math.floor(ms/3600e3);return h>=24?Math.floor(h/24)+' дн. '+(h%24)+' ч':h+' ч '+Math.floor(ms%3600e3/60e3)+' мин';}
+async function loadLeague(){
+ const w=mskWeek();const me=await board0('dq_league_board','select=*&week=eq.'+w+'&player=eq.'+PROF.id);
+ if(!me.length) return {me:null,rows:[]};const m=me[0];
+ const rows=await board0('dq_league_board','select=*&week=eq.'+w+'&tier=eq.'+m.tier+'&grp=eq.'+m.grp+'&order=pts.desc&limit=40');
+ return {me:m,rows};
+}
+async function board0(view,q){const r=await fetch(NET.url+'/rest/v1/'+view+'?'+q,{headers:hdrs()});if(!r.ok) throw new Error('net '+r.status);return r.json();}
+
+/* ---------- уведомления ---------- */
+const VAPID='BOa6XpquDGv2NNj8t1UlO-r09Zhg3vlYN3Rl2NgUbp-oQL6uXvdO3hQHyfKb7IOZtzgW_zSHjuom-KsPt040bwY';
+function b64u(s){const p='='.repeat((4-s.length%4)%4);const b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(b,c=>c.charCodeAt(0));}
+function pushSupport(){return typeof navigator!=='undefined'&&'serviceWorker' in navigator&&typeof window!=='undefined'&&'PushManager' in window&&'Notification' in window;}
+function mskAt(dayOff,h,m){const d=mskNow();return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()+dayOff,h,m||0)-3*3600e3;}
+function pushEvents(){
+ const ev=[],now=Date.now();
+ const add=(at,title,body,tag)=>{if(at>now+60e3) ev.push({at:Math.round(at),title,body,tag});};
+ CAB.labs.forEach(sl=>{if(sl){const c=CULT.find(q=>q.id===sl.id);if(c) add(sl.end,'🧫 '+c.n+': готово','Результат ждёт в лаборатории кабинета врача','lab');}});
+ CAB.beds.forEach(sl=>{if(sl){const p2=PLANTS.find(q=>q.id===sl.id);if(p2) add(sl.end,'🌿 '+p2.n+' созрела','Соберите урожай в оранжерее','bed');}});
+ CAB.brew.forEach(sl=>{if(sl&&RC[sl.id]&&sl.end-now>10*60e3) add(sl.end,'⚗️ Крем готов',RC[sl.id].n+': разлейте по баночкам','brew');});
+ const d=CAB.daily||{};const st=d.streak|0;
+ if(d.last!==today()) add(mskAt(0,19),'☀️ Утренний обход ещё не сделан',st>0?'Серия '+st+' дн. прервётся в полночь':'Заберите награду за сегодня','daily');
+ add(mskAt(1,19),'☀️ Утренний обход ждёт','Заберите награду и не прерывайте серию обходов','daily');
+ const D=dInfo();add(mskAt(1,10),'🩺 Новый случай дня №'+(D.n+1),'Один случай для всех врачей. Кто сегодня будет первым?','dcase');
+ const dl=dLoad();if(!(dl.day===D.day&&dl.done)) add(mskAt(0,20),'🩺 Случай дня №'+D.n+' ещё не пройден','До полуночи по Москве','dcase');
+ const wd=(mskNow().getUTCDay()+6)%7;add(mskAt(6-wd,18),'🏅 Лига: до конца недели 6 часов','Первые 5 поднимутся в следующую лигу','league');
+ ev.sort((a,b)=>a.at-b.at);
+ const seen={},out=[];for(const e of ev){const k=e.tag+Math.round(e.at/600e3);if(seen[k]) continue;seen[k]=1;out.push(e);}
+ return out.slice(0,14);
+}
+async function pushEnable(){
+ const msg=t=>{const e=$('m_pushmsg');if(e) e.textContent=t;toast(t,'hint');};
+ if(!netOn()||!PROF.reg){msg('Сначала начните игру, чтобы закрепить имя');return;}
+ const ios=/iPhone|iPad|iPod/.test(navigator.userAgent||''),sa=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;
+ if(ios&&!sa){msg('На айфоне уведомления работают, когда игра установлена на экран «Домой»: Поделиться → На экран «Домой»');return;}
+ if(!pushSupport()){msg('Этот браузер не поддерживает уведомления');return;}
+ try{
+  const perm=await Notification.requestPermission();if(perm!=='granted'){msg('Уведомления запрещены в настройках браузера');return;}
+  const reg=await navigator.serviceWorker.ready;
+  let sub=await reg.pushManager.getSubscription();if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID)});
+  const ok=await rpc('dq_push_save',{p_id:PROF.id,p_secret:PROF.secret,p_sub:sub.toJSON(),p_events:pushEvents()});
+  if(ok){PROF.push=true;saveProf();msg('Напоминания включены 🔔');renderPushBtn();}else msg('Не получилось сохранить подписку');
+ }catch(e){msg('Не получилось включить уведомления');}
+}
+function renderPushBtn(){const b=$('m_push');if(b) b.textContent=PROF.push?'🔔 Напоминания включены':'🔔 Включить напоминания';}
+async function pushResched(){if(!PROF.push||!netOn()||!PROF.reg) return;try{await rpc('dq_push_save',{p_id:PROF.id,p_secret:PROF.secret,p_sub:null,p_events:pushEvents()});}catch(_){}}
+$('m_push').onclick=()=>pushEnable();
+setTimeout(renderPushBtn,0);
 
 /* ---------- рейтинг врачей: профиль, синхронизация, облачное сохранение ---------- */
 const NET={url:'https://lipjmlqhhunhezizqrmz.supabase.co',key:'sb_publishable_iahNNV_kY2VUkTfNsuiAVA_7-9kSVVj'};
@@ -1640,7 +1809,8 @@ async function syncNow(force,keep){
  if(!netOn()||!PROF.reg||syncBusy) return;const now=Date.now();if(!force&&now-syncAt<30000) return;
  syncAt=now;syncBusy=true;
  try{const d=profStats();let cloud=null;try{cloud={save:loadSave(),cab:CAB,story:STORY,t:now};}catch(_){}
-  await rpc('dq_sync',{p_id:PROF.id,p_secret:PROF.secret,p_lvl:d.lvl,p_xp:d.xp,p_title:d.title,p_gender:sel.g,p_age:sel.a,p_stats:d.stats,p_cloud:cloud},keep);}
+  await rpc('dq_sync',{p_id:PROF.id,p_secret:PROF.secret,p_lvl:d.lvl,p_xp:d.xp,p_title:d.title,p_gender:sel.g,p_age:sel.a,p_stats:d.stats,p_cloud:cloud},keep);
+  if(PROF.push) rpc('dq_push_save',{p_id:PROF.id,p_secret:PROF.secret,p_sub:null,p_events:pushEvents()},keep).catch(()=>{});}
  catch(_){}finally{syncBusy=false;}
 }
 function lockName(){const n=$('nm');if(!n) return;if(PROF.reg){n.value=PROF.name;n.disabled=true;$('nmnote').textContent='Имя закреплено за вашим местом в рейтинге';}else{n.disabled=false;}}
@@ -1667,11 +1837,11 @@ async function openRate(){
  $('rlist').innerHTML='<div class="cabhint">Загружаем рейтинг...</div>';
  await syncNow(true);
  try{RATE.rows=await board('select=*&order=xp_total.desc&limit=300');RATE.err='';}catch(_){RATE.err='Нет связи с сервером рейтинга. Попробуйте позже.';}
- renderRate();renderRateFoot();
+ if(RATE.tab==='daily'||RATE.tab==='league') renderSpecial();else renderRate();renderRateFoot();
 }
 function closeRate(){$('rate').classList.remove('on');if(S&&!quizOpen&&!DLG&&!$('gmenu').classList.contains('on')&&!$('cab').classList.contains('on')) S.paused=false;}
 function renderRate(){
- for(const k in RTABS){const b=$('rt_'+k);if(b) b.classList.toggle('on',RATE.tab===k);}
+ for(const k of Object.keys(RTABS).concat(['daily','league'])){const b=$('rt_'+k);if(b) b.classList.toggle('on',RATE.tab===k);}
  const box=$('rlist');if(RATE.err){box.innerHTML='<div class="cabhint">'+RATE.err+'</div>';return;}
  const f=RTABS[RATE.tab][1];const rows=RATE.rows.slice().sort((a,b)=>f(b)-f(a)||b.xp_total-a.xp_total);
  const myI=rows.findIndex(r=>r.id===PROF.id);
@@ -1706,6 +1876,25 @@ function renderRateFoot(){
   catch(_){$('rmsg').textContent='Нет связи с сервером, попробуйте позже';}};
 }
 for(const k in RTABS){const b=$('rt_'+k);if(b) b.onclick=()=>{RATE.tab=k;$('rprof').style.display='none';$('rlist').style.display='block';renderRate();};}
+$('rt_daily').onclick=()=>{RATE.tab='daily';$('rprof').style.display='none';$('rlist').style.display='block';renderSpecial();};
+$('rt_league').onclick=()=>{RATE.tab='league';$('rprof').style.display='none';$('rlist').style.display='block';renderSpecial();};
+async function renderSpecial(){
+ for(const k of Object.keys(RTABS).concat(['daily','league'])){const b=$('rt_'+k);if(b) b.classList.toggle('on',RATE.tab===k);}
+ const box=$('rlist');if(!netOn()){box.innerHTML='<div class="cabhint">Сервер рейтинга недоступен</div>';return;}
+ box.innerHTML='<div class="cabhint">Загрузка...</div>';
+ try{
+ if(RATE.tab==='daily'){const D=dInfo();const rows=await board0('dq_daily_board','select=*&day=eq.'+D.day+'&order=score.desc,created_at.asc&limit=100');
+  let h='<div class="cabhint">Случай дня №'+D.n+', тема: '+D.tpl.name.toLowerCase()+'. Прошли: '+rows.length+'. Новый случай в полночь по Москве.</div>';
+  if(!rows.length) h+='<div class="cabhint">Сегодня ещё никто не прошёл. Будьте первым!</div>';
+  rows.forEach((r,i)=>{const st=r.stats||{};h+='<div class="rrow'+(r.player===PROF.id?' me':'')+'"><span class="rpl">'+(i<3?['🥇','🥈','🥉'][i]:(i+1))+'</span><span class="rnm"><b>'+esc(r.name)+'</b><br><small>'+(st.q?'✅ ':'❌ ')+'чистота '+(st.clean|0)+'% · рубцов '+(st.scars|0)+'</small></span><span class="rv">'+(r.score|0)+'</span></div>';});
+  box.innerHTML=h;}
+ else{const L=await loadLeague();let h='';
+  if(!L.me){box.innerHTML='<div class="cabhint">Вы попадёте в лигу после первой игры на этой неделе.</div>';return;}
+  const n=L.rows.length,me=L.me;h+='<div class="lghead">🏅 Лига «'+TIERS_L[me.tier]+'», группа '+me.grp+'</div><div class="cabhint">До конца недели: '+weekLeft()+'. Первые 5 поднимутся в лигу'+(me.tier<5?' «'+TIERS_L[me.tier+1]+'»':' выше')+(n>=10&&me.tier>1?', последние 5 опустятся':'')+'. Очки: вылеченные высыпания, посевы, кремы, урожай и случаи дня.'+(me.moved>0?' Вы поднялись на этой неделе!':me.moved<0?' На этой неделе вы опустились, самое время вернуться.':'')+'</div>';
+  L.rows.forEach((r,i)=>{const up=i<5&&me.tier<5,dn=n>=10&&i>=n-5&&me.tier>1;h+=(i===5&&me.tier<5?'<div class="lgline up">▲ зона повышения</div>':'')+(dn&&i===n-5?'<div class="lgline dn">▼ зона понижения</div>':'')+'<div class="rrow'+(r.player===PROF.id?' me':'')+(up?' lup':'')+(dn?' ldn':'')+'"><span class="rpl">'+(i+1)+'</span><span class="rnm"><b>'+esc(r.name)+'</b><br><small>'+esc(r.title||'')+'</small></span><span class="rv">'+(r.pts|0)+'</span></div>';});
+  box.innerHTML=h;}
+ }catch(_){box.innerHTML='<div class="cabhint">Нет связи с сервером</div>';}
+}
 $('rclose').onclick=closeRate;
 $('ratestart').onclick=()=>openRate();
 $('m_rate').onclick=()=>{$('gmenu').classList.remove('on');openRate();};
@@ -1995,6 +2184,7 @@ function update(dt){
  S.saveT=(S.saveT||10)-dt;if(S.saveT<=0){S.saveT=10;saveGame();}
  if(cabSaveT>0){cabSaveT-=dt;if(cabSaveT<=0) saveCab();}
  cabSt().sec+=dt;updateTeam(dt);
+ if(S.dcase&&!S.paused&&!DLG&&!S.dEnded){S.dcaseT-=dt;if(S.dcaseT<=0) finishDaily();}
  if(S.mode==='story'&&S.chap&&S.chap.dot&&!S.paused&&S.p.dead<=0&&!DLG){const dd=S.chap.dot*(S.flags.dotK||1)*dt*(S.buff.emol>0?0.6:1);S.p.hp-=dd;if(S.p.hp<=0){S.p.hp=0.5;damagePlayer(5,true);}}S.netT=(S.netT||60)-dt;if(S.netT<=0){S.netT=60;syncNow(false);}
 }
 
@@ -3303,7 +3493,7 @@ function renderCamp(){
 }
 $('cback').onclick=()=>{$('camp').classList.remove('on');$('start').classList.add('on');};
 function startStory(cid){
- const ch=CH[cid];
+ const ch=typeof cid==='string'?CH[cid]:cid;
  startGame({story:true});
  S.mode='story';S.chap=ch;S.flags={};S.stars=3;S.startPos=ch.start.slice();
  S.pop=JSON.parse(JSON.stringify(ch.pop));
@@ -3321,20 +3511,23 @@ function startStory(cid){
  dialog(ch.intro,()=>{
   let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
   if(cid==='acne1'&&!tutDone) tutStart();
+  else if(ch.dcase){}
   else toast(ch.title+'. Цели в панели справа','hint');
  });
 }
 function storyGoalsHTML(){
+ if(S.chap&&S.chap.dcase){if(!S.dinfo) return '<b>'+S.chap.title+'</b>';return dGoalsHTML();}
  let h='<b>'+S.chap.title+'</b>';
  for(const gl of S.chap.goals){const ok=gl.c();h+='<br>'+(ok?'✅ ':'▫️ ')+gl.t+(gl.p&&!ok?' ('+gl.p()+')':'');}
  return h;
 }
 function storyCheck(){
+ if(S.dcase||(S.chap&&S.chap.dcase)) return;
  if(S.chDone||S.paused||DLG) return;
  if(S.chap.goals.every(gl=>gl.c())){S.chDone=true;setTimeout(finishChapter,900);}
 }
 function finishChapter(){
- if(!S) return;const ch=S.chap;
+ if(!S||(S.chap&&S.chap.dcase)) return;const ch=S.chap;
  const scars=Math.max(0,S.scars-S.scarsFixed);let st=S.stars;
  if(scars>3) st--;if(S.flags.bad||S.flags.transam||S.flags.dry80) st--;if((S.flags.worse|0)>=4) st--;
  st=clamp(st,1,3);S.finalStars=st;
@@ -3435,7 +3628,7 @@ function loop(ts){
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
