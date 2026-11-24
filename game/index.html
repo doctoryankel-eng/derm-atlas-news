@@ -281,6 +281,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 .clb{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;margin-top:6px;border-radius:9px;border:1px solid rgba(233,193,122,.35);background:#261b20;color:var(--txt);font-size:14px;cursor:pointer;text-align:left}
 .clb.done{border-color:rgba(111,207,142,.6)}
 .clb:disabled{opacity:.4;cursor:default}
+.treq{font-size:10.5px;color:#ff9aa8}.treq.ok{color:#9fe0b0}.clb.teamch{border-color:rgba(159,224,176,.45)}
 .cdf{font-size:10.5px;letter-spacing:.5px;color:#9fe0b0}.cdf.d2{color:#ffe07a}.cdf.d3{color:#ffb06a}.cdf.d4{color:#ff7a8a}
 .cls{color:#ffd25a;font-size:13px;white-space:nowrap;margin-left:8px}
 .big.sec{background:#261b20;border-color:rgba(233,193,122,.45);font-size:15px;padding:10px;margin-top:8px}
@@ -835,7 +836,7 @@ function findSpot(type,zid,initial){
 function spawnMob(type,zid,initial,x,y,extra){
  const d=MOB[type];
  if(x==null){const sp=findSpot(type,zid,initial);if(!sp) return null;x=sp[0];y=sp[1];}
- const hk=type==='boss'?1+0.05*((S.p?S.p.lvl:1)-1):tierK();
+ const hk=(type==='boss'?1+0.05*((S.p?S.p.lvl:1)-1):tierK())*(type==='boss'?1+0.2*teamN():1+0.3*teamN());
  const m={type,zone:zid,x,y,hx:x,hy:y,r:d.r,hp:d.hp*hk,maxhp:d.hp*hk,flash:0,atk:0,shoot:rnd(0.5,2.5),auraT:0,infl:0,st:{},seed:Math.random(),dead:false,kob:false,lastHit:null};
  if(d.evolve) m.evo=rnd(d.evolve[0],d.evolve[1]);
  if(d.pore){m.plugT=rnd(6,14);m.lastHitT=-99;}
@@ -1199,7 +1200,7 @@ function areaHit(x,y,sk){
 function hitMob(m,sk,base){
  if(m.dead) return;
  const e=EFF[m.type][sk.id];
- m.lastHit=sk.id;m.lastHitT=S.t;
+ m.lastHit=sk.id;m.lastHitT=S.t;m.lastBy=S._by||null;
  if(e==='mutate'){mutate(m);return;}
  if(e<0){aggravate(m,sk,base,-e);return;}
  if(e===0){ftext(m.x,m.y,'0','#8a8a8a');hint(m.type,sk.id);return;}
@@ -1280,7 +1281,8 @@ function killMob(m){
  m.dead=true;S.kills++;sfx('kill');
  if(m.type==='steroid') S.flags.sterKills=(S.flags.sterKills||0)+1;
  if(S.flags) S.flags['k_'+m.type]=(S.flags['k_'+m.type]|0)+1;
- if(m.title) S.flags.giant=true;
+ if(m.title){S.flags.giant=true;S.flags.giants=(S.flags.giants|0)+1;}
+ if(m.lastBy&&S.flags){S.flags['rk_'+m.lastBy]=(S.flags['rk_'+m.lastBy]|0)+1;S.flags.rk=(S.flags.rk|0)+1;}
  burst(m.x,m.y,DEATHCOL[m.type],m.type==='boss'?80:14,m.type==='boss'?320:160);
  gainXP(MOB[m.type].xp*tierK()*(1+0.1*((CAB.up&&CAB.up.couch)||0)));
  CAB.coins+=Math.max(1,Math.round(MOB[m.type].xp/4*tierK()));cabDirty();
@@ -1539,11 +1541,15 @@ $('cabstart').onclick=()=>openCab();
 const RSPEC={
  acne:{n:'Акне',sk:'bpo',scrub:'#2f8f5a',d:'Бензоилпероксид по комедонам, папулам и пустулам. С 20 уровня бьёт по двум целям'},
  ros:{n:'Розацеа',sk:'metr',scrub:'#b0476a',d:'Метронидазол по розацеа и стероидному дерматиту'},
- pso:{n:'Псориаз',sk:'akr',scrub:'#5a5fb8',d:'Бетаметазон по бляшкам, помогает против босса'},
+ pso:{n:'Псориаз',sk:'akr',scrub:'#5a5fb8',d:'Бетаметазон по бляшкам. С 15 уровня бьёт босса метотрексатом'},
  care:{n:'Уход за кожей',sk:null,scrub:'#c98a2a',d:'Каждые 6 секунд лечит врача и снимает сухость кожи'},
 };
 const TEAM_LV=[5,15,30,50],TEAM_COST=[300,800,1500,3000],RMAX=50;
 const RNAMES={boy:['Артём','Илья','Максим','Никита','Тимур','Глеб','Денис','Роман','Егор','Лев'],girl:['Мария','Алина','Полина','Вера','Дарья','Ксения','Софья','Анна','Ева','Таисия']};
+function teamN(){if(!S||S.tut>=0) return 0;return Math.min(4,(CAB.team||[]).filter(r=>r.on).length);}
+function popK(){return 1+0.25*teamN();}
+function teamOK(req){if(!req) return true;const on=(CAB.team||[]).filter(r=>r.on);if(on.length<req.n) return false;return (req.spec||[]).every(sp=>on.some(r=>r.spec===sp));}
+function teamReqText(req){const sp=(req.spec||[]).map(k=>RSPEC[k].n.toLowerCase());return '👥 Нужна команда: '+req.n+' '+(req.n===1?'ординатор':req.n<5?'ординатора':'ординаторов')+(sp.length?', среди них по специализации: '+sp.join(', '):'');}
 function rneed(l){return Math.round(40*Math.pow(l,1.3));}
 function teamArr(){if(!CAB.team) CAB.team=[];return CAB.team;}
 function teamSlots(){const L=profLvl();return TEAM_LV.filter(v=>L>=v).length;}
@@ -1568,7 +1574,7 @@ function teamHTML(){
 function drawResFaces(){document.querySelectorAll('.rface').forEach(c=>{const r=teamArr()[+c.dataset.i];if(!r) return;const g2=c.getContext('2d');g2.clearRect(0,0,70,80);g2.save();g2.translate(35,76);g2.scale(1,1);
  drawHero(g2,0,0,{gender:r.g,age:'adult',dir:1,walk:0,moving:false,t:1,hurt:0,lvl:resTier(r.lvl),grow:1,scrub:RSPEC[r.spec].scrub});g2.restore();});}
 function buildTeam(){
- if(!S||S.mode!=='free'){if(S) S.team=[];return;}
+ if(!S||(S.mode!=='free'&&S.mode!=='story')||S.tut>=0){if(S) S.team=[];return;}
  const p=S.p;S.team=teamArr().filter(r=>r.on).slice(0,4).map((r,i)=>({r,x:p.x-30-i*20,y:p.y+30+i*15,walk:0,moving:false,dir:1,cd:1+i*0.3,heal:6}));
 }
 const FORM=[[-45,35],[35,-45],[-75,-10],[-10,-75]];
@@ -1579,15 +1585,15 @@ function updateTeam(dt){
   if(d>600){t.x=fx;t.y=fy;}
   else if(d>14){const v=Math.min(d*4,p.spd?p.spd*1.15:260);t.x+=dx/d*v*dt;t.y+=dy/d*v*dt;t.moving=true;t.walk+=dt*10;const sx=dx-dy;if(Math.abs(sx)>2) t.dir=sx>0?1:-1;}else t.moving=false;
   if(p.dead>0) return;
-  if(r.spec==='care'){t.heal-=dt;if(t.heal<=0){t.heal=Math.max(3.5,6-r.lvl*0.04);if(p.hp<p.maxhp||S.dry>0){const h=p.maxhp*(0.06+r.lvl*0.002);p.hp=Math.min(p.maxhp,p.hp+h);S.dry=Math.max(0,S.dry-8);
+  if(r.spec==='care'){t.heal-=dt;if(t.heal<=0){t.heal=Math.max(3.5,6-r.lvl*0.04);if(p.hp<p.maxhp||S.dry>0){const h=p.maxhp*(0.06+r.lvl*0.002);p.hp=Math.min(p.maxhp,p.hp+h);S.dry=Math.max(0,S.dry-8);if(S.flags) S.flags.careHeals=(S.flags.careHeals|0)+1;
    S.fx.push({k:'ring',x:p.x,y:p.y,r:60,t:0,max:.5,col:'#6fcf8e'});ftext(p.x,p.y-30,'+'+Math.round(h),'#6fcf8e');S.fx.push({k:'beam',x:t.x,y:t.y,x2:p.x,y2:p.y,t:0,max:.25,col:'#6fcf8e'});}}return;}
-  t.cd-=dt;if(t.cd>0) return;const sk=SK[sp.sk];
-  const cand=S.mobs.filter(m=>!m.dead&&vis(m)&&typeof EFF[m.type][sk.id]==='number'&&EFF[m.type][sk.id]>=0.6&&Math.hypot(m.x-t.x,m.y-t.y)<340).sort((a,b)=>Math.hypot(a.x-t.x,a.y-t.y)-Math.hypot(b.x-t.x,b.y-t.y));
+  t.cd-=dt;if(t.cd>0) return;const sk=SK[sp.sk];const bossOk=r.spec==='pso'&&r.lvl>=15;
+  const cand=S.mobs.filter(m=>!m.dead&&vis(m)&&Math.hypot(m.x-t.x,m.y-t.y)<340&&((m.type==='boss'&&bossOk)||(typeof EFF[m.type][sk.id]==='number'&&EFF[m.type][sk.id]>=0.6))).sort((a,b)=>Math.hypot(a.x-t.x,a.y-t.y)-Math.hypot(b.x-t.x,b.y-t.y));
   if(!cand.length){t.cd=0.4;return;}
   t.cd=Math.max(0.8,1.8-r.lvl*0.02);const k=0.4+0.02*r.lvl;
   const shots=r.spec==='acne'&&r.lvl>=20?2:1;
-  for(let j=0;j<Math.min(shots,cand.length);j++){const tg=cand[j];const ang=Math.atan2(tg.y-t.y,tg.x-t.x);
-   S.proj.push({x:t.x+Math.cos(ang)*14,y:t.y+Math.sin(ang)*14,vx:Math.cos(ang)*sk.speed,vy:Math.sin(ang)*sk.speed,ang,sk,tgt:tg,trav:0,hit:new Set(),pierce:1,trail:[],k});
+  for(let j=0;j<Math.min(shots,cand.length);j++){const tg=cand[j];const ang=Math.atan2(tg.y-t.y,tg.x-t.x);const sk2=tg.type==='boss'?SK.mtx:sk;
+   S.proj.push({x:t.x+Math.cos(ang)*14,y:t.y+Math.sin(ang)*14,vx:Math.cos(ang)*sk2.speed,vy:Math.sin(ang)*sk2.speed,ang,sk:sk2,tgt:tg,trav:0,hit:new Set(),pierce:1,trail:[],k,by:r.spec});
    const sx=Math.cos(ang)-Math.sin(ang);if(Math.abs(sx)>0.05) t.dir=sx>0?1:-1;}
  });
 }
@@ -1833,7 +1839,7 @@ function update(dt){
 
  if(p.dead>0){p.dead-=dt;if(p.dead<=0) respawn();}
  else{
-  if(!p.deb.cheil&&S.dry<60) p.hp=Math.min(p.maxhp,p.hp+2.2*dt*(1-S.dry/100)*(S.buff.regen>0?4:1)*(1+0.03*(p.lvl-1)));
+  if(!p.deb.cheil&&S.dry<60&&!(S.mode==='story'&&S.chap&&S.chap.dot)) p.hp=Math.min(p.maxhp,p.hp+2.2*dt*(1-S.dry/100)*(S.buff.regen>0?4:1)*(1+0.03*(p.lvl-1)));
   let kx=0,ky=0;
   if(keys.w||keys['ц']||keys.arrowup) ky-=1;if(keys.s||keys['ы']||keys.arrowdown) ky+=1;
   if(keys.a||keys['ф']||keys.arrowleft) kx-=1;if(keys.d||keys['в']||keys.arrowright) kx+=1;
@@ -1937,7 +1943,7 @@ function update(dt){
   for(const m of S.mobs){
    if(m.dead||pr.hit.has(m)||!vis(m)) continue;
    if(Math.hypot(m.x-pr.x,m.y-pr.y)<m.r+pr.sk.r){
-    pr.hit.add(m);hitMob(m,pr.sk,pr.sk.dmg*(pr.k||1));
+    pr.hit.add(m);S._by=pr.by||null;hitMob(m,pr.sk,pr.sk.dmg*(pr.k||1));S._by=null;
     if(pr.sk.splash){
      S.fx.push({k:'ring',x:pr.x,y:pr.y,r:pr.sk.splash,t:0,max:.35,col:pr.sk.col});
      for(const o of S.mobs) if(!o.dead&&o!==m&&Math.hypot(o.x-pr.x,o.y-pr.y)<pr.sk.splash+o.r) hitMob(o,pr.sk,pr.sk.dmg*0.6);
@@ -1979,7 +1985,7 @@ function update(dt){
  if(S.spawnT<=0){S.spawnT=2.5;
   const PP=S.pop||POP;
   for(const zid in PP){const f=Math.max(0.15,1-zoneClean(zid)*0.85);
-   for(const type in PP[zid]){const want=Math.round(PP[zid][type]*f);
+   for(const type in PP[zid]){const want=Math.round(PP[zid][type]*f*popK());
     const have=S.mobs.filter(m=>m.zone===zid&&(m.type===type||(type==='rosacea'&&m.type==='steroid'))&&!m.kob).length;
     if(have<want) spawnMob(type,zid,false);}}}
  if(!S.boss&&S.mode!=='story'){S.bossRespawn-=dt;if(S.bossRespawn<=0){spawnBoss();toast('Обострение: бляшечный псориаз вернулся на Локти','boss');}}
@@ -1988,7 +1994,8 @@ function update(dt){
  S.hudT-=dt;if(S.hudT<=0){S.hudT=0.1;updateHUD();}
  S.saveT=(S.saveT||10)-dt;if(S.saveT<=0){S.saveT=10;saveGame();}
  if(cabSaveT>0){cabSaveT-=dt;if(cabSaveT<=0) saveCab();}
- cabSt().sec+=dt;updateTeam(dt);S.netT=(S.netT||60)-dt;if(S.netT<=0){S.netT=60;syncNow(false);}
+ cabSt().sec+=dt;updateTeam(dt);
+ if(S.mode==='story'&&S.chap&&S.chap.dot&&!S.paused&&S.p.dead<=0&&!DLG){const dd=S.chap.dot*(S.flags.dotK||1)*dt*(S.buff.emol>0?0.6:1);S.p.hp-=dd;if(S.p.hp<=0){S.p.hp=0.5;damagePlayer(5,true);}}S.netT=(S.netT||60)-dt;if(S.netT<=0){S.netT=60;syncNow(false);}
 }
 
 function bossAI(m,dt,pz){
@@ -2987,6 +2994,8 @@ const CAST={
  anya:{name:'Аня, 16 лет',role:'Пациентка',d:{skin:'#f3cfb0',hair:'#6b3b22',long:true,acne:1,coat:'#e07aa0'}},
  mom:{name:'Мама Ани',role:'',d:{skin:'#efc6a4',hair:'#3b2a20',long:true,coat:'#7a5a8a'}},
  irina:{name:'Ирина, 42 года',role:'Пациентка',d:{skin:'#f1c4ad',hair:'#b9863c',long:true,red:1,coat:'#6a8fb0'}},
+ dima:{name:'Дима, 19 лет',role:'Пациент, брат Ани',d:{skin:'#efc6a6',hair:'#4a2c1c',acne:1,coat:'#3c5a7a'}},
+ oleg:{name:'Олег, 58 лет',role:'Пациент, муж Ирины',d:{skin:'#e8b79a',hair:'#bdbdc4',beard:true,red:1,glasses:true,coat:'#5a4a3a'}},
  sergey:{name:'Сергей, 35 лет',role:'Пациент',d:{skin:'#e9bf9c',hair:'#2a2a2a',beard:true,plaque:1,coat:'#55606a'}},
 };
 function drawFace(g,d,W){
@@ -3212,26 +3221,82 @@ const CH={
          {t:'Победите рефрактерный псориаз',c:()=>S.bossKills>0}],
   outro:st=>[{who:'sergey',t:'Кожа чистая уже три месяца. Я записался в бассейн.'},
              {who:'prof',t:'PASI 90 на биологической терапии. Линия псориаза пройдена, коллега.'}]},
+
+ acne7:{line:'acne',diff:4,team:{n:2,spec:['acne']},title:'Глава 7. Конглобатные акне',zone:'chin',lvl:12,eq:['scope','wood','flaser'],un:['akn'],start:[300,1700],pop:{chin:{nodule:9,pustule:8,papule:6,comedo:4}},
+  setup:()=>{for(const [x,y] of [[700,1900],[1050,2150],[500,2200]]) spawnMob('nodule','chin',true,x,y,{maxhp:900*tierK()*popK(),hp:900*tierK()*popK(),r:46,title:'Конглобатный узел'});},
+  intro:[
+   {who:'dima',t:'Я брат Ани. У меня на подбородке, шее и спине сливающиеся узлы и свищи. Сестре вы помогли, но у меня всё намного хуже.'},
+   {who:'prof',t:'Конглобатные акне, коллега. Один врач здесь не справится: работаем командой. Ординатор по акне берёт на себя воспалительные элементы, вы ведёте узлы.'},
+   {who:'dima',t:'А можно сразу полную дозу изотретиноина, чтобы быстрее?',
+    ch:[{t:'Начинаем с низкой дозы изотретиноина, при необходимости под прикрытием короткого курса системного стероида, и постепенно повышаем',ok:true,fx:()=>{S.var.akn='low';},
+         reply:[{who:'prof',t:'Правильно. Старт с полной дозы при тяжёлом узловом акне может дать резкое обострение. Низкие дозы уже выбраны в вариантах изотретиноина.'}]},
+        {t:'Да, сразу полная доза, раз так тяжело',ok:false,fx:()=>{for(let i=0;i<5;i++) spawnMob('nodule','chin',false);for(const m of S.mobs) if(ACNE_TYPES[m.type]) m.infl=10;},
+         reply:[{who:'prof',t:'Изотретиноиновое обострение: узлов стало больше, всё воспалено. Команда, за работу.'}]}]},
+  ],
+  goals:[{t:'Вылечите 3 конглобатных узла',c:()=>(S.flags.giants|0)>=3,p:()=>Math.min(3,S.flags.giants|0)+'/3'},
+         {t:'Ординатор по акне: 20 вылеченных высыпаний',c:()=>(S.flags.rk_acne|0)>=20,p:()=>Math.min(20,S.flags.rk_acne|0)+'/20'},
+         {t:'Вылечите 10 узлов',c:()=>KF('nodule')>=10,p:()=>Math.min(10,KF('nodule'))+'/10'},
+         {t:'Чистота подбородка 55%',c:()=>PCT('chin')>=55,p:()=>PCT('chin')+'%'}],
+  outro:st=>[{who:'dima',t:'Узлы ушли. Рубцы остались, но вы сказали, что лазером их можно сгладить.'},
+             {who:'prof',t:'Самая тяжёлая форма акне побеждена командой. Рубцов: '+SCARS()+'. Отличная работа, коллеги.'}]},
+
+ ros4:{line:'ros',diff:4,team:{n:2,spec:['ros']},title:'Глава 4. Ринофима',zone:'cheeks',lvl:11,eq:['scope','vlaser','flaser'],start:[1700,300],pop:{cheeks:{rosacea:12,steroid:3}},
+  setup:()=>{spawnMob('rosacea','cheeks',true,1950,700,{maxhp:1400*tierK()*popK(),hp:1400*tierK()*popK(),r:56,title:'Ринофима'});
+   for(let i=0;i<6;i++) S.marks.push({x:rnd(1550,2300),y:rnd(150,1250),k:'tel',r:22,life:600,max:600,zone:'cheeks',seed:Math.random()});},
+  intro:[
+   {who:'oleg',t:'Жена у вас лечилась. А у меня нос за десять лет стал большим, бугристым и красным. Говорят, это от выпивки, но я почти не пью.'},
+   {who:'prof',t:'Ринофима, фиматозная розацеа. Алкоголь тут ни при чём, это частый миф. Ординатор по розацеа гасит воспаление на щеках, вы займётесь носом.'},
+   {who:'oleg',t:'Может, какую-нибудь мазь, чтобы нос уменьшился?',
+    ch:[{t:'Мазь утолщение не уберёт. Гасим воспаление, а гипертрофированную ткань убираем абляционным лазером или хирургически',ok:true,
+         reply:[{who:'prof',t:'Верно. Фракционный лазер в игре сыграет роль абляционного. Используйте его по ринофиме, ординатор прикроет щёки.'}]},
+        {t:'Метронидазол уменьшит нос за пару месяцев',ok:false,fx:()=>{S.flags.myth=true;},
+         reply:[{who:'prof',t:'Наружные средства гасят воспаление, но фиматозную ткань не уменьшают. Пациент потерял время. Работайте лазером.'}]}]},
+  ],
+  goals:[{t:'Уберите ринофиму',c:()=>(S.flags.giants|0)>=1},
+         {t:'Проведите 4 сеанса фракционного лазера',c:()=>(S.flags.a_flaser|0)>=4,p:()=>Math.min(4,S.flags.a_flaser|0)+'/4'},
+         {t:'Ординатор по розацеа: 15 вылеченных очагов',c:()=>(S.flags.rk_ros|0)>=15,p:()=>Math.min(15,S.flags.rk_ros|0)+'/15'},
+         {t:'Чистота щёк 50%',c:()=>PCT('cheeks')>=50,p:()=>PCT('cheeks')+'%'}],
+  outro:st=>[{who:'oleg',t:'Нос стал нормальным. Жена говорит, я помолодел лет на десять.'},
+             {who:'prof',t:'Ринофима убрана, воспаление погашено. Линия розацеа пройдена полностью.'}]},
+
+ pso5:{line:'pso',diff:4,team:{n:4,spec:['pso','care']},title:'Глава 5. Эритродермия',zone:'elbows',lvl:14,eq:['scope','uvb','flaser'],un:['mtx','efl'],start:[1580,1580],pop:{elbows:{plaque:12}},boss:true,dot:3.5,
+  setup:()=>{if(S.boss){S.boss.maxhp*=1.15;S.boss.hp=S.boss.maxhp;}},
+  intro:[
+   {who:'sergey',t:'Доктор, я пропустил две инъекции, а в другой клинике мне прокапали гормоны. Через неделю покраснело всё тело, знобит, кожа слезает.'},
+   {who:'prof',t:'Псориатическая эритродермия, жизнеугрожающее состояние. Кожа теряет тепло и жидкость: врач будет терять здоровье каждую секунду. Нужна вся команда, обязательно ординатор по уходу.'},
+   {who:'sergey',t:'Может, ещё раз прокапать гормоны? Тогда же сначала стало лучше.',
+    ch:[{t:'Системные стероиды при псориазе не используем: на отмене они и дали эритродермию. Госпитализация, контроль температуры и жидкости, эмоленты, возобновляем генно-инженерную терапию',ok:true,
+         reply:[{who:'prof',t:'Правильно. Ординатор по уходу держит кожный барьер, ординатор по псориазу работает по бляшкам, вы ведёте босса.'}]},
+        {t:'Да, короткий курс стероидов снимет обострение',ok:false,fx:()=>{S.flags.dotK=1.5;},
+         reply:[{who:'prof',t:'Повторные стероиды только усилили эритродермию. Потеря тепла выросла. Действуйте быстрее.'}]}]},
+  ],
+  goals:[{t:'Победите эритродермию',c:()=>S.bossKills>0},
+         {t:'Ординатор по псориазу: 15 бляшек',c:()=>(S.flags.rk_pso|0)>=15,p:()=>Math.min(15,S.flags.rk_pso|0)+'/15'},
+         {t:'Ординатор по уходу: 15 процедур',c:()=>(S.flags.careHeals|0)>=15,p:()=>Math.min(15,S.flags.careHeals|0)+'/15'}],
+  outro:st=>[{who:'sergey',t:'Я снова чувствую свою кожу. Больше никаких капельниц «от знакомых».'},
+             {who:'prof',t:'Эритродермию вытащила вся команда. Пять человек, одна цель: так и работает настоящее отделение.'}]},
 };
 for(const k in CH) CH[k].id=k;
 const LINES=[
- {id:'acne',name:'Акне',who:'anya',desc:'Аня, от 15 лет до ремиссии. От чёрных точек до узлов, изотретиноина и поддерживающей терапии',ch:['acne1','acne2','acne3','acne4','acne5','acne6']},
- {id:'ros',name:'Розацеа',who:'irina',desc:'Ирина, 42 года. Покраснение и сосуды, гормональная мазь «от косметолога», папулопустулёзное обострение',ch:['ros1','ros2','ros3']},
- {id:'pso',name:'Псориаз',who:'sergey',desc:'Сергей, 35 лет. От бляшек на локтях до генно-инженерной терапии',ch:['pso1','pso2','pso3','pso4']},
+ {id:'acne',name:'Акне',who:'anya',desc:'Аня, от 15 лет до ремиссии. От чёрных точек до узлов, изотретиноина и поддерживающей терапии',ch:['acne1','acne2','acne3','acne4','acne5','acne6','acne7']},
+ {id:'ros',name:'Розацеа',who:'irina',desc:'Ирина, 42 года. Покраснение и сосуды, гормональная мазь «от косметолога», папулопустулёзное обострение',ch:['ros1','ros2','ros3','ros4']},
+ {id:'pso',name:'Псориаз',who:'sergey',desc:'Сергей, 35 лет. От бляшек на локтях до генно-инженерной терапии',ch:['pso1','pso2','pso3','pso4','pso5']},
  {id:'ad',name:'Атопический дерматит',who:null,desc:'Миша, 5 лет, и мама, которая боится гормонов. Эмоленты, топические стероиды, такролимус, дупилумаб и босс «Зуд»',ch:[],soon:true},
 ];
 function starsStr(n){return '★'.repeat(n)+'☆'.repeat(3-n);}
 function openCamp(){renderCamp();qFocus=0;$('camp').classList.add('on');}
 function renderCamp(){
  const box=$('clist');box.innerHTML='';
+ {const n=Math.min(4,(CAB.team||[]).filter(r=>r.on).length);const d0=document.createElement('div');d0.className='cabhint';d0.style.textAlign='center';
+  d0.textContent=n?'👥 С вами в команде '+n+(n===1?' ординатор':' ординатора')+'. Высыпаний больше на '+(25*n)+'%, они крепче на '+(30*n)+'%, боссы на '+(40*n)+'%':'Вы играете в одиночку. Ординаторов можно взять в кабинете врача, в ординаторской. Некоторые главы проходятся только командой';box.appendChild(d0);}
  for(const L of LINES){
   const d=document.createElement('div');d.className='cl'+(L.soon?' soon':'');
   const top=document.createElement('div');top.className='cltop';
   if(L.who){const cv2=document.createElement('canvas');cv2.width=120;cv2.height=120;cv2.className='clface';drawFace(cv2.getContext('2d'),CAST[L.who].d,120);top.appendChild(cv2);}
   const tx=document.createElement('div');tx.innerHTML='<div class="cln">'+L.name+(L.soon?' <span class="soonb">в разработке</span>':'')+'</div><div class="cld">'+L.desc+'</div>';top.appendChild(tx);d.appendChild(top);
-  L.ch.forEach((cid,i)=>{const c=CH[cid],st=STORY[cid],open=i===0||(STORY[L.ch[i-1]]&&STORY[L.ch[i-1]].done);
-   const b=document.createElement('button');b.className='clb'+(st&&st.done?' done':'');b.disabled=!open;
-   b.innerHTML='<span>'+c.title+'<br><small class="cdf d'+c.diff+'">'+'●'.repeat(c.diff)+'○'.repeat(4-c.diff)+' '+DIFF[c.diff]+'</small></span><span class="cls">'+(st&&st.done?starsStr(st.stars):(open?'Начать':'Закрыто'))+'</span>';
+  L.ch.forEach((cid,i)=>{const c=CH[cid],st=STORY[cid],prevOk=i===0||(STORY[L.ch[i-1]]&&STORY[L.ch[i-1]].done),tOk=teamOK(c.team),open=prevOk&&tOk;
+   const b=document.createElement('button');b.className='clb'+(st&&st.done?' done':'')+(c.team?' teamch':'');b.disabled=!open;
+   b.innerHTML='<span>'+c.title+'<br><small class="cdf d'+c.diff+'">'+'●'.repeat(c.diff)+'○'.repeat(4-c.diff)+' '+DIFF[c.diff]+'</small>'+(c.team?'<br><small class="treq'+(tOk?' ok':'')+'">'+teamReqText(c.team)+'</small>':'')+'</span><span class="cls">'+(st&&st.done?starsStr(st.stars):(open?'Начать':(prevOk?'👥':'Закрыто')))+'</span>';
    b.onclick=()=>{$('camp').classList.remove('on');startStory(cid);};d.appendChild(b);});
   box.appendChild(d);
  }
@@ -3247,7 +3312,8 @@ function startStory(cid){
  p.un={bpo:true,ada:true,aza:true};for(const sk of SKILLS) if(!sk.quiz&&sk.lvl<=ch.lvl) p.un[sk.id]=true;
  if(ch.un) for(const u of ch.un) p.un[u]=true;
  S.sp=1+Math.max(0,ch.lvl-1)*2;S.eq={};for(const e of (ch.eq||[])) S.eq[e]=true;S.picks=0;
- for(const zid in S.pop) for(const type in S.pop[zid]) for(let i=0;i<S.pop[zid][type];i++) spawnMob(type,zid,true);
+ S.team=null;
+ for(const zid in S.pop) for(const type in S.pop[zid]) for(let i=0;i<Math.round(S.pop[zid][type]*popK());i++) spawnMob(type,zid,true);
  if(ch.boss) spawnBoss();
  if(ch.setup) ch.setup();
  const c=iso(p.x,p.y);camX=c[0];camY=c[1];
