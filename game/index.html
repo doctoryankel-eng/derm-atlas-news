@@ -1517,7 +1517,7 @@ $('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.mode==='story
 $('cabstart').onclick=()=>openCab();
 
 /* ---------- рейтинг врачей: профиль, синхронизация, облачное сохранение ---------- */
-const NET={url:'',key:''};
+const NET={url:'https://lipjmlqhhunhezizqrmz.supabase.co',key:'sb_publishable_iahNNV_kY2VUkTfNsuiAVA_7-9kSVVj'};
 const PROF_KEY='dq_prof_v1';
 function rid(n){const a=new Uint8Array(n);(typeof crypto!=='undefined'&&crypto.getRandomValues?crypto.getRandomValues(a):a.forEach((_,i)=>a[i]=Math.random()*256));return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('');}
 function uuid(){const h=rid(16);return h.slice(0,8)+'-'+h.slice(8,12)+'-4'+h.slice(13,16)+'-'+((parseInt(h[16],16)&3)|8).toString(16)+h.slice(17,20)+'-'+h.slice(20,32);}
