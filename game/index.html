@@ -207,6 +207,39 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 .inum{flex:none;width:26px;height:26px;border-radius:50%;background:#3a2a1c;border:1px solid var(--gold);color:#ffe9bf;display:flex;align-items:center;justify-content:center;font-weight:700}
 .iarrow{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:34px;color:#7fb2ff;animation:ibounce 1s infinite;text-shadow:0 0 12px rgba(127,178,255,.8)}
 @keyframes ibounce{50%{transform:translate(-50%,8px)}}
+.cabc{max-width:640px}
+.cabhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cabcoins{font-size:18px;color:#ffe9bf;background:#3a2a1c;border:1px solid var(--gold);border-radius:12px;padding:4px 12px}
+.ctabs{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 8px}
+.ctabs button{flex:1;min-width:96px;padding:8px 4px;border-radius:9px;border:1px solid rgba(233,193,122,.3);background:#261b20;color:var(--muted);font-size:12.5px;cursor:pointer}
+.ctabs button.on{color:#ffe9bf;border-color:var(--gold);background:#3a2a1c}
+.cabhint{font-size:12px;color:var(--muted);margin:4px 0 8px;line-height:1.4}
+.cslot{border:1px solid var(--line);border-radius:10px;padding:9px;margin-bottom:8px;background:rgba(255,255,255,.02)}
+.csn{font-size:14px;margin-bottom:5px}
+.csd{font-size:11.5px;color:var(--muted)}
+.cchoices{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:5px}
+.cbtn{padding:7px 8px;border-radius:8px;border:1px solid rgba(159,232,255,.35);background:#17242a;color:var(--txt);font-size:11.5px;cursor:pointer;text-align:left;line-height:1.3}
+.cbtn.s{flex:none;text-align:center;white-space:nowrap}
+.cbtn:disabled{opacity:.4;cursor:default}
+.cbar{height:9px;border-radius:5px;background:#2b1e22;overflow:hidden;margin:4px 0}
+.cbar i{display:block;height:100%;background:linear-gradient(90deg,#9fe8ff,#2f9db8)}
+.cbar.g i{background:linear-gradient(90deg,#a6f0c0,#3f9e66)}
+.cbar.b i{background:linear-gradient(90deg,#ffe07a,#c99a1c)}
+.crec{display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06);padding:7px 0;font-size:13px;line-height:1.35}
+.crec.off{opacity:.6}
+.crec.done{opacity:.55}
+.cnt{font-size:11px;color:var(--gold)}
+.cneed{font-size:10.5px;color:#9fd3ff}
+.csub{font-family:Georgia,serif;color:var(--gold);font-size:14px;margin:10px 0 5px}
+.cline{display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.ckit{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
+.ckits{padding:10px 6px;border-radius:10px;border:1px dashed rgba(111,207,142,.6);background:#16241b;color:var(--txt);font-size:11.5px;cursor:pointer;min-height:58px}
+#cabmsg{position:sticky;bottom:0;text-align:center;font-size:13px;color:#d7ffe3;background:rgba(20,40,28,.9);border-radius:8px;padding:6px;opacity:0;transition:opacity .4s}
+#menubtn{pointer-events:auto;background:#261b20;border:1px solid rgba(233,193,122,.45);color:var(--gold);border-radius:9px;padding:4px 10px;font-size:13px;cursor:pointer}
+#kit{position:absolute;left:30px;bottom:160px;display:flex;gap:6px;pointer-events:auto}
+.slot.kit{position:relative;width:50px;height:50px;left:auto;top:auto;flex:none;border-color:rgba(111,207,142,.6);background:radial-gradient(circle at 50% 32%,#24382b,#0f1a13)}
+.slot.kit .nm{font-size:6.5px;margin-bottom:4px}
+.slot.kit .ct{right:4px;bottom:auto;top:2px;font-size:11px}
 .dlgc{max-width:600px}
 .dlgtop{display:flex;gap:14px;align-items:center;margin-bottom:10px}
 #dlgface{width:92px;height:92px;border-radius:12px;border:1px solid var(--line);flex:none}
@@ -255,6 +288,9 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  #bossbar{top:118px;width:72vw}
  #joy{bottom:22px;left:14px;width:116px;height:116px}
  #cluster{transform:scale(.78)}
+ #kit{left:14px;bottom:146px;gap:4px}
+ .slot.kit{width:42px;height:42px}
+ #helpbtn,#sndbtn{display:none!important}
  #proc{left:8px;bottom:242px;transform:none}
  #proctg{cursor:pointer;padding:6px 9px}
  #proctg::after{content:' ▸'}
@@ -294,7 +330,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <div class="bar" id="resb"><i></i><span></span></div>
    <div class="bar" id="dryb"><i></i><span></span></div>
    <div id="debuffs"></div>
-   <div class="hbtns"><button id="spbtn">★ Прокачка <b id="spn">1</b></button><button id="eqbtn">🛠 Кабинет <b id="eqn">0</b></button></div>
+   <div class="hbtns"><button id="spbtn">★ Прокачка <b id="spn">1</b></button><button id="eqbtn">🛠 <b id="eqn">0</b></button><button id="menubtn">☰</button></div>
   </div>
  </div>
  <div id="zone"><div id="zname" class="serif">Лоб</div><div id="zsub"></div></div>
@@ -307,6 +343,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
  </div>
  <div id="toasts"></div>
  <div id="cluster"></div>
+ <div id="kit"></div>
  <div id="buffs"></div>
  <div id="proc"><div id="proctg">Процедуры</div><div id="procs"></div></div>
  <div id="helpbtn" class="panel serif">?</div>
@@ -327,6 +364,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <button id="cont" class="big"></button>
   <button id="go" class="big">Сюжет</button>
   <button id="free" class="big sec">Свободная игра</button>
+  <button id="cabstart" class="big sec">🏥 Кабинет врача</button>
   <div id="install">Чтобы игра жила на айфоне как приложение: нажмите «Поделиться» внизу Safari, затем «На экран Домой». Игра будет открываться на весь экран и работать без интернета.</div>
   <div class="foot">Прототип одиночного режима. Игровая модель упрощает клинические рекомендации: дозы, схемы и показания в реальной практике сложнее.<br>Геймпад: ✕ начать, □ пол, △ возраст.</div>
  </div>
@@ -373,7 +411,10 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <h3>Навыки врача</h3>
   <ul>
    <li>★ Прокачка под портретом (клавиша K, кнопка PS на геймпаде): очки навыков за уровень и босса тратятся на ранги заклинаний. Ранг усиливает урон, площадь, радиус ауры или длительность и ускоряет перезарядку</li>
-   <li>🛠 Кабинет: на юбилейных уровнях (3, 6, 9) выбираете один прибор: дерматоскоп, лампу Вуда, сосудистый лазер, фототерапию 311 нм, фракционный лазер. Прибор открывает процедуру</li>
+   <li>☰ Меню: кабинет врача, справка, звук, выход. В кабинете врача посевы и анализы в реальном времени, оранжерея лекарственных растений, ступка для кремов, склад с аптечкой и улучшения. Ежедневный утренний обход даёт награду, серия дней увеличивает её</li>
+   <li>Аптечка над джойстиком: кремы из кабинета берутся с собой на приём (клавиша F, L2 на геймпаде для первой ячейки)</li>
+   <li>Уровней 100, звания от ординатора до легенды дерматологии. Высыпания крепнут вместе с врачом, у каждого заклинания 10 рангов</li>
+   <li>🛠 Оборудование: на юбилейных уровнях (5, 10, 15, 20) выбираете один прибор: дерматоскоп, лампу Вуда, сосудистый лазер, фототерапию 311 нм, фракционный лазер. Прибор открывает процедуру</li>
    <li>Лампа Вуда подсвечивает невидимые микрокомедоны и порфирины C. acnes. Ретиноиды и изотретиноин бьют по микрокомедонам даже без лампы</li>
    <li>Фототерапия 311 нм: импульс вокруг врача по бляшкам псориаза. Розацеа от ультрафиолета обостряется</li>
    <li>Со 2 ранга у части препаратов открываются варианты: адапален 0,3%, бензоилпероксид 2,5%, азелаиновая кислота гель 15%, доксициклин 40 мг, низкие дозы изотретиноина</li>
@@ -498,9 +539,29 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 <div id="eqp" class="ov">
  <div class="card panel">
   <h3 class="serif" style="color:var(--gold);font-size:20px;margin-bottom:4px">Оснащение кабинета</h3>
-  <div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">На юбилейных уровнях (3, 6, 9...) можно выбрать один прибор. Свободных выборов: <b id="eqleft" style="color:var(--gold)">0</b>. Прибор открывает процедуру в меню процедур.</div>
+  <div style="font-size:12.5px;color:var(--muted);margin-bottom:8px">На юбилейных уровнях (5, 10, 15, 20) можно выбрать один прибор. Свободных выборов: <b id="eqleft" style="color:var(--gold)">0</b>. Прибор открывает процедуру в меню процедур.</div>
   <div id="eqlist"></div>
   <button class="big" id="eqclose" style="margin-top:8px">Готово</button>
+ </div>
+</div>
+<div id="cab" class="ov">
+ <div class="card panel cabc">
+  <div class="cabhead"><div><div class="serif" style="font-size:22px;color:var(--gold)">🏥 Кабинет врача</div><div id="cablvl" style="font-size:12px;color:var(--muted)"></div></div><div id="cabcoins" class="cabcoins">0 ₽</div></div>
+  <button class="big" id="cabdaily" style="font-size:14px;padding:9px">☀️ Утренний обход</button>
+  <div class="ctabs"><button id="ct_lab">🧫 Лаборатория</button><button id="ct_garden">🌿 Оранжерея</button><button id="ct_brew">⚗️ Ступка</button><button id="ct_store">💼 Склад</button><button id="ct_upg">⬆️ Улучшения</button></div>
+  <div id="cabbody"></div>
+  <div id="cabmsg"></div>
+  <button class="big sec" id="cabclose" style="margin-top:8px">Закрыть</button>
+ </div>
+</div>
+<div id="gmenu" class="ov">
+ <div class="card panel" style="max-width:380px">
+  <div class="serif" style="font-size:20px;color:var(--gold);margin-bottom:8px;text-align:center">Меню</div>
+  <button class="big" id="m_cab">🏥 Кабинет врача</button>
+  <button class="big sec" id="m_help">? Справка</button>
+  <button class="big sec" id="m_snd">🔊 Звук</button>
+  <button class="big sec" id="m_exit">Выйти в главное меню</button>
+  <button class="big sec" id="m_close">Вернуться в игру</button>
  </div>
 </div>
 <div id="death" class="ov"><div class="card panel"><h2>Вы выбыли</h2><div id="dtxt">Возвращение в ординаторскую...</div></div></div>
@@ -646,11 +707,11 @@ const ABIL=[
 ];
 const AB={};ABIL.forEach(a=>AB[a.id]=a);
 const EQUIP=[
- {id:'scope',name:'Дерматоскоп',lvl:3,desc:'Процедура «Дерматоскопия»: над каждым высыпанием виден препарат выбора'},
- {id:'wood',name:'Лампа Вуда',lvl:3,desc:'Подсвечивает скрытые микрокомедоны и коралловое свечение порфиринов C. acnes'},
- {id:'vlaser',name:'Сосудистый лазер 595 нм',lvl:3,desc:'Поле: убирает красные пятна и сосуды, осветляет коричневые, бьёт по розацеа'},
- {id:'uvb',name:'Фототерапия 311 нм',lvl:6,desc:'Узкополосный ультрафиолет B: импульс по бляшкам псориаза вокруг врача'},
- {id:'flaser',name:'Фракционный лазер',lvl:6,desc:'Поле: сглаживает рубцы, сужает поры, кожа становится гладкой'},
+ {id:'scope',name:'Дерматоскоп',lvl:5,desc:'Процедура «Дерматоскопия»: над каждым высыпанием виден препарат выбора'},
+ {id:'wood',name:'Лампа Вуда',lvl:5,desc:'Подсвечивает скрытые микрокомедоны и коралловое свечение порфиринов C. acnes'},
+ {id:'vlaser',name:'Сосудистый лазер 595 нм',lvl:10,desc:'Поле: убирает красные пятна и сосуды, осветляет коричневые, бьёт по розацеа'},
+ {id:'uvb',name:'Фототерапия 311 нм',lvl:15,desc:'Узкополосный ультрафиолет B: импульс по бляшкам псориаза вокруг врача'},
+ {id:'flaser',name:'Фракционный лазер',lvl:20,desc:'Поле: сглаживает рубцы, сужает поры, кожа становится гладкой'},
 ];
 const EQ={};EQUIP.forEach(e=>EQ[e.id]=e);
 function abUnl(id){const a=AB[id];return S.p.lvl>=a.lvl&&(!a.eq||!!(S.eq&&S.eq[id]));}
@@ -666,11 +727,13 @@ const pointer={x:0,y:0,down:false,has:false};
 let quizOpen=null;
 let camX=0,camY=0,demoT=0;
 
-function need(l){return Math.round(30*Math.pow(l,1.5));}
-function dmgScale(){return 1+0.08*(S.p.lvl-1);}
+const MAXLVL=100;
+function need(l){return Math.round(25*Math.pow(l,1.2)+25);}
+function tierK(){return 1+0.035*((S&&S.p?S.p.lvl:1)-1);}
+function dmgScale(){return 1+0.04*(S.p.lvl-1);}
 function speed(){const p=S.p;return 175*(p.age==='teen'?1.08:1)*(p.deb.retder?0.65:1)*(S.sebum>0?0.7:1);}
 function canEnter(){return S.p.lvl>=5&&!!S.p.un.mtx;}
-function recalcHP(full){const p=S.p;p.maxhp=100+15*(p.lvl-1)+(p.age==='adult'?15:0);if(full)p.hp=p.maxhp;}
+function recalcHP(full){const p=S.p;p.maxhp=100+15*Math.min(p.lvl-1,19)+6*Math.max(0,p.lvl-20)+(p.age==='adult'?15:0);if(full)p.hp=p.maxhp;}
 function toWorld(sx,sy){const ix=(sx-W/2)/Z+camX,iy=(sy-H/2-H*0.06)/Z+camY;return [(ix+2*iy)/2,(2*iy-ix)/2];}
 function pointerWorld(){return toWorld(pointer.x,pointer.y);}
 
@@ -698,7 +761,8 @@ function startGame(opt){opt=(opt&&opt.story!==undefined)?opt:{};
  const c=iso(S.p.x,S.p.y);camX=c[0];camY=c[1];
  $('start').classList.remove('on');$('hud').classList.add('on');
  $('pname').textContent=name;
- buildCluster();drawPortrait();S.revealReady=false;
+ buildCluster();buildKit();drawPortrait();S.revealReady=false;
+ if(!(opt&&opt.story)&&CAB.pendXP>0){const px=CAB.pendXP;CAB.pendXP=0;saveCab();setTimeout(()=>{if(S){gainXP(px);toast('Опыт из кабинета врача: +'+px,'good');}},1500);}
  $('joy').classList.add('on');
  let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
  if(opt.story){}
@@ -727,7 +791,8 @@ function findSpot(type,zid,initial){
 function spawnMob(type,zid,initial,x,y,extra){
  const d=MOB[type];
  if(x==null){const sp=findSpot(type,zid,initial);if(!sp) return null;x=sp[0];y=sp[1];}
- const m={type,zone:zid,x,y,hx:x,hy:y,r:d.r,hp:d.hp,maxhp:d.hp,flash:0,atk:0,shoot:rnd(0.5,2.5),auraT:0,infl:0,st:{},seed:Math.random(),dead:false,kob:false,lastHit:null};
+ const hk=type==='boss'?1+0.05*((S.p?S.p.lvl:1)-1):tierK();
+ const m={type,zone:zid,x,y,hx:x,hy:y,r:d.r,hp:d.hp*hk,maxhp:d.hp*hk,flash:0,atk:0,shoot:rnd(0.5,2.5),auraT:0,infl:0,st:{},seed:Math.random(),dead:false,kob:false,lastHit:null};
  if(d.evolve) m.evo=rnd(d.evolve[0],d.evolve[1]);
  if(d.pore){m.plugT=rnd(6,14);m.lastHitT=-99;}
  if(extra) Object.assign(m,extra);
@@ -810,9 +875,9 @@ window.addEventListener('pointerdown',()=>{if(S) audioInit();},true);
 window.addEventListener('keydown',()=>{if(S) audioInit();},true);
 
 /* ---------- очки навыков и ранги ---------- */
-const MAXR=5;
+const MAXR=10;
 function rk(id){return (S&&S.rank&&S.rank[id])||0;}
-function cdK(id){return 1-0.08*rk(id);}
+function cdK(id){return Math.max(0.4,1-0.06*rk(id));}
 function setCd(id,base){const p=S.p;const v=base*cdK(id)*(id==='bpo'&&vr('bpo')==='25'?0.75:1);p.cd[id]=v;p.cdMax=p.cdMax||{};p.cdMax[id]=v;}
 function durOf(id,base){return base+1.5*rk(id);}
 function radOf(sk){return sk.rad*(1+0.1*rk(sk.id))*(sk.id==='aza'&&vr('aza')==='gel'?1.25:1);}
@@ -837,12 +902,12 @@ function woodK(m){return (S.buff.wood||0)>0&&m&&(ACNE_TYPES[m.type]||m.type==='p
 function motivK(){return 1.35+0.05*rk('motiv');}
 function rankText(id){
  if(SK[id]){const sk=SK[id];
-  if(sk.type==='aura') return 'Сила +15%, радиус +8%, длительность +1,5 с, перезарядка -8%';
-  if(sk.type==='area') return 'Урон +15%, площадь +10%, перезарядка -8%';
-  return 'Урон +15%, перезарядка -8%';}
- return {dash:'Перезарядка -8%',scope:'Длительность +1,5 с, перезарядка -8%',extr:'Радиус +10%, перезарядка -8%',
-  spf:'Защита +5%, длительность +1,5 с, перезарядка -8%',motiv:'Бонус к урону +5%, длительность +1,5 с, перезарядка -8%',
-  vlaser:'Поле +10%, урон по розацеа +15%, перезарядка -8%',flaser:'Поле +10%, перезарядка -8%'}[id]||'';
+  if(sk.type==='aura') return 'Сила +12%, радиус +8%, длительность +1,5 с, перезарядка -6%';
+  if(sk.type==='area') return 'Урон +12%, площадь +10%, перезарядка -6%';
+  return 'Урон +12%, перезарядка -6%';}
+ return {dash:'Перезарядка -8%',scope:'Длительность +1,5 с, перезарядка -6%',extr:'Радиус +10%, перезарядка -6%',
+  spf:'Защита +5%, длительность +1,5 с, перезарядка -6%',motiv:'Бонус к урону +5%, длительность +1,5 с, перезарядка -6%',
+  vlaser:'Поле +10%, урон по розацеа +15%, перезарядка -6%',flaser:'Поле +10%, перезарядка -6%'}[id]||'';
 }
 function isUnl(id){return SK[id]?!!S.p.un[id]:abUnl(id);}
 function openSkills(){if(!S) return;skTab('ranks');$('skills').classList.add('on');S.paused=true;}
@@ -955,7 +1020,7 @@ function aimAngle(range){
 }
 function useAbility(id){
  const a=AB[id],p=S.p;if(!a||p.dead>0||S.paused) return;
- if(a.eq&&!(S.eq&&S.eq[id])){toast(a.name.replace(/\u00ad/g,'')+': нужно оборудование. Его выбирают на юбилейных уровнях: '+EQ[id].lvl+', 6, 9','bad');return;}
+ if(a.eq&&!(S.eq&&S.eq[id])){toast(a.name.replace(/\u00ad/g,'')+': нужно оборудование. Его выбирают на юбилейных уровнях: 5, 10, 15, 20. Этот прибор с '+EQ[id].lvl+' уровня','bad');return;}
  if(p.lvl<a.lvl){toast(a.name+': откроется на '+a.lvl+' уровне','bad');return;}
  if((S.acd[id]||0)>0) return;
  S.acd[id]=a.cd*cdK(id);S.acdMax[id]=S.acd[id];
@@ -1115,7 +1180,7 @@ function hitMob(m,sk,base){
   S.texts.push({x:m.x,y:m.y,txt:'КОМБО ×'+combo.m,col:'#ffd23f',big:true,t:1.2,dy:18});
   if(!S.combos[combo.name]){S.combos[combo.name]=true;toast('Открыто комбо: '+combo.name+' ('+Object.keys(S.combos).length+' из '+COMBOS.length+')','good');}
  }
- const dmg=base*dmgScale()*mult*rnd(0.9,1.1)*(1+0.15*rk(sk.id))*(S.buff.motiv>0?motivK():1)*woodK(m)*varK(sk.id,m);
+ const dmg=base*dmgScale()*mult*rnd(0.9,1.1)*(1+0.12*rk(sk.id))*(S.buff.motiv>0?motivK():1)*woodK(m)*varK(sk.id,m);
  m.hp-=dmg;m.flash=0.12;sfx(combo?'combo':'hit');
  ftext(m.x,m.y,Math.round(dmg),mult>=1.4?'#ffe07a':(mult<0.35?'#9a9a9a':'#ffffff'),mult>=1.4);
  if(e<0.35) hint(m.type,sk.id);
@@ -1168,7 +1233,8 @@ function killMob(m){
  if(m.type==='steroid') S.flags.sterKills=(S.flags.sterKills||0)+1;
  if(m.title) S.flags.giant=true;
  burst(m.x,m.y,DEATHCOL[m.type],m.type==='boss'?80:14,m.type==='boss'?320:160);
- gainXP(MOB[m.type].xp);
+ gainXP(MOB[m.type].xp*tierK()*(1+0.1*((CAB.up&&CAB.up.couch)||0)));
+ CAB.coins+=Math.max(1,Math.round(MOB[m.type].xp/4*tierK()));cabDirty();
  if(m.type!=='boss') S.zk[m.zone]=(S.zk[m.zone]||0)+(m.type==='steroid'||m.type==='pore'?2:1);
  if(m.type==='pore'){ftext(m.x,m.y,'Пора сузилась','#a6f0c0',true);warnOnce('pore','Пора сузилась. Ретиноиды и изотретиноин снижают выработку себума и сужают поры. Без лечения поры снова расширяются','good');}
  leaveMark(m);
@@ -1178,7 +1244,7 @@ function killMob(m){
  if(m===S.attack) S.attack=null;
  if(m===S.hover) S.hover=null;
  if(m.type==='boss'){
-  S.boss=null;S.bossRespawn=45;S.bossKills++;S.sp+=2;setTimeout(()=>toast('+2 очка навыков за победу над боссом','good'),1500);
+  S.boss=null;S.bossRespawn=45;S.bossKills++;S.sp+=2;CAB.coins+=150;cabDirty();setTimeout(()=>toast('+2 очка навыков за победу над боссом','good'),1500);
   for(let i=0;i<3;i++){S.drops.push({k:'bep',x:m.x+rnd(-50,50),y:m.y+rnd(-50,50),t:0});S.drops.push({k:'folic',x:m.x+rnd(-50,50),y:m.y+rnd(-50,50),t:0});}
   for(const o of S.mobs) if(o.kob&&!o.dead){o.dead=true;burst(o.x,o.y,'#f2f2f8',8);}
   S.tele=[];
@@ -1192,15 +1258,16 @@ function checkZoneDone(zid){
   if(totalClean()>=0.97) showBanner('Чистая кожа','Полная ремиссия. Рубцов: '+Math.max(0,S.scars-S.scarsFixed)+'. Чем их меньше, тем аккуратнее было лечение');}
 }
 function gainXP(n){
- const p=S.p;p.xp+=n;
- while(p.xp>=need(p.lvl)){p.xp-=need(p.lvl);p.lvl++;onLevel();}
+ const p=S.p;if(p.lvl>=MAXLVL){p.xp=0;return;}p.xp+=Math.round(n);
+ while(p.lvl<MAXLVL&&p.xp>=need(p.lvl)){p.xp-=need(p.lvl);p.lvl++;onLevel();}
 }
 function onLevel(){
  const p=S.p;recalcHP(true);burst(p.x,p.y,'#e9c17a',34,200);sfx('level');rumble(0.3,250);
  S.fx.push({k:'ring',x:p.x,y:p.y,r:120,t:0,max:.6,col:'#e9c17a'});S.fx.push({k:'pillar',x:p.x,y:p.y,t:0,max:1.1,col:'#ffe7a8'});
- S.sp+=2;
- if(p.lvl%3===0&&S.mode!=='story'&&availEquip().length){S.picks++;S.eqWant=true;setTimeout(()=>toast('Юбилейный уровень '+p.lvl+'! Выберите оборудование для кабинета','boss'),1200);}
- toast('Уровень '+p.lvl+': '+rankTitle(p.lvl)+(LOOK[p.lvl]?'. Новый облик: '+LOOK[p.lvl]:'')+'. +2 очка навыков','good');
+ const spGain=p.lvl<=20?2:1;S.sp+=spGain;
+ if(tierOf(p.lvl)>tierOf(p.lvl-1)) setTimeout(()=>toast('Новое звание: '+rankTitle(p.lvl)+(LOOK[tierOf(p.lvl)]?'. Новый облик: '+LOOK[tierOf(p.lvl)]:''),'boss'),600);
+ if(p.lvl%5===0&&S.mode!=='story'&&availEquip().length){S.picks++;S.eqWant=true;setTimeout(()=>toast('Юбилейный уровень '+p.lvl+'! Выберите оборудование для кабинета','boss'),1200);}
+ toast('Уровень '+p.lvl+'. +'+spGain+(spGain===1?' очко':' очка')+' навыков','good');
  for(const a of ABIL) if(a.lvl===p.lvl) setTimeout(()=>{toast('Новый навык: '+a.name+(a.id==='dash'?'':' ('+locOf(a.id)+')')+'. '+a.desc,'good');},900);
  for(const sk of SKILLS) if(sk.lvl===p.lvl&&!p.un[sk.id]){
   if(sk.quiz) S.quizQ.push(sk.quiz);
@@ -1212,7 +1279,8 @@ function onLevel(){
 function damagePlayer(n,quiet){
  const p=S.p;if(p.dead>0||S.paused||p.inv>0) return;
  if(S.tut>=0&&S.tut<8) n*=0.3;
- n*=Math.min(1,0.55+0.09*p.lvl);
+ n*=Math.min(1,0.55+0.09*p.lvl)*(1+0.02*(p.lvl-1));
+ if(S.buff.emol>0) n*=0.7;
  if(S.buff.spf>0) n*=Math.max(0.25,0.5-0.05*rk('spf'));
  else if(p.deb.photo) n*=1.25;
  if(S.dry>0) n*=1+S.dry/100*0.4;
@@ -1226,12 +1294,187 @@ function respawn(){
  if(S.boss){const b=S.boss;b.x=1960;b.y=1960;b.hp=b.maxhp;b.engaged=false;b.enraged=false;}
  S.tele=[];S.eproj=[];
 }
-function useBep(){
+function useBep(){useKit(0);}
+function useBepOld(){
  const p=S.p;if(p.dead>0) return;
  if(p.bep<=0){toast('Декспантенол закончился. Он выпадает из вылеченных высыпаний','bad');return;}
  sfx('good');p.bep--;delete p.deb.cheil;delete p.deb.retder;p.hp=Math.min(p.maxhp,p.hp+25);if(S.dry>0){S.dry=Math.max(0,S.dry-30);ftext(p.x,p.y-20,'Сухость -30','#e8d6a8');}
  ftext(p.x,p.y,'Декспантенол +25','#6fcf8e');burst(p.x,p.y,'#6fcf8e',12,90);
 }
+
+/* ---------- кабинет врача: посевы, оранжерея, кремы ---------- */
+const CAB_KEY='dq_cab_v1';
+const INGR={panthenol:{n:'Пантенол',price:20},base:{n:'Эмолентная основа',price:15},ceram:{n:'Церамиды',price:40},shea:{n:'Масло ши',price:25},zinc:{n:'Оксид цинка',price:30},azsub:{n:'Азелаиновая кислота, субстанция',price:50},
+ chamo:{n:'Ромашка'},aloe:{n:'Алоэ'},calend:{n:'Календула'},centella:{n:'Центелла азиатская'},colony:{n:'Колонии культур'}};
+const CULT=[
+ {id:'koh',n:'Микроскопия соскоба',h:1,coins:15,xp:40,desc:'Быстрый анализ: немного гонорара и опыта'},
+ {id:'map',n:'Дерматоскопическое картирование',h:4,coins:50,xp:120,desc:'Картирование невусов пациента'},
+ {id:'sab',n:'Посев на грибок, среда Сабуро',h:24,coins:120,xp:300,gives:{colony:1},desc:'Растёт сутки. Колонии нужны для улучшений лаборатории'},
+ {id:'abx',n:'Бакпосев с антибиотикограммой',h:48,coins:250,xp:600,gives:{colony:2},res:true,desc:'Двое суток. Обнуляет резистентность C. acnes в текущем приёме'},
+];
+const PLANTS=[{id:'chamo',n:'Ромашка',h:2,y:3},{id:'aloe',n:'Алоэ',h:4,y:2},{id:'calend',n:'Календула',h:6,y:3},{id:'centella',n:'Центелла азиатская',h:8,y:2}];
+const RECIPES=[
+ {id:'dexp',sh:'Декспан\u00adтенол',n:'Крем с декспантенолом 5%',need:{panthenol:2,base:1},min:1,col:'#1f9d63',desc:'+40 здоровья, снимает хейлит, ретиноидный дерматит и 40% сухости'},
+ {id:'calo',sh:'Календула',n:'Мазь с календулой',need:{calend:3,base:1},min:2,col:'#f0a020',desc:'+25 здоровья, снимает ретиноидный дерматит'},
+ {id:'emol',sh:'Эмолент',n:'Эмолент с церамидами',need:{ceram:1,shea:2},min:2,col:'#e8e0c8',desc:'20 с: урон по врачу -30%, сухость не растёт'},
+ {id:'spf50',sh:'SPF 50',n:'Солнцезащитный крем SPF 50',need:{zinc:2,base:1},min:2,col:'#ffd25a',desc:'30 с защиты солнцезащитного крема, новые пятна не темнеют'},
+ {id:'calm',sh:'Алоэ и ромашка',n:'Успокаивающий крем с алоэ и ромашкой',need:{aloe:1,chamo:2},min:3,col:'#9fe0b0',desc:'Гасит воспаление у всех высыпаний вокруг, 10 с они стреляют реже'},
+ {id:'azcream',sh:'Азелаино\u00adвый крем',n:'Крем с азелаиновой кислотой 20%',need:{azsub:1,base:1},min:3,col:'#f2e3a0',desc:'Осветляет все пятна постакне вокруг врача'},
+ {id:'cica',sh:'Центелла',n:'Заживляющий бальзам с центеллой',need:{centella:2,shea:1},min:5,col:'#7fd08a',desc:'+70 здоровья и 10 с усиленной регенерации'},
+];
+const RC={};RECIPES.forEach(r=>RC[r.id]=r);
+const UPG=[
+ {id:'lab',n:'Термостат для посевов',desc:'+1 место в лаборатории',costs:[300,800]},
+ {id:'bed',n:'Грядка',desc:'+1 грядка в оранжерее',costs:[200,400,800,1500]},
+ {id:'lamp',n:'Фитолампа',desc:'Растения растут на 30% быстрее',costs:[600]},
+ {id:'auto',n:'Лаборант',desc:'Посевы готовятся на 25% быстрее',costs:[1500],colony:2},
+ {id:'kit',n:'Шкафчик для аптечки',desc:'+1 крем с собой на приём',costs:[500,1200]},
+ {id:'couch',n:'Удобная кушетка',desc:'+10% опыта за приём',costs:[400,1000,2000]},
+ {id:'mortar',n:'Вторая ступка',desc:'Можно варить два крема одновременно',costs:[900],colony:1},
+];
+function cabDefault(){return {v:1,coins:60,inv:{dexp:2,panthenol:2,base:2},labs:[null,null,null,null],beds:[null,null,null,null,null,null],brew:[null,null],up:{},kit:['dexp',null,null,null],daily:{last:'',streak:0},pendXP:0};}
+let CAB=cabDefault();
+try{const c=JSON.parse(localStorage.getItem(CAB_KEY)||'null');if(c&&c.v===1) CAB=Object.assign(cabDefault(),c);}catch(_){}
+let cabSaveT=0;
+function saveCab(){try{localStorage.setItem(CAB_KEY,JSON.stringify(CAB));}catch(_){}}
+function cabDirty(){cabSaveT=1;}
+function upL(id){return (CAB.up&&CAB.up[id])||0;}
+function labSlots(){return 2+upL('lab');}
+function bedSlots(){return 2+upL('bed');}
+function kitSlots(){return 2+upL('kit');}
+function brewSlots(){return 1+upL('mortar');}
+function fmtLeft(ms){if(ms<=0) return 'готово';const s=Math.ceil(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;return h?h+' ч '+m+' мин':(m?m+' мин '+sec+' с':sec+' с');}
+function today(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function yesterday(){const d=new Date(Date.now()-864e5);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function profLvl(){if(S&&S.mode==='free') return S.p.lvl;const sv=loadSave();return sv?sv.lvl:1;}
+function addProfileXP(n){
+ n=Math.round(n*(1+0.1*upL('couch')));
+ if(S&&S.mode==='free'){gainXP(n);return;}
+ const sv=loadSave();
+ if(sv){sv.xp=(sv.xp||0)+n;while(sv.lvl<MAXLVL&&sv.xp>=need(sv.lvl)){sv.xp-=need(sv.lvl);sv.lvl++;sv.sp=(sv.sp||0)+(sv.lvl<=20?2:1);}
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(sv));}catch(_){}}
+ else CAB.pendXP=(CAB.pendXP||0)+n;
+}
+function addInv(id,n){CAB.inv[id]=(CAB.inv[id]||0)+n;}
+function hasNeed(r){for(const k in r.need) if((CAB.inv[k]||0)<r.need[k]) return false;return true;}
+let CABTAB='lab',cabTimer=null;
+function openCab(){CABTAB=CABTAB||'lab';renderCab();$('cab').classList.add('on');if(S) S.paused=true;
+ if(typeof setInterval!=='undefined'&&!cabTimer) cabTimer=setInterval(()=>{if($('cab').classList.contains('on')) renderCab(true);},1000);}
+function closeCab(){$('cab').classList.remove('on');saveCab();if(S&&!quizOpen&&!DLG) S.paused=false;if(S) S.hudT=0;}
+function cabTab(t){CABTAB=t;renderCab();}
+function renderCab(tick){
+ const L=profLvl();
+ $('cablvl').textContent='Уровень '+L+' · '+rankTitle(L);$('cabcoins').textContent=CAB.coins+' ₽';
+ const d=CAB.daily||{};const can=d.last!==today();
+ const db=$('cabdaily');db.disabled=!can;db.textContent=can?'☀️ Утренний обход: забрать награду':'☀️ Обход сделан · серия '+(d.streak||0)+' дн.';
+ for(const t of ['lab','garden','brew','store','upg']) $('ct_'+t).classList.toggle('on',CABTAB===t);
+ const box=$('cabbody');
+ if(tick&&!['lab','garden','brew'].includes(CABTAB)) return;
+ const now=Date.now();let h='';
+ if(CABTAB==='lab'){
+  h+='<div class="cabhint">Посевы и анализы растут в реальном времени, даже когда игра закрыта.</div>';
+  for(let i=0;i<labSlots();i++){const sl=CAB.labs[i];
+   if(!sl){h+='<div class="cslot"><div class="csn">Термостат '+(i+1)+': свободно</div><div class="cchoices">'+CULT.map(c=>'<button class="cbtn" data-act="cult" data-i="'+i+'" data-id="'+c.id+'"><b>'+c.n+'</b><br>'+c.h+' ч · '+c.coins+' ₽ · '+c.xp+' опыта'+(c.gives?' · колонии':'')+'</button>').join('')+'</div></div>';}
+   else{const c=CULT.find(q=>q.id===sl.id),left=sl.end-now,pr=Math.min(1,(now-sl.start)/(sl.end-sl.start));
+    h+='<div class="cslot"><div class="csn">'+c.n+'</div><div class="cbar"><i style="width:'+(pr*100)+'%"></i></div><div class="csd">'+(left>0?'Осталось: '+fmtLeft(left):'Готово!')+'</div>'+(left<=0?'<button class="big" data-act="collect" data-i="'+i+'">Забрать результат</button>':'')+'</div>';}}
+  if(labSlots()<4) h+='<div class="cabhint">Ещё термостаты: в разделе «Улучшения».</div>';
+ }else if(CABTAB==='garden'){
+  h+='<div class="cabhint">Лекарственные растения для кремов. Урожай растёт в реальном времени'+(upL('lamp')?', фитолампа ускоряет рост на 30%':'')+'.</div>';
+  for(let i=0;i<bedSlots();i++){const sl=CAB.beds[i];
+   if(!sl){h+='<div class="cslot"><div class="csn">Грядка '+(i+1)+': пусто</div><div class="cchoices">'+PLANTS.map(p2=>'<button class="cbtn" data-act="plant" data-i="'+i+'" data-id="'+p2.id+'">🌱 <b>'+p2.n+'</b><br>'+Math.round(p2.h*(upL('lamp')?0.7:1)*10)/10+' ч · урожай '+p2.y+'</button>').join('')+'</div></div>';}
+   else{const p2=PLANTS.find(q=>q.id===sl.id),left=sl.end-now,pr=Math.min(1,(now-sl.start)/(sl.end-sl.start));
+    h+='<div class="cslot"><div class="csn">'+(pr<0.5?'🌱':pr<1?'🌿':'🌼')+' '+p2.n+'</div><div class="cbar g"><i style="width:'+(pr*100)+'%"></i></div><div class="csd">'+(left>0?'Созреет через '+fmtLeft(left):'Созрело!')+'</div>'+(left<=0?'<button class="big" data-act="harvest" data-i="'+i+'">Собрать урожай</button>':'')+'</div>';}}
+ }else if(CABTAB==='brew'){
+  h+='<div class="cabhint">Варите кремы и берите их с собой на приём в аптечке. Ингредиенты: оранжерея и склад.</div>';
+  for(let i=0;i<brewSlots();i++){const sl=CAB.brew[i];
+   if(sl){const r=RC[sl.id],left=sl.end-now,pr=Math.min(1,(now-sl.start)/(sl.end-sl.start));
+    h+='<div class="cslot"><div class="csn">⚗️ Ступка '+(i+1)+': '+r.n+'</div><div class="cbar b"><i style="width:'+(pr*100)+'%"></i></div><div class="csd">'+(left>0?'Готово через '+fmtLeft(left):'Крем готов!')+'</div>'+(left<=0?'<button class="big" data-act="bottle" data-i="'+i+'">Разлить по баночкам</button>':'')+'</div>';}}
+  const free=CAB.brew.slice(0,brewSlots()).findIndex(x=>!x);
+  for(const r of RECIPES){const ok=hasNeed(r);
+   h+='<div class="crec'+(ok?'':' off')+'"><div><b>'+r.n+'</b> <span class="cnt">в запасе: '+(CAB.inv[r.id]||0)+'</span><br><span class="csd">'+r.desc+'</span><br><span class="cneed">'+Object.keys(r.need).map(k=>INGR[k].n+' '+(CAB.inv[k]||0)+'/'+r.need[k]).join(' · ')+' · '+r.min+' мин</span></div><button class="cbtn s" data-act="brew" data-id="'+r.id+'"'+(ok&&free>=0?'':' disabled')+'>Варить</button></div>';}
+ }else if(CABTAB==='store'){
+  h+='<div class="csub">Аптечка на приём ('+kitSlots()+' места). Нажмите на ячейку, чтобы сменить крем</div><div class="ckit">';
+  for(let i=0;i<kitSlots();i++){const id=CAB.kit[i];h+='<button class="ckits" data-act="kit" data-i="'+i+'">'+(id?RC[id].n+'<br><b>×'+(CAB.inv[id]||0)+'</b>':'пусто')+'</button>';}
+  h+='</div><div class="csub">Готовые кремы</div>';
+  const crafted=RECIPES.filter(r=>(CAB.inv[r.id]||0)>0);
+  h+=crafted.length?crafted.map(r=>'<div class="cline">'+r.n+' <b>×'+CAB.inv[r.id]+'</b></div>').join(''):'<div class="csd">Пока нет. Сварите в ступке.</div>';
+  h+='<div class="csub">Ингредиенты</div>';
+  for(const k in INGR){const it=INGR[k];h+='<div class="cline">'+it.n+' <b>×'+(CAB.inv[k]||0)+'</b>'+(it.price?' <button class="cbtn s" data-act="buy" data-id="'+k+'"'+(CAB.coins>=it.price?'':' disabled')+'>Купить за '+it.price+' ₽</button>':' <span class="csd">'+(k==='colony'?'из лаборатории':'из оранжереи')+'</span>')+'</div>';}
+ }else if(CABTAB==='upg'){
+  h+='<div class="cabhint">Улучшения кабинета покупаются за гонорар. Гонорар приходит за вылеченные высыпания, посевы, боссов и главы сюжета.</div>';
+  for(const u of UPG){const lv=upL(u.id),max=u.costs.length,cost=u.costs[lv],col=u.colony||0;
+   const ok=lv<max&&CAB.coins>=cost&&(CAB.inv.colony||0)>=col;
+   h+='<div class="crec'+(lv<max?'':' done')+'"><div><b>'+u.n+'</b> <span class="cnt">'+lv+'/'+max+'</span><br><span class="csd">'+u.desc+'</span></div>'+(lv<max?'<button class="cbtn s" data-act="upg" data-id="'+u.id+'"'+(ok?'':' disabled')+'>'+cost+' ₽'+(col?' + '+col+' колон.':'')+'</button>':'<span class="cnt">куплено</span>')+'</div>';}
+  if(S&&S.mode==='free') h+='<button class="big sec" data-act="equip">🛠 Оборудование для процедур (юбилейные уровни)</button>';
+ }
+ box.innerHTML=h;
+ box.querySelectorAll('[data-act]').forEach(el=>el.onclick=()=>cabAct(el.dataset.act,+el.dataset.i,el.dataset.id));
+}
+function cabAct(act,i,id){
+ const now=Date.now();
+ if(act==='cult'){const c=CULT.find(q=>q.id===id);CAB.labs[i]={id,start:now,end:now+c.h*3600e3*(upL('auto')?0.75:1)};sfx('click');}
+ else if(act==='collect'){const sl=CAB.labs[i];const c=CULT.find(q=>q.id===sl.id);CAB.labs[i]=null;CAB.coins+=c.coins;addProfileXP(c.xp);
+  if(c.gives) for(const k in c.gives) addInv(k,c.gives[k]);if(c.res&&S) S.res=0;sfx('level');cabToast(c.n+': +'+c.coins+' ₽, +'+c.xp+' опыта'+(c.gives?', колонии':''));}
+ else if(act==='plant'){const p2=PLANTS.find(q=>q.id===id);CAB.beds[i]={id,start:now,end:now+p2.h*3600e3*(upL('lamp')?0.7:1)};sfx('click');}
+ else if(act==='harvest'){const sl=CAB.beds[i];const p2=PLANTS.find(q=>q.id===sl.id);CAB.beds[i]=null;addInv(p2.id,p2.y);addProfileXP(20);sfx('pickup');cabToast(p2.n+': +'+p2.y);}
+ else if(act==='brew'){const r=RC[id];const free=CAB.brew.slice(0,brewSlots()).findIndex(x=>!x);if(free<0||!hasNeed(r)) return;
+  for(const k in r.need) CAB.inv[k]-=r.need[k];CAB.brew[free]={id,start:now,end:now+r.min*60e3};sfx('aura');}
+ else if(act==='bottle'){const sl=CAB.brew[i];CAB.brew[i]=null;addInv(sl.id,1);addProfileXP(30);sfx('good');cabToast(RC[sl.id].n+' готов');}
+ else if(act==='buy'){const it=INGR[id];if(CAB.coins<it.price) return;CAB.coins-=it.price;addInv(id,1);sfx('click');}
+ else if(act==='kit'){const opts=[null].concat(RECIPES.map(r=>r.id));let k=opts.indexOf(CAB.kit[i]);k=(k+1)%opts.length;CAB.kit[i]=opts[k];sfx('click');}
+ else if(act==='upg'){const u=UPG.find(q=>q.id===id),lv=upL(id),cost=u.costs[lv],col=u.colony||0;if(lv>=u.costs.length||CAB.coins<cost||(CAB.inv.colony||0)<col) return;
+  CAB.coins-=cost;CAB.inv.colony=(CAB.inv.colony||0)-col;CAB.up[id]=lv+1;sfx('level');cabToast(u.n+': улучшено');}
+ else if(act==='equip'){closeCab();openEquip();return;}
+ saveCab();renderCab();if(S) S.hudT=0;
+}
+function cabToast(t){const e=$('cabmsg');e.textContent=t;e.style.opacity='1';setTimeout(()=>{e.style.opacity='0';},2200);}
+$('cabdaily').onclick=()=>{const d=CAB.daily||{last:'',streak:0};if(d.last===today()) return;
+ d.streak=d.last===yesterday()?(d.streak||0)+1:1;d.last=today();CAB.daily=d;
+ const coins=50+10*Math.min(d.streak,10);CAB.coins+=coins;addProfileXP(100);
+ const pool=['chamo','aloe','calend','centella','shea','ceram','zinc','panthenol','base'];const gift=pool[Math.floor(Math.random()*pool.length)];addInv(gift,2);
+ sfx('level');cabToast('Обход: +'+coins+' ₽, +100 опыта, '+INGR[gift].n+' ×2. Серия: '+d.streak+' дн.');saveCab();renderCab();};
+for(const t of ['lab','garden','brew','store','upg']) $('ct_'+t).onclick=()=>cabTab(t);
+$('cabclose').onclick=closeCab;
+/* аптечка в приёме */
+function buildKit(){
+ const box=$('kit');box.innerHTML='';
+ for(let i=0;i<kitSlots();i++){const b=document.createElement('div');b.className='slot kit';b.id='kslot'+i;
+  b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useKit(i);});box.appendChild(b);}
+ updateKit(true);
+}
+function kitIcon(id){const r=RC[id];return makeIcon({id:'kit_'+id,col:r?r.col:'#888',type:'proj'});}
+function updateKit(full){
+ for(let i=0;i<kitSlots();i++){const b=$('kslot'+i);if(!b) continue;const id=CAB.kit[i];
+  if(full||b.dataset.id!==(id||'')){b.dataset.id=id||'';b.innerHTML='<span class="ct"></span>'+(id?'<span class="nm">'+RC[id].sh+'</span>':'');if(id){const ic=kitIcon(id);ic.className='ic';b.insertBefore(ic,b.firstChild);}b.title=id?RC[id].n+': '+RC[id].desc:'Пустая ячейка аптечки';}
+  const c=b.querySelector('.ct');if(c) c.textContent=id?(CAB.inv[id]||0):'';
+  b.classList.toggle('empty',!id||!(CAB.inv[id]>0));}
+}
+function useKit(i){
+ if(!S||S.paused) return;const p=S.p;if(p.dead>0) return;const id=CAB.kit[i];
+ if(!id){toast('Ячейка аптечки пуста. Кремы варятся в кабинете врача','bad');return;}
+ if(!(CAB.inv[id]>0)){toast(RC[id].n+' закончился. Сварите ещё в кабинете врача','bad');return;}
+ CAB.inv[id]--;cabDirty();sfx('good');const r=RC[id];
+ const hk2=Math.max(1,p.maxhp/150);
+ if(id==='dexp'){p.hp=Math.min(p.maxhp,p.hp+40*hk2);delete p.deb.cheil;delete p.deb.retder;S.dry=Math.max(0,S.dry-40);}
+ else if(id==='calo'){p.hp=Math.min(p.maxhp,p.hp+25*hk2);delete p.deb.retder;}
+ else if(id==='emol'){S.buff.emol=20;}
+ else if(id==='spf50'){S.buff.spf=Math.max(S.buff.spf||0,30);}
+ else if(id==='calm'){for(const m of S.mobs) if(!m.dead&&dist(m,p)<220){m.infl=0;m.calm=10;}S.fx.push({k:'ring',x:p.x,y:p.y,r:220,t:0,max:.6,col:'#9fe0b0'});}
+ else if(id==='azcream'){let n=0;for(const k of S.marks) if((k.k==='brown'||k.k==='red')&&Math.hypot(k.x-p.x,k.y-p.y)<250){k.life-=k.max*(k.k==='red'?1:0.6);n++;}S.fx.push({k:'ring',x:p.x,y:p.y,r:250,t:0,max:.6,col:'#f2e3a0'});computeClean();if(n) ftext(p.x,p.y-20,'Пятна светлеют: '+n,'#fff1a8');}
+ else if(id==='cica'){p.hp=Math.min(p.maxhp,p.hp+70*hk2);S.buff.regen=10;}
+ ftext(p.x,p.y,r.sh.replace(/\u00ad/g,''),'#6fcf8e');burst(p.x,p.y,r.col,14,100,true);updateKit();
+}
+/* меню ☰ */
+function openMenu(){$('gmenu').classList.add('on');if(S) S.paused=true;$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';$('m_exit').textContent=S&&S.mode==='story'?'Выйти к сюжетам':'Сохранить и выйти в главное меню';}
+function closeMenu(){$('gmenu').classList.remove('on');if(S&&!quizOpen&&!DLG) S.paused=false;}
+$('menubtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openMenu();});
+$('m_close').onclick=closeMenu;
+$('m_cab').onclick=()=>{$('gmenu').classList.remove('on');openCab();};
+$('m_help').onclick=()=>{$('gmenu').classList.remove('on');toggleHelp();};
+$('m_snd').onclick=()=>{audioInit();setSound(!SND.on);$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';};
+$('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.mode==='story'){exitToCamp();return;}saveGame();saveCab();$('hud').classList.remove('on');S=null;
+ const sv=loadSave();const b=$('cont');if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);}$('start').classList.add('on');};
+$('cabstart').onclick=()=>openCab();
 
 /* ---------- обучение ---------- */
 const TUT_KEY='dq_tut_done';
@@ -1244,7 +1487,7 @@ const TUT=[
  {show:['clin'],t:'Ещё одно оружие: клиндамицин, антибиотик против воспалённых папул и пустул. В одиночку он растит резистентность, поэтому его всегда сочетают с бензоилпероксидом. Попробуйте.',hl:'clin',done:()=>(S.tutCast.clin||0)>0},
  {show:['hp'],setK:true,t:'Высыпания начинают сопротивляться и стрелять. Здоровье врача в панели слева сверху. Вылечите ещё 5 высыпаний.',hl:'tl',done:()=>S.kills-S.tutKills0>=5,p:()=>Math.min(5,S.kills-S.tutKills0)+'/5'},
  {show:['aza'],t:'После лечения на коже остаются пятна. Азелаиновая кислота осветляет постакне и тоже бьёт по площади. Нанесите её.',hl:'aza',done:()=>(S.tutCast.aza||0)>0},
- {show:['dash','bep'],t:'Рывок (кнопка с шевронами) уводит из-под огня, декспантенол (зелёный тюбик) лечит врача и снимает сухость. Сделайте рывок.',hl:'slotdash',done:()=>(S.acd.dash||0)>0},
+ {show:['dash','bep'],t:'Рывок (кнопка с шевронами) уводит из-под огня. Над джойстиком появилась аптечка: крем с декспантенолом лечит врача и снимает сухость. Новые кремы варятся в кабинете врача. Сделайте рывок.',hl:'slotdash',done:()=>(S.acd.dash||0)>0},
  {show:['all'],t:'Обучение пройдено! Справа сверху карта и цели. Новые препараты, баффы и процедуры будут появляться на экране с уровнем. ✎ меняет кнопки местами, ★ прокачка, ? справка.',hl:'tr',last:true},
 ];
 const TUT_PEACE=6;
@@ -1327,7 +1570,7 @@ function update(dt){
 
  if(p.dead>0){p.dead-=dt;if(p.dead<=0) respawn();}
  else{
-  if(!p.deb.cheil&&S.dry<60) p.hp=Math.min(p.maxhp,p.hp+2.2*dt*(1-S.dry/100));
+  if(!p.deb.cheil&&S.dry<60) p.hp=Math.min(p.maxhp,p.hp+2.2*dt*(1-S.dry/100)*(S.buff.regen>0?4:1)*(1+0.03*(p.lvl-1)));
   let kx=0,ky=0;
   if(keys.w||keys['ц']||keys.arrowup) ky-=1;if(keys.s||keys['ы']||keys.arrowdown) ky+=1;
   if(keys.a||keys['ф']||keys.arrowleft) kx-=1;if(keys.d||keys['в']||keys.arrowright) kx+=1;
@@ -1373,7 +1616,7 @@ function update(dt){
    const e=EFF[m.type][sk.id];if(!(e>0)) continue;
    if(m.infl>0){m.infl=0;ftext(m.x,m.y,'Воспаление ушло','#a6f0c0');}
    const resK=sk.id==='doxy'?Math.max(0.15,1-S.res/100*0.8):1;
-   const dmg=sk.dps*e*resK*dmgScale()*(1+0.15*rk(sk.id))*(S.buff.motiv>0?motivK():1)*woodK(m)*varK(sk.id,m)*dt;m.hp-=dmg;m.lastHit=sk.id;m.lastHitT=S.t;m.sysAcc=(m.sysAcc||0)+dmg;
+   const dmg=sk.dps*e*resK*dmgScale()*(1+0.12*rk(sk.id))*(S.buff.motiv>0?motivK():1)*woodK(m)*varK(sk.id,m)*dt;m.hp-=dmg;m.lastHit=sk.id;m.lastHitT=S.t;m.sysAcc=(m.sysAcc||0)+dmg;
    m.sysT=(m.sysT||0)-dt;if(m.sysT<=0){m.sysT=0.7;if(m.sysAcc>=1){ftext(m.x,m.y,Math.round(m.sysAcc),sk.col);m.sysAcc=0;}m.flash=0.06;}
    if(m.hp<=0) killMob(m);}
   S.cum[sk.id]=(S.cum[sk.id]||0)+dt;
@@ -1384,7 +1627,7 @@ function update(dt){
    if(S.res>=60) warnOnce('res60','Резистентность C. acnes выше 60%: доксициклин и клиндамицин почти не работают. Нужен бензоилпероксид и перерыв в антибиотиках','bad');
   }
   if(sk.id==='akn'){
-   S.dry=Math.min(100,S.dry+(2+S.cum.akn*0.06)*dt*(vr('akn')==='low'?0.5:1));
+   if(!(S.buff.emol>0)) S.dry=Math.min(100,S.dry+(2+S.cum.akn*0.06)*dt*(vr('akn')==='low'?0.5:1));
    if(S.dry>=40) warnOnce('dry40','Ксероз: кожа сухая, барьер нарушен, урон по врачу растёт. Декспантенол смягчает сухость','bad');
    if(S.dry>=80){S.flags.dry80=true;}
    if(S.dry>=80) warnOnce('dry80','Выраженная сухость кожи. Чем дольше курс изотретиноина, тем суше кожа','bad');
@@ -1415,7 +1658,7 @@ function update(dt){
   const dp=dist(m,p),infl=m.infl>0;
   if(d.aura&&dp<d.aura.r+14){m.auraT-=dt;if(m.auraT<=0){m.auraT=0.5;damagePlayer(d.aura.dps*0.5*(infl?1.4:1),true);
    warnOnce('aura','Приливы: рядом с розацеа кожу жжёт. Лечите с дистанции','hint');}}
-  if(d.shot&&dp<d.shot.range){m.shoot-=dt*(infl?1.6:1)*(calmR&&dp<calmR+m.r&&m.type!=='plaque'?0.4:1);if(m.shoot<=0){m.shoot=d.shot.cd*rnd(0.85,1.15);fireAt(m,d.shot,infl);if(dp<340) sfx('eshot');}}
+  if(d.shot&&dp<d.shot.range){m.shoot-=dt*(infl?1.6:1)*((calmR&&dp<calmR+m.r&&m.type!=='plaque')||m.calm>0?0.4:1);if(m.calm>0) m.calm-=dt;if(m.shoot<=0){m.shoot=d.shot.cd*rnd(0.85,1.15);fireAt(m,d.shot,infl);if(dp<340) sfx('eshot');}}
  }
 
  // снаряды
@@ -1453,7 +1696,7 @@ function update(dt){
 
  for(const dr of S.drops){dr.t+=dt;
   if(p.dead<=0&&Math.hypot(dr.x-p.x,dr.y-p.y)<36){dr.got=true;
-   sfx('pickup');if(dr.k==='bep'){p.bep++;ftext(p.x,p.y,'+1 декспантенол','#6fcf8e');}
+   sfx('pickup');if(dr.k==='bep'){CAB.inv.dexp=(CAB.inv.dexp||0)+1;cabDirty();ftext(p.x,p.y,'+1 крем с декспантенолом','#6fcf8e');}
    else{p.liver=Math.max(0,p.liver-35);ftext(p.x,p.y,'Фолиевая кислота: печень -35','#ffe07a');}}}
  S.drops=S.drops.filter(d=>!d.got&&d.t<40);
 
@@ -1481,6 +1724,7 @@ function update(dt){
  const c=iso(p.x,p.y);const k=Math.min(1,dt*7);camX+=(c[0]-camX)*k;camY+=(c[1]-camY)*k;
  S.hudT-=dt;if(S.hudT<=0){S.hudT=0.1;updateHUD();}
  S.saveT=(S.saveT||10)-dt;if(S.saveT<=0){S.saveT=10;saveGame();}
+ if(cabSaveT>0){cabSaveT-=dt;if(cabSaveT<=0) saveCab();}
 }
 
 function bossAI(m,dt,pz){
@@ -1732,9 +1976,10 @@ function drawMob(m){
  }
  m._sx=cx;m._sy=cy;m._sr=Math.max(rx,ry);
 }
-const TITLES=['','Ординатор','Врач','Врач-дерматолог','Врач первой категории','Врач высшей категории','Кандидат медицинских наук','Доктор медицинских наук','Профессор','Академик'];
-function rankTitle(l){return TITLES[Math.min(l,9)];}
-const LOOK={2:'медицинская шапочка',3:'дерматоскоп в руке',4:'золотая отделка халата',5:'плащ и бинокулярная лупа',6:'наплечники и круг света под ногами',7:'сияющий халат',8:'золотой венок',9:'крылья света'};
+const TIERS=[[1,'Ординатор'],[3,'Врач'],[6,'Врач-дерматолог'],[10,'Врач первой категории'],[15,'Врач высшей категории'],[22,'Кандидат медицинских наук'],[30,'Доцент'],[40,'Доктор медицинских наук'],[52,'Профессор'],[66,'Заведующий кафедрой'],[82,'Академик'],[100,'Легенда дерматологии']];
+function tierOf(l){let t=1;for(let i=0;i<TIERS.length;i++) if(l>=TIERS[i][0]) t=i+1;return t;}
+function rankTitle(l){return TIERS[tierOf(l)-1][1];}
+const LOOK={2:'медицинская шапочка',3:'дерматоскоп в руке',4:'золотая отделка халата',5:'плащ и бинокулярная лупа',6:'наплечники и круг света под ногами',7:'сияющий халат',8:'золотой венок',9:'крылья света',10:'золотые крылья',11:'сияние академика',12:'радужный ореол легенды'};
 function drawHero(g,x,y,o){
  const L=o.lvl||1;
  const s=(o.age==='teen'?0.86:1)*(1+Math.min(0.24,(L-1)*0.03));
@@ -1748,7 +1993,8 @@ function drawHero(g,x,y,o){
  g.scale(s*o.dir,s);g.translate(0,-bob);
  const hairC=o.gender==='girl'?'#5b3222':'#3a281e',skin='#f2caa6',gold='#e9c17a';
  if(L>=7){g.save();g.globalCompositeOperation='lighter';const ag=g.createRadialGradient(0,-34,4,0,-34,44);ag.addColorStop(0,'rgba(255,214,140,.32)');ag.addColorStop(1,'rgba(255,214,140,0)');g.fillStyle=ag;g.beginPath();g.arc(0,-34,44,0,TAU);g.fill();g.restore();}
- if(L>=9){g.save();g.globalCompositeOperation='lighter';const f=Math.sin(o.t*3)*4;
+ if(L>=11){g.save();g.globalCompositeOperation='lighter';const rg2=g.createRadialGradient(0,-34,6,0,-34,62);rg2.addColorStop(0,'rgba(255,230,160,.35)');rg2.addColorStop(1,'rgba(255,230,160,0)');g.fillStyle=rg2;g.beginPath();g.arc(0,-34,62,0,TAU);g.fill();g.restore();}
+ if(L>=9){g.save();g.globalCompositeOperation='lighter';const f=Math.sin(o.t*3)*4*(L>=10?1.5:1);if(L>=10) g.scale(1.25,1.2);
   for(const sd of [-1,1]){const wg=g.createLinearGradient(0,-60,sd*40,-30);wg.addColorStop(0,'rgba(255,245,210,.55)');wg.addColorStop(1,'rgba(255,215,140,.05)');g.fillStyle=wg;
    g.beginPath();g.moveTo(sd*5,-42);g.quadraticCurveTo(sd*26,-80-f,sd*44,-74-f);g.quadraticCurveTo(sd*36,-58,sd*40,-50+f*0.3);g.quadraticCurveTo(sd*28,-44,sd*34,-32);g.quadraticCurveTo(sd*18,-34,sd*6,-30);g.closePath();g.fill();
    g.strokeStyle='rgba(255,240,200,.5)';g.lineWidth=0.8;for(let i=0;i<4;i++){g.beginPath();g.moveTo(sd*7,-38+i*2);g.lineTo(sd*(30+i*3),-70+i*10-f*(1-i*0.25));g.stroke();}}
@@ -1793,6 +2039,7 @@ function drawHero(g,x,y,o){
  if(o.age==='adult'){g.strokeStyle='#333';g.lineWidth=0.9;g.beginPath();g.arc(-1.2,-53.5,2.7,0,TAU);g.moveTo(6.9,-53.5);g.arc(4.2,-53.5,2.7,0,TAU);g.stroke();}
  if(L>=5){g.fillStyle='#b9c0cc';g.fillRect(-9.8,-60.5,19.6,1.8);g.fillStyle='#2b2f38';rr(g,-3.2,-63.5,3.4,4.5,1);g.fill();rr(g,2.4,-63.5,3.4,4.5,1);g.fill();
   g.fillStyle='rgba(150,240,255,.85)';g.fillRect(-2.6,-63,2.2,1.2);g.fillRect(3,-63,2.2,1.2);}
+ if(L>=12){g.save();g.globalCompositeOperation='lighter';const hue=(o.t*60)%360;g.strokeStyle='hsla('+hue+',90%,70%,.8)';g.lineWidth=2.4;g.beginPath();g.ellipse(0,-74,11,3.4,0,0,TAU);g.stroke();g.restore();}
  if(L>=8){g.save();for(let i=0;i<9;i++){const a=Math.PI*1.08+i*(Math.PI*0.84/8);const lx=Math.cos(a)*11.5,ly=-57+Math.sin(a)*11.5;g.save();g.translate(lx,ly);g.rotate(a+Math.PI/2+(i<4?0.5:-0.5));
    g.fillStyle=i%2?'#f1cf7a':'#d8a945';g.beginPath();g.ellipse(0,0,1.8,3.6,0,0,TAU);g.fill();g.restore();}
   g.globalCompositeOperation='lighter';g.strokeStyle='rgba(255,220,140,.6)';g.lineWidth=1.2;g.beginPath();g.ellipse(0,-71,8,2.4,0,0,TAU);g.stroke();g.restore();}
@@ -1811,11 +2058,11 @@ function drawPlayer(){
   ctx.strokeStyle='rgba('+c+','+(0.55*fade)+')';ctx.lineWidth=2;ctx.setLineDash([10,9]);ctx.lineDashOffset=-S.t*30;ctx.beginPath();ctx.ellipse(ix,iy,R*1.41,R*0.707,0,0,TAU);ctx.stroke();ctx.setLineDash([]);
   for(let i=0;i<10;i++){const a=S.t*0.9+i*TAU/10+(sk.id==='akn'?0.3:0);ctx.fillStyle='rgba('+c+','+(0.8*fade)+')';ctx.beginPath();ctx.arc(ix+Math.cos(a)*R*1.41,iy+Math.sin(a)*R*0.707-4-Math.sin(S.t*3+i)*4,2.6,0,TAU);ctx.fill();}
   ctx.restore();}
- drawHero(ctx,ix,iy,{gender:p.gender,age:p.age,dir:p.dir,walk:p.walk,moving:p.moving,t:S.t,hurt:S.hurt,lvl:p.lvl});
+ drawHero(ctx,ix,iy,{gender:p.gender,age:p.age,dir:p.dir,walk:p.walk,moving:p.moving,t:S.t,hurt:S.hurt,lvl:tierOf(p.lvl)});
  if(S.buff.spf>0){ctx.save();ctx.globalCompositeOperation='lighter';const sh=ctx.createRadialGradient(ix,iy-34,10,ix,iy-34,46);sh.addColorStop(0,'rgba(255,240,180,0)');sh.addColorStop(0.8,'rgba(255,236,170,.12)');sh.addColorStop(1,'rgba(255,236,170,.4)');
   ctx.fillStyle=sh;ctx.beginPath();ctx.ellipse(ix,iy-34,40,48,0,0,TAU);ctx.fill();ctx.restore();}
- const sc=(p.age==='teen'?0.86:1)*(1+Math.min(0.24,(p.lvl-1)*0.03));
- const ny=iy-(p.lvl>=8?82:74)*sc;
+ const tr2=tierOf(p.lvl),sc=(p.age==='teen'?0.86:1)*(1+Math.min(0.24,(tr2-1)*0.03));
+ const ny=iy-(tr2>=8?82:74)*sc;
  ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';
  ctx.font='bold 12px Trebuchet MS,sans-serif';ctx.fillStyle='#ffe9bf';ctx.strokeText(p.name,ix,ny-11);ctx.fillText(p.name,ix,ny-11);
  ctx.font='10px Trebuchet MS,sans-serif';ctx.fillStyle='#e9c17a';const tt=rankTitle(p.lvl);ctx.strokeText(tt,ix,ny);ctx.fillText(tt,ix,ny);
@@ -2115,7 +2362,7 @@ function updateCluster(){
   const k=b.querySelector('.ky');if(k) k.textContent=pad.active?SLOT_GLYPH[i]:String(i+1);}
  const d=$('slotdash');if(d){d.querySelector('.cdv').style.height=((S.acd.dash||0)/((S.acdMax&&S.acdMax.dash)||AB.dash.cd)*100)+'%';d.querySelector('.ky').textContent=pad.active?'R2':'Пробел';}
  const bp=$('slotbep');if(bp) bp.querySelector('.ky').textContent=pad.active?'L2':'F';
- const bc=$('bepct');if(bc) bc.textContent=p.bep;
+ updateKit();
  applyReveal();
 }
 function setDisp(el,on,disp){if(el&&el.style){const v=on?(disp||''):'none';if(el.style.display!==v) el.style.display=v;}}
@@ -2140,7 +2387,8 @@ function applyReveal(){
  const ed=$('pged');setDisp(ed,S.tut<0,'');
  setDisp($('buffs'),ba,'flex');setDisp($('bpager'),bo||BPAGE>0,'flex');
  setDisp($('proc'),pa,'flex');setDisp($('ppager'),po||PPAGE>0,'flex');
- setDisp($('slotdash'),uiShown('dash'),'flex');setDisp($('slotbep'),uiShown('bep'),'flex');
+ setDisp($('slotdash'),uiShown('dash'),'flex');setDisp($('slotbep'),false,'flex');setDisp($('kit'),uiShown('bep'),'flex');
+ setDisp($('menubtn'),true,'');
  setDisp($('tl'),uiShown('hp'),'flex');setDisp($('tr'),uiShown('tr')||uiShown('all'),'block');
  setDisp($('helpbtn'),uiShown('all'),'flex');setDisp($('sndbtn'),uiShown('all'),'flex');setDisp($('zone'),uiShown('all'),'block');
 }
@@ -2241,7 +2489,7 @@ function drawMinimap(){
 }
 function drawPortrait(){
  const c=$('portrait'),g=c.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,c.width,c.height);
- g.save();g.translate(54,170);g.scale(2.3,2.3);drawHero(g,0,0,{gender:S.p.gender,age:'adult',dir:1,walk:0,moving:false,t:0,hurt:0,lvl:Math.min(S.p.lvl,7)});g.restore();
+ g.save();g.translate(54,170);g.scale(2.3,2.3);drawHero(g,0,0,{gender:S.p.gender,age:'adult',dir:1,walk:0,moving:false,t:0,hurt:0,lvl:Math.min(tierOf(S.p.lvl),7)});g.restore();
 }
 
 /* ---------- ввод ---------- */
@@ -2270,7 +2518,7 @@ window.addEventListener('keydown',e=>{
  if(!S) return;
  if(k==='h'||k==='р'){toggleHelp();return;}
  if(k==='k'||k==='л'){if($('skills').classList.contains('on')) closeSkills();else openSkills();return;}
- if(k==='escape'){if($('eqp').classList.contains('on')){closeEquip();return;}if($('skills').classList.contains('on')){closeSkills();return;}if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
+ if(k==='escape'){if($('cab').classList.contains('on')){closeCab();return;}if($('gmenu').classList.contains('on')){closeMenu();return;}if($('eqp').classList.contains('on')){closeEquip();return;}if($('skills').classList.contains('on')){closeSkills();return;}if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
  if(S.paused) return;
  if(k>='1'&&k<='4'){useSlot(+k-1);e.preventDefault();}
  if(k>='5'&&k<='8'){useBuffSlot(+k-5);e.preventDefault();}
@@ -2282,7 +2530,7 @@ window.addEventListener('keydown',e=>{
  if(k==='q'||k==='й') setPage(PAGE-1);
  if(k==='e'||k==='у') setPage(PAGE+1);
  if(k===' ') useAbility('dash');
- if(k==='f'||k==='а') useBep();
+ if(k==='f'||k==='а') useKit(0);
 });
 window.addEventListener('keyup',e=>{keys[(e.key||'').toLowerCase()]=false;});
 window.addEventListener('blur',()=>{for(const k in keys) keys[k]=false;pointer.down=false;});
@@ -2353,11 +2601,12 @@ function pollPad(dt){
   if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: заклинания, L1/R1: панель заклинаний, крестовина: баффы, нажатие левого стика: страница баффов, Create: выбрать процедуру, R3: выполнить, R2: рывок, L2: декспантенол','good');S.hudT=0;}}
  pad.navT-=dt;
  const navY=(B(12)||pad.ly<-0.6)?-1:((B(13)||pad.ly>0.6)?1:0);
- const ovs=['dlg','res','camp'].filter(id=>$(id).classList.contains('on'));
+ const ovs=['gmenu','cab','dlg','res','camp'].filter(id=>$(id).classList.contains('on'));
  if(ovs.length){
   pad.lx=pad.ly=0;const bs=Array.prototype.slice.call($(ovs[0]).querySelectorAll('button:not(:disabled)'));
   if(navY&&pad.navT<=0&&bs.length){pad.navT=0.22;qFocus=(qFocus+navY+bs.length)%bs.length;bs.forEach((b,i)=>b.classList.toggle('focus',i===qFocus));}
   if(P(0)&&bs.length){const b=bs[Math.min(qFocus,bs.length-1)];qFocus=0;b.click();}
+  if(P(1)){if(ovs[0]==='cab') closeCab();else if(ovs[0]==='gmenu') closeMenu();}
  }else if($('start').classList.contains('on')){
   if(P(0)||P(9)) startGame();
   else if(P(2)) setG(sel.g==='boy'?'girl':'boy');
@@ -2388,11 +2637,12 @@ function pollPad(dt){
    [12,15,13,14].forEach((btn,i)=>{if(P(btn)) useBuffSlot(i);});
    if(P(10)) setBPage(BPAGE+1);
    if(P(16)) openSkills();
+   if(P(9)&&false){}
    if(P(8)){PSEL=(PSEL+1)%(NPP*4);PPAGE=Math.floor(PSEL/4);buildSlots();const id=LAYOUT[POFF+PSEL];ftext(S.p.x,S.p.y,'Процедура: '+(id?actInfo(id).name:'пусто'),'#9fe8ff');S.hudT=0;}
    if(P(11)||P(17)) useProcSlot(PSEL%4);
    [0,2,3,1].forEach((btn,i)=>{const id=LAYOUT[PAGE*4+i];if(!id) return;if(SK[id]){if(B(btn)&&(S.p.un[id]||P(btn))) padCast(id,false);}else if(P(btn)) useAbility(id);});
    if(P(7)) useAbility('dash');
-   if(P(6)) useBep();
+   if(P(6)) useKit(0);
   }
  }
  pad.prev=g.buttons.map(x=>!!(x&&(x.pressed||x.value>0.5)));
@@ -2586,6 +2836,7 @@ function finishChapter(){
  const scars=Math.max(0,S.scars-S.scarsFixed);let st=S.stars;
  if(scars>3) st--;if(S.flags.bad||S.flags.transam||S.flags.dry80) st--;
  st=clamp(st,1,3);S.finalStars=st;
+ CAB.coins+=100*st;cabDirty();
  const prev=STORY[ch.id];STORY[ch.id]={done:true,stars:Math.max(st,prev&&prev.stars||0)};saveStory();
  sfx('level');
  dialog(ch.outro(st),()=>showResult(st));
@@ -2641,8 +2892,8 @@ function continueGame(sv){
  computeClean();drawPortrait();updateHUD();
  toast('С возвращением! Уровень '+p.lvl+': '+rankTitle(p.lvl),'good');
 }
-window.addEventListener('pagehide',saveGame);
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden') saveGame();});
+window.addEventListener('pagehide',()=>{saveGame();saveCab();});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){saveGame();saveCab();}});
 (function(){
  const sv=loadSave();const b=$('cont');
  if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);$('free').textContent='Новая свободная игра';}
@@ -2667,7 +2918,7 @@ $('free').onclick=()=>startGame();
 $('nm').addEventListener('keydown',e=>{if(e.key==='Enter') startGame();});
 const pv=$('prev'),pg=pv.getContext('2d');let pvT=0;
 function drawPreview(){pvT+=1/60;pg.setTransform(1,0,0,1,0,0);pg.clearRect(0,0,pv.width,pv.height);pg.save();pg.translate(150,262);pg.scale(2.2,2.2);
- drawHero(pg,0,0,{gender:sel.g,age:sel.a,dir:1,walk:pvT*8,moving:true,t:pvT,hurt:0,lvl:1+Math.floor(pvT/1.6)%9});pg.restore();}
+ drawHero(pg,0,0,{gender:sel.g,age:sel.a,dir:1,walk:pvT*8,moving:true,t:pvT,hurt:0,lvl:1+Math.floor(pvT/1.6)%12});pg.restore();}
 
 let last=0;
 function loop(ts){
@@ -2680,7 +2931,7 @@ function loop(ts){
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
