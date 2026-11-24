@@ -210,6 +210,8 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 .iarrow{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:34px;color:#7fb2ff;animation:ibounce 1s infinite;text-shadow:0 0 12px rgba(127,178,255,.8)}
 @keyframes ibounce{50%{transform:translate(-50%,8px)}}
 .cabc{max-width:640px}
+#menubtn{font-size:15px;padding:4px 12px}
+.clb.resume .cls{color:#9fe0b0}
 .big.coopb{background:linear-gradient(180deg,#24406a,#152640);border-color:#7fb3ff;line-height:1.25}.big.coopb small{font-size:11.5px;color:#cfe0ff;font-family:Trebuchet MS,sans-serif}
 .big.daily{background:linear-gradient(180deg,#245a44,#14362a);border-color:#6fcf8e;line-height:1.25}.big.daily small{font-size:11.5px;color:#cfeedd;font-family:Trebuchet MS,sans-serif}
 .lghead{font-family:Georgia,serif;color:var(--gold);font-size:17px;margin:4px 0}
@@ -360,7 +362,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <div class="bar" id="resb"><i></i><span></span></div>
    <div class="bar" id="dryb"><i></i><span></span></div>
    <div id="debuffs"></div>
-   <div class="hbtns"><button id="spbtn">★ Прокачка <b id="spn">1</b></button><button id="eqbtn">🛠 <b id="eqn">0</b></button><button id="menubtn">☰</button></div>
+   <div class="hbtns"><button id="spbtn">★ Прокачка <b id="spn">1</b></button><button id="eqbtn">🛠 <b id="eqn">0</b></button><button id="menubtn" title="Пауза (Esc, P)">❚❚ Пауза</button></div>
   </div>
  </div>
  <div id="zone"><div id="zname" class="serif">Лоб</div><div id="zsub"></div></div>
@@ -445,7 +447,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <h3>Навыки врача</h3>
   <ul>
    <li>★ Прокачка под портретом (клавиша K, кнопка PS на геймпаде): очки навыков за уровень и босса тратятся на ранги заклинаний. Ранг усиливает урон, площадь, радиус ауры или длительность и ускоряет перезарядку</li>
-   <li>☰ Меню: кабинет врача, справка, звук, выход. В кабинете врача посевы и анализы в реальном времени, оранжерея лекарственных растений, ступка для кремов, склад с аптечкой и улучшения. Ежедневный утренний обход даёт награду, серия дней увеличивает её</li>
+   <li>⏸ Пауза (кнопка вверху слева, Esc, P или Options на геймпаде): продолжить, сохранить и выйти, кабинет врача, рейтинг, справка, звук. Глава сюжета сохраняется с того же места, продолжить её можно в списке сюжетов. Если свернуть игру, она сама встаёт на паузу. В кабинете врача посевы и анализы в реальном времени, оранжерея лекарственных растений, ступка для кремов, склад с аптечкой и улучшения. Ежедневный утренний обход даёт награду, серия дней увеличивает её</li>
    <li>👥 Ординаторская в кабинете врача: с 5 уровня можно взять первого ординатора, с 15, 30 и 50 ещё по одному. Ординаторы ходят с вами в свободной игре, лечат высыпания по своей специализации и растут в уровнях</li>
    <li>Аптечка над джойстиком: кремы из кабинета берутся с собой на приём (клавиша F, L2 на геймпаде для первой ячейки)</li>
    <li>Уровней 100, звания от ординатора до легенды дерматологии. Высыпания крепнут вместе с врачом, у каждого заклинания 10 рангов</li>
@@ -629,16 +631,18 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 </div>
 <div id="gmenu" class="ov">
  <div class="card panel" style="max-width:380px">
-  <div class="serif" style="font-size:20px;color:var(--gold);margin-bottom:8px;text-align:center">Меню</div>
+  <div class="serif" id="gm_title" style="font-size:22px;color:var(--gold);text-align:center">⏸ Пауза</div>
+  <div id="gm_sub" class="cabhint" style="text-align:center;margin-bottom:8px"></div>
+  <button class="big" id="m_close2">▶ Продолжить</button>
+  <button class="big sec" id="m_exit">Выйти в главное меню</button>
   <button class="big" id="m_coop" style="display:none">👥 Позвать коллег</button>
-  <button class="big" id="m_cab">🏥 Кабинет врача</button>
+  <button class="big sec" id="m_cab">🏥 Кабинет врача</button>
   <button class="big sec" id="m_rate">🏆 Рейтинг врачей</button>
   <button class="big sec" id="m_push">🔔 Включить напоминания</button>
   <div id="m_pushmsg" class="cabhint" style="text-align:center"></div>
   <button class="big sec" id="m_help">? Справка</button>
   <button class="big sec" id="m_snd">🔊 Звук</button>
-  <button class="big sec" id="m_exit">Выйти в главное меню</button>
-  <button class="big sec" id="m_close">Вернуться в игру</button>
+  <button class="big sec" id="m_close" style="display:none">Вернуться в игру</button>
  </div>
 </div>
 <div id="death" class="ov"><div class="card panel"><h2>Вы выбыли</h2><div id="dtxt">Возвращение в ординаторскую...</div></div></div>
@@ -1564,15 +1568,17 @@ function useKit(i){
  else if(id==='cica'){p.hp=Math.min(p.maxhp,p.hp+70*hk2);S.buff.regen=10;}
  ftext(p.x,p.y,r.sh.replace(/\u00ad/g,''),'#6fcf8e');burst(p.x,p.y,r.col,14,100,true);updateKit();
 }
-/* меню ☰ */
-function openMenu(){$('gmenu').classList.add('on');if(S) S.paused=true;$('m_coop').style.display=S&&S.coop?'':'none';if(S&&S.coop) $('m_coop').textContent='👥 Позвать коллег в консилиум '+S.coop.code;$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';$('m_exit').textContent=S&&S.coop?'Выйти из консилиума':S&&S.dcase?'Завершить случай дня':S&&S.mode==='story'?'Выйти к сюжетам':'Сохранить и выйти в главное меню';}
+/* пауза и меню */
+function openMenu(){$('gmenu').classList.add('on');if(S) S.paused=true;
+ $('gm_title').textContent=S&&S.coop?'Меню · консилиум идёт':'⏸ Пауза';$('gm_sub').textContent=S&&S.coop?'В консилиуме игра не останавливается, ваш врач стоит на месте':(S&&S.mode==='story'&&!S.dcase?'Можно сохранить главу и вернуться к ней позже':(S&&S.dcase?'Таймер случая дня остановлен':'Прогресс свободной игры сохраняется'));$('m_coop').style.display=S&&S.coop?'':'none';if(S&&S.coop) $('m_coop').textContent='👥 Позвать коллег в консилиум '+S.coop.code;$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';$('m_exit').textContent=S&&S.coop?'Выйти из консилиума':S&&S.dcase?'Завершить случай дня':S&&S.mode==='story'?'💾 Сохранить главу и выйти':'Сохранить и выйти в главное меню';}
 function closeMenu(){$('gmenu').classList.remove('on');if(S&&!quizOpen&&!DLG) S.paused=false;}
 $('menubtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();openMenu();});
 $('m_close').onclick=closeMenu;
+$('m_close2').onclick=closeMenu;
 $('m_cab').onclick=()=>{$('gmenu').classList.remove('on');openCab();};
 $('m_help').onclick=()=>{$('gmenu').classList.remove('on');toggleHelp();};
 $('m_snd').onclick=()=>{audioInit();setSound(!SND.on);$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';};
-$('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.coop){coopLeave();return;}if(S&&S.dcase){finishDaily(true);return;}if(S&&S.mode==='story'){exitToCamp();return;}saveGame();saveCab();$('hud').classList.remove('on');S=null;
+$('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.coop){coopLeave();return;}if(S&&S.dcase){finishDaily(true);return;}if(S&&S.mode==='story'){const ok=saveResume();saveCab();exitToCamp();if(ok) toast('Глава сохранена. Продолжить можно в списке сюжетов','good');return;}saveGame();saveCab();$('hud').classList.remove('on');S=null;
  const sv=loadSave();const b=$('cont');if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);}$('start').classList.add('on');};
 $('cabstart').onclick=()=>openCab();
 
@@ -1793,6 +1799,32 @@ async function pushResched(){if(!PROF.push||!netOn()||!PROF.reg) return;try{awai
 $('m_push').onclick=()=>pushEnable();
 setTimeout(renderPushBtn,0);
 
+/* ---------- сохранение главы на паузе ---------- */
+const RESUME_KEY='dq_story_resume';
+function getResume(){try{return JSON.parse(localStorage.getItem(RESUME_KEY)||'null');}catch(_){return null;}}
+function clearResume(cid){const r=getResume();if(r&&(!cid||r.cid===cid)) try{localStorage.removeItem(RESUME_KEY);}catch(_){}}
+function saveResume(){
+ if(!S||S.mode!=='story'||!S.chap||S.chap.dcase||S.chDone) return false;const p=S.p;
+ const snap={cid:S.chap.id,t:Date.now(),
+  p:{x:Math.round(p.x),y:Math.round(p.y),hp:p.hp,lvl:p.lvl,xp:p.xp,un:p.un,liver:p.liver||0,dir:p.dir},
+  sp:S.sp,rank:S.rank,var:S.var,eq:S.eq,res:S.res,cum:S.cum,dry:S.dry,flags:S.flags,stars:S.stars,kills:S.kills,kills0:S.kills0,bossKills:S.bossKills,
+  scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,zk:S.zk,pop:S.pop,
+  mobs:S.mobs.filter(m=>!m.dead).map(m=>({type:m.type,zone:m.zone,x:Math.round(m.x),y:Math.round(m.y),hp:m.hp,maxhp:m.maxhp,r:m.r,infl:m.infl,title:m.title||null,evo:m.evo,boss:m===S.boss,slamT:m.slamT,kobT:m.kobT,enraged:m.enraged})),
+  marks:S.marks.map(k=>({x:Math.round(k.x),y:Math.round(k.y),k:k.k,r:k.r,life:k.life,max:k.max,zone:k.zone,seed:k.seed})),
+  smooth:S.smooth||[]};
+ try{localStorage.setItem(RESUME_KEY,JSON.stringify(snap));return true;}catch(_){return false;}
+}
+function applyResume(r){
+ const p=S.p;Object.assign(p,{x:r.p.x,y:r.p.y,lvl:r.p.lvl,xp:r.p.xp,un:r.p.un,liver:r.p.liver,dir:r.p.dir||1});recalcHP(true);p.hp=Math.min(p.maxhp,r.p.hp);
+ Object.assign(S,{sp:r.sp,rank:r.rank||{},var:r.var||{},eq:r.eq||{},res:r.res||0,cum:r.cum||{doxy:0,akn:0},dry:r.dry||0,flags:r.flags||{},stars:r.stars,kills:r.kills|0,kills0:r.kills0|0,bossKills:r.bossKills|0,scars:r.scars|0,scarsFixed:r.scarsFixed|0,combos:r.combos||{},zk:r.zk||S.zk,pop:r.pop||S.pop,smooth:r.smooth||[]});
+ S.mobs=[];S.boss=null;
+ for(const m of r.mobs){const ex={hp:m.hp,maxhp:m.maxhp,r:m.r,infl:m.infl||0};if(m.title) ex.title=m.title;if(m.evo!=null) ex.evo=m.evo;if(m.boss) Object.assign(ex,{slamT:m.slamT||3,kobT:m.kobT||7,engaged:false,enraged:!!m.enraged});
+  const mm=spawnMob(m.type,m.zone,true,m.x,m.y,ex);if(m.boss) S.boss=mm;}
+ S.marks=r.marks||[];
+ const c=iso(p.x,p.y);camX=c[0];camY=c[1];
+ S.team=null;drawPortrait();buildSlots();computeClean();updateHUD();S.paused=false;
+}
+
 /* ---------- консилиум: до 5 врачей на одном поле ---------- */
 let RT=null,MOBID=0;
 function rtUrl(){return NET.url.replace(/^http/,'ws')+'/realtime/v1/websocket?apikey='+encodeURIComponent(NET.key)+'&vsn=1.0.0';}
@@ -1856,7 +1888,7 @@ async function startCoop(role,code){
  if(role==='client'){S.mobs=[];S.marks=[];S.pop={};C.ghost={};}
  else{for(const m of S.mobs) if(m.nid==null) m.nid=++MOBID;}
  const p=S.p;p.x=300;p.y=300;S.startPos=[300,300];
- toast(role==='host'?'Консилиум '+code+' открыт. Позовите коллег: код '+code+' или ссылка в меню ☰':'Вы в консилиуме '+code+'. Лечим вместе','good');
+ toast(role==='host'?'Консилиум '+code+' открыт. Позовите коллег: код '+code+' или ссылка в меню ⏸':'Вы в консилиуме '+code+'. Лечим вместе','good');
  coopTick(1);
 }
 function coopLeave(silent){
@@ -2123,7 +2155,7 @@ const TUT=[
  {show:['dash'],t:'Рывок уводит из-под огня. Нажмите кнопку с шевронами (или пробел).',hl:'slotdash',done:()=>(S.tutCast.dash||0)>0},
  {show:['bep'],t:'Над джойстиком появилась аптечка. Крем с декспантенолом лечит врача и снимает сухость кожи. Нажмите на него. Новые кремы варятся в кабинете врача.',hl:'kit',
   setup:()=>{if(!(CAB.inv.dexp>0)) CAB.inv.dexp=1;if(!CAB.kit[0]) CAB.kit[0]='dexp';buildKit();},done:()=>(S.tutCast.kit||0)>0},
- {show:['all'],t:'Обучение пройдено! Справа сверху карта и цели. Новые препараты, баффы и процедуры будут появляться с уровнем. ✎ меняет кнопки местами, ★ прокачка, ☰ меню с кабинетом и рейтингом.',hl:'tr',last:true},
+ {show:['all'],t:'Обучение пройдено! Справа сверху карта и цели. Новые препараты, баффы и процедуры будут появляться с уровнем. ✎ меняет кнопки местами, ★ прокачка, ⏸ пауза и меню с кабинетом и рейтингом.',hl:'tr',last:true},
 ];
 const TUT_PEACE=7;
 function shown(id){
@@ -3216,7 +3248,8 @@ window.addEventListener('keydown',e=>{
  if(!S) return;
  if(k==='h'||k==='р'){toggleHelp();return;}
  if(k==='k'||k==='л'){if($('skills').classList.contains('on')) closeSkills();else openSkills();return;}
- if(k==='escape'){if($('adm').classList.contains('on')){$('adm').classList.remove('on');return;}if($('rate').classList.contains('on')){closeRate();return;}if($('cab').classList.contains('on')){closeCab();return;}if($('gmenu').classList.contains('on')){closeMenu();return;}if($('eqp').classList.contains('on')){closeEquip();return;}if($('skills').classList.contains('on')){closeSkills();return;}if($('layout').classList.contains('on')){closeLayout();return;}$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}
+ if(k==='escape'){if($('adm').classList.contains('on')){$('adm').classList.remove('on');return;}if($('rate').classList.contains('on')){closeRate();return;}if($('cab').classList.contains('on')){closeCab();return;}if($('gmenu').classList.contains('on')){closeMenu();return;}if($('eqp').classList.contains('on')){closeEquip();return;}if($('skills').classList.contains('on')){closeSkills();return;}if($('layout').classList.contains('on')){closeLayout();return;}if($('help').classList.contains('on')){$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}if(S&&!S.paused&&!DLG&&!quizOpen){openMenu();return;}return;}
+ if((k==='p'||k==='з')&&S&&!DLG&&!quizOpen){if($('gmenu').classList.contains('on')) closeMenu();else if(!S.paused) openMenu();return;}
  if(S.paused) return;
  if(k>='1'&&k<='4'){useSlot(+k-1);e.preventDefault();}
  if(k>='5'&&k<='8'){useBuffSlot(+k-5);e.preventDefault();}
@@ -3328,7 +3361,7 @@ function pollPad(dt){
   pad.lx=pad.ly=0;
   if(P(0)||P(1)||P(9)) $('helpclose').click();
  }else if(S){
-  if(P(9)) toggleHelp();
+  if(P(9)){if($('gmenu').classList.contains('on')) closeMenu();else if(!S.paused) openMenu();}
   else if(!S.paused&&S.p.dead<=0){
    if(P(4)) setPage(PAGE-1);
    if(P(5)) setPage(PAGE+1);
@@ -3669,12 +3702,13 @@ function renderCamp(){
   L.ch.forEach((cid,i)=>{const c=CH[cid],st=STORY[cid],prevOk=i===0||(STORY[L.ch[i-1]]&&STORY[L.ch[i-1]].done),tOk=teamOK(c.team),open=prevOk&&tOk;
    const b=document.createElement('button');b.className='clb'+(st&&st.done?' done':'')+(c.team?' teamch':'');b.disabled=!open;
    b.innerHTML='<span>'+c.title+'<br><small class="cdf d'+c.diff+'">'+'●'.repeat(c.diff)+'○'.repeat(4-c.diff)+' '+DIFF[c.diff]+'</small>'+(c.team?'<br><small class="treq'+(tOk?' ok':'')+'">'+teamReqText(c.team)+'</small>':'')+'</span><span class="cls">'+(st&&st.done?starsStr(st.stars):(open?'Начать':(prevOk?'👥':'Закрыто')))+'</span>';
-   b.onclick=()=>{$('camp').classList.remove('on');startStory(cid);};d.appendChild(b);});
+   const rsm=getResume();if(rsm&&rsm.cid===cid&&open){b.querySelector('.cls').textContent='▶ Продолжить';b.classList.add('resume');}
+   b.onclick=()=>{$('camp').classList.remove('on');const r2=getResume();startStory(cid,r2&&r2.cid===cid?r2:null);};d.appendChild(b);});
   box.appendChild(d);
  }
 }
 $('cback').onclick=()=>{$('camp').classList.remove('on');$('start').classList.add('on');};
-function startStory(cid){
+function startStory(cid,resume){
  const ch=typeof cid==='string'?CH[cid]:cid;
  startGame({story:true});
  S.mode='story';S.chap=ch;S.flags={};S.stars=3;S.startPos=ch.start.slice();
@@ -3690,6 +3724,8 @@ function startStory(cid){
  if(ch.setup) ch.setup();
  const c=iso(p.x,p.y);camX=c[0];camY=c[1];
  S.kills0=S.kills;drawPortrait();buildSlots();computeClean();updateHUD();
+ if(resume){applyResume(resume);clearResume();toast(ch.title+': продолжаем с того же места','good');return;}
+ if(typeof cid==='string') clearResume(cid);
  dialog(ch.intro,()=>{
   let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
   if(cid==='acne1'&&!tutDone) tutStart();
@@ -3714,6 +3750,7 @@ function finishChapter(){
  if(scars>3) st--;if(S.flags.bad||S.flags.transam||S.flags.dry80) st--;if((S.flags.worse|0)>=4) st--;
  st=clamp(st,1,3);S.finalStars=st;
  CAB.coins+=100*st;cabDirty();addProfileXP(150*st);setTimeout(()=>syncNow(true),1500);
+ clearResume(ch.id);
  const prev=STORY[ch.id];STORY[ch.id]={done:true,stars:Math.max(st,prev&&prev.stars||0)};saveStory();
  sfx('level');
  dialog(ch.outro(st),()=>showResult(st));
@@ -3771,7 +3808,7 @@ function continueGame(sv){
  toast('С возвращением! Уровень '+p.lvl+': '+rankTitle(p.lvl),'good');
 }
 window.addEventListener('pagehide',()=>{saveGame();saveCab();syncNow(true,true);});
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){saveGame();saveCab();syncNow(true,true);}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){saveGame();saveCab();syncNow(true,true);if(S&&!S.coop&&!S.paused&&!DLG&&!quizOpen&&$('hud').classList.contains('on')) openMenu();}});
 (function(){
  const sv=loadSave();const b=$('cont');
  if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);$('free').textContent='Новая свободная игра';}
