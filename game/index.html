@@ -210,6 +210,24 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 .iarrow{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:34px;color:#7fb2ff;animation:ibounce 1s infinite;text-shadow:0 0 12px rgba(127,178,255,.8)}
 @keyframes ibounce{50%{transform:translate(-50%,8px)}}
 .cabc{max-width:640px}
+.emc{max-width:620px}
+#emer.run .emintro{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;margin:4px 0}
+#emer.run .emhead #emface{width:48px;height:48px}
+#emer.run .emmon{grid-template-columns:repeat(4,1fr);padding:6px;gap:4px}#emer.run .emv b{font-size:14px}#emer.run .emv.wide{display:none}
+#emer.run .emlog{min-height:0;font-size:11.5px}.emhead{display:flex;gap:10px;align-items:center}#emface{width:72px;height:72px;border-radius:12px;flex:none}
+.emclock{font-family:monospace;font-size:20px;color:#ffe9bf;margin-top:2px}
+.emintro{font-size:13px;line-height:1.45;margin:8px 0;color:var(--txt)}
+.emmon{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;background:#0b1410;border:1px solid #2f6a4a;border-radius:10px;padding:8px}
+.emv{display:flex;flex-direction:column}.emv small{font-size:10px;color:#7fbf9a}.emv b{font-family:monospace;font-size:17px;color:#9fffc8}.emv.wide{grid-column:1/-1}.emv.wide b{font-size:12px;font-family:inherit;color:#cfeedd}
+.emv.crit b{color:#ff6a7a;animation:emblink 1s infinite}.emv.crit small{color:#ff9aa8}
+@keyframes emblink{50%{opacity:.45}}.emflash{animation:emblink .8s infinite}
+.emlog{margin:8px 0;min-height:60px;font-size:12px;line-height:1.4}.eml{padding:2px 0;color:var(--muted)}.eml span{font-family:monospace;color:#ffe9bf;margin-right:4px}
+.eml.key,.eml.ok{color:#cfeedd}.eml.bad{color:#ff9aa8}.eml.warn{color:#ffd58a}
+.emacts{display:grid;grid-template-columns:1fr 1fr;gap:6px}.emb{padding:9px 8px;border-radius:9px;border:1px solid rgba(255,154,168,.35);background:#2a171c;color:var(--txt);font-size:12.5px;text-align:left;line-height:1.3;cursor:pointer}
+.emb.used{opacity:.4;border-style:dashed}.emb:disabled{cursor:default}
+@media (max-width:520px){.emacts{grid-template-columns:1fr}}
+.emdx{font-size:13.5px;margin:4px 0;line-height:1.4}.emerr{color:#ff9aa8;font-size:13px;margin:4px 0}.emerr small,.emwarn small{color:var(--muted);font-size:11.5px}.emwarn{color:#ffd58a;font-size:13px;margin:4px 0}
+.emideal{font-size:13px;line-height:1.5;padding-left:20px;margin:4px 0}.emsrc{font-size:11px;color:var(--muted);margin-top:4px}.emtl{max-height:180px;overflow:auto}
 #menubtn{font-size:15px;padding:4px 12px}
 .clb.resume .cls{color:#9fe0b0}
 .big.coopb{background:linear-gradient(180deg,#24406a,#152640);border-color:#7fb3ff;line-height:1.25}.big.coopb small{font-size:11.5px;color:#cfe0ff;font-family:Trebuchet MS,sans-serif}
@@ -451,6 +469,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <ul>
    <li>★ Прокачка под портретом (клавиша K, кнопка PS на геймпаде): очки навыков за уровень и босса тратятся на ранги заклинаний. Ранг усиливает урон, площадь, радиус ауры или длительность и ускоряет перезарядку</li>
    <li>⏸ Пауза (кнопка вверху слева, Esc, P или Options на геймпаде): продолжить, сохранить и выйти, кабинет врача, рейтинг, справка, звук. Глава сюжета сохраняется с того же места, продолжить её можно в списке сюжетов. Если свернуть игру, она сама встаёт на паузу. В кабинете врача посевы и анализы в реальном времени, оранжерея лекарственных растений, ступка для кремов, склад с аптечкой и улучшения. Ежедневный утренний обход даёт награду, серия дней увеличивает её</li>
+   <li>🚨 Неотложные состояния: тренажёр внештатных ситуаций в списке сюжетов. Анафилаксия, обморок, токсичность метотрексата, герпетическая экзема, ТЭН. Время идёт, каждое действие отнимает минуты, в конце разбор с правильным алгоритмом. В свободной игре с 4 уровня иногда приходит срочный вызов в процедурный</li>
    <li>👔 Гардероб в кабинете врача: халат, хирургический костюм, джинсы и футболка, спортивный костюм, костюм лектора, лохмотья и чумной доктор. Головные уборы: шапочка, ободок, кепка, ушанка, фуражка, шляпа чумного доктора. Многое можно перекрасить. Одежду видят коллеги в консилиуме и в рейтинге</li>
    <li>👥 Ординаторская в кабинете врача: с 5 уровня можно взять первого ординатора, с 15, 30 и 50 ещё по одному. Ординаторы ходят с вами в свободной игре, лечат высыпания по своей специализации и растут в уровнях</li>
    <li>Аптечка над джойстиком: кремы из кабинета берутся с собой на приём (клавиша F, L2 на геймпаде для первой ячейки)</li>
@@ -631,6 +650,34 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <div id="cpmsg" style="color:#ffcf8a;font-size:13px;min-height:16px"></div>
   <div id="cplist"></div>
   <button class="big sec" id="cpclose" style="margin-top:8px">Закрыть</button>
+ </div>
+</div>
+<div id="emer" class="ov">
+ <div class="card panel emc">
+  <div id="emplay">
+   <div class="emhead"><canvas id="emface" width="96" height="96"></canvas><div style="flex:1"><div class="serif" id="emtitle" style="font-size:19px;color:#ff9aa8"></div><div id="emwho" style="font-size:12px;color:var(--muted)"></div><div id="emclock" class="emclock"></div></div></div>
+   <div id="emintro" class="emintro"></div>
+   <button class="big" id="emstart">▶ Начать: время пойдёт</button>
+   <div id="emmon" class="emmon"></div>
+   <div id="emlog" class="emlog"></div>
+   <div class="csub">Ваши действия</div>
+   <div id="emacts" class="emacts"></div>
+   <button class="big sec" id="emquit" style="margin-top:8px;font-size:13px">Сдаться и посмотреть разбор</button>
+  </div>
+  <div id="emres" style="display:none">
+   <div id="emresbody"></div>
+   <button class="big" id="emagain" style="margin-top:10px">Пройти ещё раз</button>
+   <button class="big sec" id="emexit">Закрыть</button>
+  </div>
+ </div>
+</div>
+<div id="emcall" class="ov">
+ <div class="card panel" style="max-width:420px;text-align:center;border-color:#ff6a7a">
+  <div class="serif emflash" style="font-size:24px;color:#ff9aa8">🚨 Срочный вызов в процедурный!</div>
+  <div id="emcalltxt" style="margin:10px 0;line-height:1.45"></div>
+  <div class="cabhint">Внештатная ситуация: награда ×1,5</div>
+  <button class="big" id="emgo">Бежать</button>
+  <button class="big sec" id="emlater">Через пару минут</button>
  </div>
 </div>
 <div id="gmenu" class="ov">
@@ -2055,7 +2102,7 @@ function profStats(){
  const st=cabSt();let stars=0,ch=0;for(const k in STORY){if(STORY[k]&&STORY[k].done){ch++;stars+=STORY[k].stars|0;}}
  const kills=p?S.kills:(sv?sv.kills|0:0),boss=p?S.bossKills:(sv?sv.bossKills|0:0),combos=Object.keys((p?S.combos:(sv&&sv.combos))||{}).length;
  const eq=Object.keys((p?S.eq:(sv&&sv.eq))||{}).length;let up=0;for(const k in CAB.up) up+=CAB.up[k]|0;
- return {lvl,xp:xpTotal(lvl,xp),title:rankTitle(lvl),stats:{kills,boss,combos,eq,stars,ch,coins:CAB.coins|0,up,streak:(CAB.daily&&CAB.daily.streak)|0,cult:st.cult|0,harvest:st.harvest|0,brewed:st.brewed|0,sec:Math.round(st.sec)|0,sessions:st.sessions|0,days:st.days|0,plat:platform(),wd:myWD(),team:teamArr().length,teamMax:teamArr().reduce((a,r)=>Math.max(a,r.lvl),0),scars:p?Math.max(0,S.scars-S.scarsFixed):(sv?Math.max(0,(sv.scars|0)-(sv.scarsFixed|0)):0)}};
+ return {lvl,xp:xpTotal(lvl,xp),title:rankTitle(lvl),stats:{kills,boss,combos,eq,stars,ch,coins:CAB.coins|0,up,streak:(CAB.daily&&CAB.daily.streak)|0,cult:st.cult|0,harvest:st.harvest|0,brewed:st.brewed|0,sec:Math.round(st.sec)|0,sessions:st.sessions|0,days:st.days|0,plat:platform(),wd:myWD(),em:Object.values(EMR).reduce((a,r)=>a+(r.stars|0),0),team:teamArr().length,teamMax:teamArr().reduce((a,r)=>Math.max(a,r.lvl),0),scars:p?Math.max(0,S.scars-S.scarsFixed):(sv?Math.max(0,(sv.scars|0)-(sv.scarsFixed|0)):0)}};
 }
 let syncAt=0,syncBusy=false;
 async function ensureReg(name){
@@ -2114,7 +2161,7 @@ function renderRate(){
 function showPlayer(id){
  const r=RATE.rows.find(q=>q.id===id);if(!r) return;const st=r.stats||{};
  const rows=RATE.rows.slice().sort((a,b)=>b.xp_total-a.xp_total);const pl=rows.findIndex(q=>q.id===id)+1;
- const cells=[['Место по опыту',pl],['Уровень',r.lvl],['Опыт всего',r.xp_total],['Вылечено высыпаний',st.kills|0],['Побеждено боссов',st.boss|0],['Найдено комбо',(st.combos|0)+' из 3'],['Глав сюжета',(st.ch|0)+', звёзд '+(st.stars|0)],['Оборудование',st.eq|0],['Посевов собрано',st.cult|0],['Кремов сварено',st.brewed|0],['Урожаев',st.harvest|0],['Улучшений кабинета',st.up|0],['Ординаторов',(st.team|0)+(st.teamMax?' (макс. ур. '+st.teamMax+')':'')],['Серия обходов',(st.streak|0)+' дн.'],['Время в игре',hrs(st.sec)],['В игре с',new Date(r.created_at).toLocaleDateString('ru-RU')],['Был в игре',ago(r.last_seen)]];
+ const cells=[['Место по опыту',pl],['Уровень',r.lvl],['Опыт всего',r.xp_total],['Вылечено высыпаний',st.kills|0],['Побеждено боссов',st.boss|0],['Найдено комбо',(st.combos|0)+' из 3'],['Глав сюжета',(st.ch|0)+', звёзд '+(st.stars|0)],['Оборудование',st.eq|0],['Посевов собрано',st.cult|0],['Кремов сварено',st.brewed|0],['Урожаев',st.harvest|0],['Улучшений кабинета',st.up|0],['Неотложные состояния',(st.em|0)+' ★ из 15'],['Ординаторов',(st.team|0)+(st.teamMax?' (макс. ур. '+st.teamMax+')':'')],['Серия обходов',(st.streak|0)+' дн.'],['Время в игре',hrs(st.sec)],['В игре с',new Date(r.created_at).toLocaleDateString('ru-RU')],['Был в игре',ago(r.last_seen)]];
  $('rlist').style.display='none';const pr=$('rprof');pr.style.display='block';
  pr.innerHTML='<div class="rph"><canvas id="rpc" width="120" height="140"></canvas><div><div class="serif" style="font-size:20px;color:var(--gold)">'+esc(r.name)+'</div><div style="color:var(--muted);font-size:13px">'+esc(r.title||'')+' · уровень '+r.lvl+'</div></div></div><div class="rgrid">'+cells.map(c=>'<div><small>'+c[0]+'</small><b>'+esc(c[1])+'</b></div>').join('')+'</div><button class="big sec" id="rback">← К рейтингу</button>';
  const c=$('rpc').getContext('2d');c.save();c.translate(60,128);c.scale(1.15,1.15);drawHero(c,0,0,{gender:r.gender==='girl'?'girl':'boy',age:r.age==='teen'?'teen':'adult',dir:1,walk:0,moving:false,t:1,hurt:0,lvl:tierOf(r.lvl),grow:1,wd:(r.stats||{}).wd||null});c.restore();
@@ -2443,7 +2490,7 @@ function update(dt){
  S.hudT-=dt;if(S.hudT<=0){S.hudT=0.1;updateHUD();}
  S.saveT=(S.saveT||10)-dt;if(S.saveT<=0){S.saveT=10;saveGame();}
  if(cabSaveT>0){cabSaveT-=dt;if(cabSaveT<=0) saveCab();}
- cabSt().sec+=dt;updateTeam(dt);if(S.coop) coopTick(dt);
+ cabSt().sec+=dt;updateTeam(dt);if(S.coop) coopTick(dt);emMaybeCall(dt);
  if(S.dcase&&!S.paused&&!DLG&&!S.dEnded){S.dcaseT-=dt;if(S.dcaseT<=0) finishDaily();}
  if(S.mode==='story'&&S.chap&&S.chap.dot&&!S.paused&&S.p.dead<=0&&!DLG){const dd=S.chap.dot*(S.flags.dotK||1)*dt*(S.buff.emol>0?0.6:1);S.p.hp-=dd;if(S.p.hp<=0){S.p.hp=0.5;damagePlayer(5,true);}}S.netT=(S.netT||60)-dt;if(S.netT<=0){S.netT=60;syncNow(false);}
 }
@@ -3369,6 +3416,7 @@ window.addEventListener('keydown',e=>{
  if(!S) return;
  if(k==='h'||k==='р'){toggleHelp();return;}
  if(k==='k'||k==='л'){if($('skills').classList.contains('on')) closeSkills();else openSkills();return;}
+ if($('emer').classList.contains('on')||$('emcall').classList.contains('on')) return;
  if(k==='escape'){if($('adm').classList.contains('on')){$('adm').classList.remove('on');return;}if($('rate').classList.contains('on')){closeRate();return;}if($('cab').classList.contains('on')){closeCab();return;}if($('gmenu').classList.contains('on')){closeMenu();return;}if($('eqp').classList.contains('on')){closeEquip();return;}if($('skills').classList.contains('on')){closeSkills();return;}if($('layout').classList.contains('on')){closeLayout();return;}if($('help').classList.contains('on')){$('help').classList.remove('on');if(!quizOpen) S.paused=false;return;}if(S&&!S.paused&&!DLG&&!quizOpen){openMenu();return;}return;}
  if((k==='p'||k==='з')&&S&&!DLG&&!quizOpen){if($('gmenu').classList.contains('on')) closeMenu();else if(!S.paused) openMenu();return;}
  if(S.paused) return;
@@ -3814,7 +3862,7 @@ function openCamp(){renderCamp();qFocus=0;$('camp').classList.add('on');}
 function renderCamp(){
  const box=$('clist');box.innerHTML='';
  {const n=Math.min(4,(CAB.team||[]).filter(r=>r.on).length);const d0=document.createElement('div');d0.className='cabhint';d0.style.textAlign='center';
-  d0.textContent=n?'👥 С вами в команде '+n+(n===1?' ординатор':' ординатора')+'. Высыпаний больше на '+(25*n)+'%, они крепче на '+(30*n)+'%, боссы на '+(40*n)+'%':'Вы играете в одиночку. Ординаторов можно взять в кабинете врача, в ординаторской. Некоторые главы проходятся только командой';box.appendChild(d0);}
+  d0.textContent=n?'👥 С вами в команде '+n+(n===1?' ординатор':' ординатора')+'. Высыпаний больше на '+(25*n)+'%, они крепче на '+(30*n)+'%, боссы на '+(20*n)+'%':'Вы играете в одиночку. Ординаторов можно взять в кабинете врача, в ординаторской. Некоторые главы проходятся только командой';box.appendChild(d0);}
  for(const L of LINES){
   const d=document.createElement('div');d.className='cl'+(L.soon?' soon':'');
   const top=document.createElement('div');top.className='cltop';
@@ -3827,8 +3875,246 @@ function renderCamp(){
    b.onclick=()=>{$('camp').classList.remove('on');const r2=getResume();startStory(cid,r2&&r2.cid===cid?r2:null);};d.appendChild(b);});
   box.appendChild(d);
  }
+ emCampBlock(box);
 }
 $('cback').onclick=()=>{$('camp').classList.remove('on');$('start').classList.add('on');};
+/* ---------- неотложные состояния: тренажёр ЧС ---------- */
+CAST.pavel={name:'Павел, 24 года',role:'Пациент, биопсия невуса',d:{skin:'#f0c8a8',hair:'#3a2a1c',coat:'#4a6a8a'}};
+CAST.natalia={name:'Наталья, 38 лет',role:'Пациентка, удаление кератомы',d:{skin:'#f2c6ae',hair:'#8a5a2a',long:true,red:1,coat:'#8a5a7a'}};
+CAST.petr={name:'Пётр Иванович, 64 года',role:'Пациент с псориазом',d:{skin:'#e8b99c',hair:'#c9c9cf',glasses:true,plaque:1,coat:'#5a5a4a'}};
+CAST.misha={name:'Миша, 5 лет, и мама',role:'Пациент с атопическим дерматитом',d:{skin:'#f6d2b6',hair:'#c99a5a',red:1,coat:'#5a8ac9'}};
+CAST.svetlana={name:'Светлана, 46 лет',role:'Пациентка, принимает ламотриджин',d:{skin:'#f0c4aa',hair:'#4a2a1a',long:true,red:1,acne:1,coat:'#6a6a8a'}};
+const EMKEY='dq_emer_v1';
+let EMR={};try{EMR=JSON.parse(localStorage.getItem(EMKEY)||'{}')||{};}catch(_){EMR={};}
+function emSave(){try{localStorage.setItem(EMKEY,JSON.stringify(EMR));}catch(_){}}
+const clampv=(v,a,b)=>Math.max(a,Math.min(b,v));
+function mmHg(v){return Math.round(v.sbp)+'/'+Math.round(v.sbp*0.6);}
+const EMER=[
+ {id:'faint',diff:1,title:'Обморок в процедурном',who:'pavel',unit:'мин',spd:1/12,tmax:6,
+  intro:'Процедурный кабинет. Вы делаете панч-биопсию невуса на спине под местной анестезией. Пациент сидит на кушетке. Внезапно бледнеет, покрывается холодным потом, говорит, что темнеет в глазах, и обмякает.',
+  v:{sbp:72,hr:46,spo2:97,rr:14},skin:'бледная, влажная, сыпи нет',
+  show:[['АД',s=>mmHg(s.v),s=>s.v.sbp<90],['ЧСС',s=>Math.round(s.v.hr),s=>s.v.hr<50||s.v.hr>120],['SpO₂',s=>Math.round(s.v.spo2)+'%',s=>s.v.spo2<92],['Сознание',s=>s.v.sbp>=100?'ясное':s.v.sbp>=88?'приходит в себя':'без сознания',s=>s.v.sbp<88]],
+  tick:(s,d)=>{const v=s.v;if(s.f.flat){v.sbp=Math.min(112,v.sbp+22*d);v.hr=Math.min(72,v.hr+18*d);}else{v.sbp=Math.max(55,v.sbp-1.2*d);}if(s.f.adr){v.hr=Math.min(150,v.hr);}},
+  acts:[
+   {id:'stop',t:'Прекратить процедуру, прижать рану салфеткой',dur:0.1,k:'key',fb:'Процедура остановлена, рана прижата.'},
+   {id:'flat',t:'Уложить на спину и приподнять ноги',dur:0.2,k:'key',fx:s=>{s.f.flat=1;},fb:'Пациент лежит, ноги приподняты. Кровь возвращается к сердцу и мозгу.'},
+   {id:'abc',t:'Проверить дыхание, пульс и реакцию на голос',dur:0.2,k:'key',fb:s=>'Дышит самостоятельно, пульс на лучевой артерии '+Math.round(s.v.hr)+' в минуту, слабый. На голос '+(s.v.sbp>=88?'отвечает.':'реагирует стоном.')},
+   {id:'air',t:'Расстегнуть ворот, открыть окно',dur:0.1,k:'ok',fb:'Ворот расстёгнут, есть приток воздуха.'},
+   {id:'sugar',t:'Измерить глюкозу глюкометром',dur:0.3,k:'ok',fb:'Глюкоза 5,2 ммоль/л, гипогликемии нет.'},
+   {id:'sit',t:'Усадить и похлопать по щекам',dur:0.2,k:'bad',fx:s=>{s.f.flat=0;s.v.sbp-=8;},fb:'В вертикальном положении мозг получает ещё меньше крови. Пациент сползает с кушетки.'},
+   {id:'amm',t:'Поднести ватку с нашатырным спиртом',dur:0.2,k:'neutral',fb:'При правильном положении сознание возвращается само за 1-2 минуты. Близко поднесённый нашатырь может обжечь слизистую носа.'},
+   {id:'adr',t:'Ввести адреналин внутримышечно',dur:0.2,k:'bad',fx:s=>{s.f.adr=1;s.v.hr+=55;s.v.sbp+=25;},fb:'Признаков анафилаксии нет: кожа бледная и влажная, сыпи и отёков нет, дыхание чистое, пульс редкий. Адреналин без показаний дал тахикардию.'},
+   {id:'call',t:'Вызвать скорую помощь',dur:0.2,k:'ok',fb:'Скорая вызвана. Это обязательно, если пациент лёжа не приходит в себя за 1-2 минуты или нет нормального дыхания.'},
+  ],
+  lose:s=>(!s.f.flat&&s.t>4)?'Пациент 4 минуты без сознания в сидячем положении, упал с кушетки и рассёк бровь.':null,
+  win:s=>s.f.flat&&s.v.sbp>=100&&s.used.abc,
+  stars:s=>{let st=1;const tf=s.first.flat;if(tf!=null&&tf<=0.6) st=3;else if(tf!=null&&tf<=1.5) st=2;if(s.bad) st=Math.max(1,st-1);return st;},
+  dx:'Вазовагальный обморок',
+  ideal:['Прекратить процедуру','Уложить на спину, приподнять ноги на 30-45 см','Проверить дыхание, пульс, сознание','Обеспечить приток воздуха, расстегнуть тесную одежду','Если за 1-2 минуты лёжа не приходит в себя или нет нормального дыхания: скорая и сердечно-лёгочная реанимация по показаниям','После восстановления не поднимать резко, сажать через 10-15 минут, исключить гипогликемию'],
+  note:'Самая частая внештатная ситуация в процедурном кабинете. Отличить от анафилаксии помогают бледная влажная кожа без сыпи, редкий пульс и быстрое восстановление в горизонтальном положении.',
+  src:'European Resuscitation Council Guidelines 2021: First Aid (обморок и предобморочное состояние)'},
+ {id:'ana',diff:3,title:'Внезапная реакция после инъекции',who:'natalia',unit:'мин',spd:0.2,tmax:12,
+  intro:'Пациентка лежит на кушетке после инфильтрационной анестезии лидокаином перед удалением кератомы. Через 5 минут жалуется на зуд, по всему телу волдыри, губы отекают, голос осип, «ком в горле», сильная слабость.',
+  v:{sbp:82,hr:128,spo2:92,rr:28},skin:'крапивница, отёк губ',
+  show:[['АД',s=>mmHg(s.v),s=>s.v.sbp<90],['ЧСС',s=>Math.round(s.v.hr),s=>s.v.hr>120],['SpO₂',s=>Math.round(s.v.spo2)+'%',s=>s.v.spo2<94],['ЧДД',s=>Math.round(s.v.rr),s=>s.v.rr>24],['Сознание',s=>s.v.sbp<55?'без сознания':s.v.sbp<75?'оглушение':'заторможена',s=>s.v.sbp<75]],
+  tick:(s,d)=>{const v=s.v,f=s.f;let drop=4.2*(f.stop?1:1.5)*(f.flat?0.7:1)*(f.up?1.6:1);let up=0,ox=0;
+   for(const a of s.adr){const age=s.t-a.t;if(age<0) continue;const k=a.sc?(age<3?0.15:0.55):(age<6?1:0.35);up+=k*(age<1.5?age/1.5:1)*10;ox+=k*1.1;}
+   if(f.fluid) up+=Math.min(4,(s.t-f.fluid)*2);
+   v.sbp=clampv(v.sbp+(up-drop)*d,30,135);v.spo2=clampv(v.spo2+(ox-0.9*(f.o2?0.35:1))*d,60,99);v.hr=clampv(v.hr+(v.sbp<85?2:-4)*d,60,200);v.rr=clampv(v.rr+(v.spo2<93?1:-1.2)*d,12,40);
+   if(f.iv2&&s.t-f.iv2<1){v.hr=185;}},
+  acts:[
+   {id:'stop',t:'Прекратить введение препарата',dur:0.1,k:'key',fx:s=>{s.f.stop=1;},fb:'Введение остановлено.'},
+   {id:'help',t:'Позвать помощь, вызвать реанимационную бригаду',dur:0.3,k:'key',fb:'Медсестра вызвала реанимационную бригаду и принесла противошоковую укладку.'},
+   {id:'adr',t:'Адреналин 0,1% 0,5 мл (0,5 мг) в/м в переднелатеральную поверхность бедра',dur:0.2,k:'key',cd:5,fx:s=>{s.adr.push({t:s.t});},fb:s=>s.adr.length>1?'Повторная доза адреналина введена.':'Адреналин введён в бедро. Эффект ожидается в течение нескольких минут, при его отсутствии повтор через 5-15 минут.'},
+   {id:'flat',t:'Уложить на спину, приподнять ноги',dur:0.2,k:'key',fx:s=>{s.f.flat=1;s.f.up=0;},fb:'Пациентка лежит с приподнятыми ногами.'},
+   {id:'o2',t:'Кислород через маску, высокий поток',dur:0.3,k:'ok',fx:s=>{s.f.o2=1;},fb:'Кислород подаётся.'},
+   {id:'iv',t:'Установить периферический венозный катетер',dur:0.6,k:'ok',fx:s=>{s.f.iv=1;},fb:'Венозный доступ есть.'},
+   {id:'fluid',t:'Болюс 0,9% натрия хлорида 500-1000 мл',dur:0.2,k:'ok',req:'iv',fx:s=>{s.f.fluid=s.t;},fb:'Инфузия идёт струйно.'},
+   {id:'mon',t:'Монитор: АД, ЧСС, SpO₂ каждые 2-3 минуты',dur:0.2,k:'ok',fb:'Мониторинг налажен.'},
+   {id:'antih',t:'Хлоропирамин в/м',dur:1,k:'neutral',fb:'Антигистаминные уменьшают зуд и крапивницу, на давление, отёк гортани и бронхоспазм почти не влияют. Ушла минута.'},
+   {id:'pred',t:'Преднизолон в/в',dur:1,k:'neutral',req:'iv',fb:'Глюкокортикостероиды начинают действовать через часы и в первые минуты не спасают. Первым идёт адреналин.'},
+   {id:'up',t:'Посадить на стул, чтобы отдышалась',dur:0.2,k:'bad',fx:s=>{s.f.up=1;s.f.flat=0;s.v.sbp-=15;},fb:'Резкий переход в вертикальное положение при анафилаксии опасен остановкой сердца: венозный возврат падает. Давление рухнуло.'},
+   {id:'adrsc',t:'Адреналин 0,5 мл подкожно в плечо',dur:0.2,k:'bad',fx:s=>{s.adr.push({t:s.t,sc:1});},fb:'Подкожно адреналин всасывается медленнее и непредсказуемее. Рекомендуемый путь: внутримышечно в бедро.'},
+   {id:'adriv',t:'Адреналин 1 мг в/в струйно, неразведённый',dur:0.2,k:'bad',req:'iv',fx:s=>{s.f.iv2=s.t;s.v.sbp-=8;},fb:'Болюс неразведённого адреналина в вену у пациентки с сохранённым пульсом вызвал желудочковую тахикардию. Внутривенно адреналин титруют реаниматологи под монитором.'},
+  ],
+  lose:s=>s.v.sbp<45||s.v.spo2<75?'Остановка кровообращения. Реанимационная бригада начала сердечно-лёгочную реанимацию.':null,
+  win:null,
+  end:s=>s.v.sbp>=90?'Бригада прибыла. Давление '+mmHg(s.v)+', пациентку передали стабильной.':'Бригада прибыла. Пациентку передали в тяжёлом состоянии, давление '+mmHg(s.v)+'.',
+  stars:s=>{const ta=s.first.adr;let st=ta==null?0:ta<=2?3:ta<=5?2:1;if(s.v.sbp<90) st=Math.min(st,1);if(s.bad) st=Math.max(st?1:0,st-1);if(!s.used.help) st=Math.max(st?1:0,st-1);return Math.max(1,st);},
+  dx:'Анафилактический шок на лидокаин',
+  ideal:['Прекратить введение препарата','Позвать помощь, вызвать реанимационную бригаду','Адреналин 0,1% 0,5 мл (0,5 мг) в/м в переднелатеральную поверхность бедра, сразу, без ожидания венозного доступа','Уложить на спину с приподнятыми ногами, не сажать и не поднимать','Кислород, венозный доступ, болюс кристаллоидов','Повтор адреналина через 5-15 минут при отсутствии эффекта','Антигистаминные и глюкокортикостероиды: после адреналина, как вторая линия'],
+  note:'Главная ошибка в реальной практике: начинать с антигистаминных и гормонов и откладывать адреналин. Каждая минута задержки ухудшает прогноз. У детей доза адреналина 0,01 мг/кг, но не больше 0,5 мг.',
+  src:'Клинические рекомендации МЗ РФ «Анафилактический шок» (2020); World Allergy Organization Anaphylaxis Guidance 2020'},
+ {id:'mtx',diff:2,title:'Звонок жены пациента',who:'petr',unit:'ч',spd:0.35,tmax:48,
+  intro:'Неделю назад вы назначили пациенту с псориазом метотрексат 15 мг. Сегодня звонит жена: во рту язвы, он не может есть, температура 38,2, на руках синяки. Выясняется, что он принимал 15 мг каждый день.',
+  v:{temp:38.2,wbc:2.2,plt:88},m:{},
+  show:[['t°',s=>s.v.temp.toFixed(1),s=>s.v.temp>=38],['Лейкоциты',s=>s.used.labs?s.v.wbc.toFixed(1)+'×10⁹/л':'?',s=>s.used.labs&&s.v.wbc<3],['Тромбоциты',s=>s.used.labs?Math.round(s.v.plt)+'×10⁹/л':'?',s=>s.used.labs&&s.v.plt<100],['Где пациент',s=>s.f.hosp?'в стационаре':'дома',s=>!s.f.hosp]],
+  tick:(s,d)=>{const v=s.v,f=s.f;const fol=f.folin!=null?s.t-f.folin:-1;let rate=f.stop?0.045:0.07;if(fol>10) rate=-0.05;else if(fol>=0) rate*=0.4;
+   v.wbc=clampv(v.wbc-rate*d,0.2,6);v.plt=clampv(v.plt-(rate*30)*d,8,250);v.temp=clampv(v.temp+(v.wbc<1&&!f.abx?0.04:(f.abx?-0.06:0))*d,36.6,40.5);},
+  acts:[
+   {id:'stop',t:'Немедленно отменить метотрексат',dur:0.1,k:'key',fx:s=>{s.f.stop=1;},fb:'Пациент больше не принимает метотрексат.'},
+   {id:'hosp',t:'Направить на срочную госпитализацию',dur:2,k:'key',fx:s=>{s.f.hosp=1;},fb:'Пациент госпитализирован.'},
+   {id:'labs',t:'Срочно: общий анализ крови, креатинин, АЛТ, АСТ',dur:1,k:'key',fb:s=>'Лейкоциты '+s.v.wbc.toFixed(1)+', тромбоциты '+Math.round(s.v.plt)+'. Креатинин на верхней границе нормы, АЛТ повышена в 2 раза.'},
+   {id:'folin',t:'Кальция фолинат как можно раньше',dur:0.5,k:'key',fx:s=>{s.f.folin=s.t;},fb:'Кальция фолинат введён. Дозу и длительность подбирают по уровню метотрексата и функции почек.'},
+   {id:'hydr',t:'Инфузионная терапия, контроль диуреза',dur:0.5,k:'ok',req:'hosp',fb:'Инфузия идёт, диурез контролируется.'},
+   {id:'abx',t:'Фебрильная нейтропения: посевы и эмпирический антибиотик',dur:0.5,k:'ok',req:'labs',fx:s=>{s.f.abx=1;},fb:'Посевы взяты, антибиотик начат.'},
+   {id:'mouth',t:'Уход за слизистой рта, обезболивание',dur:0.3,k:'ok',fb:'Мукозит обработан, боль меньше.'},
+   {id:'edu',t:'Разобрать схему: метотрексат 1 раз в неделю, день отмечен в календаре',dur:0.3,k:'ok',fb:'Жена записала: метотрексат только по понедельникам.'},
+   {id:'folic',t:'Увеличить фолиевую кислоту до 5 мг в день',dur:0.3,k:'bad',fb:'Фолиевая кислота не является антидотом: метотрексат блокирует фермент, который переводит её в активную форму. Кальция фолинат обходит этот блок.'},
+   {id:'wait',t:'Пропустить следующую дозу и понаблюдать дома',dur:3,k:'bad',fb:'Токсичность уже развилась: панцитопения и мукозит требуют стационара и антидота. Потеряно 3 часа.'},
+  ],
+  lose:s=>(!s.f.hosp&&s.t>16)?'Пациент остался дома. Ночью развился септический шок на фоне агранулоцитоза.':(s.v.wbc<0.6&&!s.f.abx&&s.t>20)?'Фебрильная нейтропения без антибиотика перешла в сепсис.':null,
+  end:s=>'Прошло двое суток. '+(s.v.wbc>=3?'Лейкоциты восстанавливаются, мукозит заживает.':'Лейкоциты пока низкие, пациент в стационаре под наблюдением.'),
+  stars:s=>{const a=s.first.folin,h=s.first.hosp;let st=(a!=null&&a<=4&&h!=null&&h<=4)?3:(a!=null&&a<=10)?2:1;if(s.bad) st=Math.max(1,st-1);return st;},
+  dx:'Токсичность метотрексата из-за ежедневного приёма',
+  ideal:['Отменить метотрексат','Срочная госпитализация','Общий анализ крови, креатинин, печёночные ферменты','Кальция фолинат как можно раньше, доза по уровню метотрексата и функции почек','Инфузионная терапия, контроль диуреза','При лихорадке на фоне нейтропении: посевы и антибиотики','Разобрать с пациентом и родственниками схему: один раз в неделю, в один и тот же день'],
+  note:'Ежедневный приём вместо еженедельного: одна из самых частых и опасных ошибок с метотрексатом в мире. Профилактика: писать на рецепте день недели, объяснять родственникам, не назначать «по 1 таблетке».',
+  src:'ISMP: предупреждения об ошибках ежедневного приёма низкодозового метотрексата; рекомендации British Association of Dermatologists по метотрексату'},
+ {id:'eh',diff:2,title:'Ребёнок с лихорадкой и пузырьками',who:'misha',unit:'ч',spd:0.3,tmax:24,
+  intro:'Мише 5 лет, у него атопический дерматит. Мама пришла без записи: за 2 дня на лице, веках и шее появились сгруппированные пузырьки и мелкие округлые «выбитые» эрозии. Температура 38,9, ребёнок вялый. Мама уже два дня мажет бетаметазоном погуще.',
+  v:{temp:38.9,area:6},
+  show:[['t°',s=>s.v.temp.toFixed(1),s=>s.v.temp>=38.5],['Поражение кожи',s=>Math.round(s.v.area)+'%',s=>s.v.area>10],['Глаза',s=>s.f.eye?'осмотрены':'не осмотрены',s=>!s.f.eye],['Где пациент',s=>s.f.hosp?'в стационаре':'в кабинете',s=>!s.f.hosp]],
+  tick:(s,d)=>{const v=s.v,f=s.f;const a=f.acv!=null?s.t-f.acv:-1;let r=0.55*(f.ster?1:1.4)*(f.strong?1.6:1);if(a>6) r=-0.15;else if(a>=0) r*=0.4;v.area=clampv(v.area+r*d,1,60);v.temp=clampv(v.temp+(a>8?-0.12:0.02)*d,36.6,40.5);},
+  acts:[
+   {id:'acv',t:'Ацикловир системно, не дожидаясь анализов',dur:0.3,k:'key',fx:s=>{s.f.acv=s.t;},fb:'Системный ацикловир начат.'},
+   {id:'hosp',t:'Госпитализация: ребёнок, лихорадка, вялость',dur:1,k:'key',fx:s=>{s.f.hosp=1;},fb:'Миша госпитализирован вместе с мамой.'},
+   {id:'ster',t:'Прекратить топический стероид на поражённых участках',dur:0.1,k:'key',fx:s=>{s.f.ster=1;},fb:'Стероид на поражённые участки больше не наносят.'},
+   {id:'eye',t:'Срочный осмотр офтальмолога: пузырьки на веках',dur:1,k:'key',fx:s=>{s.f.eye=1;},fb:'Офтальмолог осмотрел: начальный кератит, назначено лечение глаз.'},
+   {id:'pcr',t:'ПЦР мазка с эрозии на вирус простого герпеса',dur:0.3,k:'ok',fb:'Мазок взят. Лечение из-за анализа не откладывают.'},
+   {id:'emol',t:'Эмоленты на непоражённую кожу',dur:0.2,k:'ok',fb:'Мама наносит эмолент на здоровую кожу.'},
+   {id:'abx',t:'Антибиотик при признаках вторичной инфекции',dur:0.3,k:'neutral',fb:'Вторичная бактериальная инфекция частая, антибиотик добавляют при её признаках. Противовирусную терапию он не заменяет.'},
+   {id:'topacv',t:'Только мазь с ацикловиром',dur:0.3,k:'neutral',fb:'Местного противовирусного при герпетической экземе недостаточно, нужна системная терапия.'},
+   {id:'strong',t:'Усилить: клобетазол 2 раза в день',dur:0.2,k:'bad',fx:s=>{s.f.strong=1;},fb:'Сильный стероид на герпетическую инфекцию ускоряет её распространение.'},
+   {id:'tacro',t:'Перейти на мазь с такролимусом',dur:0.2,k:'bad',fb:'Ингибиторы кальциневрина на активную герпетическую инфекцию тоже не наносят.'},
+  ],
+  lose:s=>(s.f.acv==null&&s.t>12)?'Инфекция генерализовалась, поражены глаза. Ребёнок переведён в реанимацию.':null,
+  end:s=>'Прошли сутки. '+(s.v.area<8?'Новых пузырьков нет, эрозии подсыхают, температура снижается.':'Высыпания ещё распространяются, лечение продолжается в стационаре.'),
+  stars:s=>{const a=s.first.acv;let st=(a!=null&&a<=1&&s.f.hosp&&s.f.eye)?3:(a!=null&&a<=4)?2:1;if(s.bad) st=Math.max(1,st-1);return st;},
+  dx:'Герпетическая экзема Капоши',
+  ideal:['Заподозрить по сгруппированным пузырькам и «выбитым» эрозиям на фоне атопического дерматита','Ацикловир системно сразу, не дожидаясь подтверждения','Госпитализация при лихорадке, распространённом поражении, у маленьких детей','Прекратить топические стероиды и ингибиторы кальциневрина на поражённых участках','Срочный осмотр офтальмолога при высыпаниях на веках и вокруг глаз','ПЦР мазка параллельно с лечением, антибиотик при вторичной инфекции'],
+  note:'Герпетическую экзему часто принимают за обострение атопического дерматита и усиливают стероид. Насторожить должны мономорфные пузырьки, округлые эрозии и лихорадка.',
+  src:'Клинические рекомендации РФ «Атопический дерматит»; DermNet: Eczema herpeticum'},
+ {id:'ten',diff:4,title:'Пузыри после нового препарата',who:'svetlana',unit:'ч',spd:0.25,tmax:18,
+  intro:'Три недели назад невролог назначил пациентке ламотриджин. Двое суток температура, жжение в глазах, боль в горле. Сегодня на туловище тёмные пятна, сливающиеся пузыри, эпидермис отслаивается от лёгкого касания, на губах геморрагические корки.',
+  v:{temp:39.1,bsa:8,hr:116},
+  show:[['t°',s=>s.v.temp.toFixed(1),s=>s.v.temp>=38.5],['Отслойка',s=>Math.round(s.v.bsa)+'% площади',s=>s.v.bsa>=10],['ЧСС',s=>Math.round(s.v.hr),s=>s.v.hr>=120],['Где пациентка',s=>s.f.icu?'ожоговый центр':'отделение',s=>!s.f.icu]],
+  tick:(s,d)=>{const v=s.v,f=s.f;v.bsa=clampv(v.bsa+(f.stop?0.35:1.3)*(f.cont?1.4:1)*d,0,90);v.hr=clampv(v.hr+(v.bsa>15&&!f.fluids?0.8:-0.3)*d,80,170);v.temp=clampv(v.temp+(f.icu?-0.05:0.03)*d,36.6,40.6);},
+  acts:[
+   {id:'stop',t:'Отменить ламотриджин и все необязательные препараты',dur:0.2,k:'key',fx:s=>{s.f.stop=1;s.f.cont=0;},fb:'Ламотриджин отменён, неврологу сообщено, противосудорожная терапия будет подобрана другим препаратом.'},
+   {id:'bsa',t:'Оценить площадь отслойки, посчитать SCORTEN',dur:0.5,k:'key',fb:s=>{const sc=1+(s.v.bsa>=10?1:0)+(s.v.hr>=120?1:0);return 'Отслойка '+Math.round(s.v.bsa)+'% площади. SCORTEN '+sc+(sc<=1?': ожидаемая летальность около 3%.':sc===2?': ожидаемая летальность около 12%.':': ожидаемая летальность около 35%.');}},
+   {id:'icu',t:'Перевести в ожоговый центр или реанимацию',dur:2,k:'key',fx:s=>{s.f.icu=1;},fb:'Пациентка переведена в ожоговый центр.'},
+   {id:'eye',t:'Срочный осмотр офтальмолога',dur:1,k:'key',fx:s=>{s.f.eye=s.t;},fb:'Офтальмолог осмотрел: конъюнктивит с эрозиями, назначены капли и ежедневный осмотр.'},
+   {id:'fluids',t:'Инфузия под контролем диуреза',dur:0.5,k:'ok',fx:s=>{s.f.fluids=1;},fb:'Инфузия идёт, диурез контролируется.'},
+   {id:'dress',t:'Атравматичные повязки, без пластырей, стерильное бельё',dur:0.5,k:'ok',fb:'Кожа под атравматичными повязками.'},
+   {id:'blist',t:'Проколоть пузыри, оставив покрышку на месте',dur:0.5,k:'ok',fb:'Пузыри опорожнены, покрышка работает как биологическая повязка.'},
+   {id:'mouth',t:'Уход за слизистой рта и губ, обезболивание',dur:0.3,k:'ok',fb:'Слизистые обработаны, боль меньше.'},
+   {id:'abxp',t:'Антибиотики широкого спектра профилактически',dur:0.3,k:'bad',fb:'Профилактические антибиотики при ТЭН не рекомендуются: они растят резистентность и риск грибковой инфекции. Посевы и антибиотики при признаках инфекции.'},
+   {id:'cont',t:'Продолжить ламотриджин, добавить антигистаминные',dur:0.3,k:'bad',fx:s=>{if(!s.f.stop) s.f.cont=1;},fb:'Пока виновный препарат принимается, некролиз прогрессирует. Антигистаминные на него не влияют.'},
+   {id:'ster',t:'Мазь с бетаметазоном на всю кожу',dur:0.5,k:'bad',fb:'Сильный стероид на эрозированную кожу не останавливает некролиз и повышает риск инфекции и системного всасывания.'},
+  ],
+  lose:s=>s.v.bsa>=45?'Отслойка превысила 45% площади тела, развилась полиорганная недостаточность.':(!s.f.icu&&s.t>10)?'Без лечения в ожоговом центре развился сепсис.':null,
+  end:s=>'Прошло 18 часов. '+(s.v.bsa<20?'Новых пузырей почти нет, состояние стабилизируется.':'Отслойка большая, пациентка в тяжёлом состоянии под наблюдением реаниматологов.')+(s.f.eye!=null&&s.f.eye<=8?'':' Офтальмолог осмотрел поздно: есть риск рубцовых изменений конъюнктивы.'),
+  stars:s=>{const a=s.first.stop,b=s.first.icu;let st=(a!=null&&a<=1&&b!=null&&b<=3&&s.f.eye!=null)?3:(a!=null&&a<=3)?2:1;if(s.bad) st=Math.max(1,st-1);return st;},
+  dx:'Синдром Стивенса-Джонсона с переходом в токсический эпидермальный некролиз на ламотриджин',
+  ideal:['Немедленно отменить подозреваемый препарат и все необязательные','Оценить площадь отслойки и тяжесть по SCORTEN','Перевести в ожоговый центр или реанимацию','Срочный осмотр офтальмолога, затем ежедневно','Инфузия, атравматичные повязки, пузыри прокалывают и оставляют покрышку','Антибиотики только при признаках инфекции, по посевам'],
+  note:'Ламотриджин, аллопуринол, карбамазепин, сульфаниламиды: частые виновники ТЭН и синдрома Стивенса-Джонсона, обычно в первые 8 недель приёма. Чем раньше отменён препарат, тем лучше прогноз.',
+  src:'British Association of Dermatologists: UK guidelines for the management of SJS/TEN in adults (2016)'},
+];
+const EMID={};EMER.forEach(e=>EMID[e.id]=e);
+let EM=null;
+function emOpen(id,opt){
+ const sc=EMID[id];if(!sc) return;opt=opt||{};
+ if(S) S.paused=true;
+ EM={sc,t:0,v:JSON.parse(JSON.stringify(sc.v)),f:{},used:{},cd:{},first:{},adr:[],log:[],bad:0,done:false,surprise:!!opt.surprise,beepT:0};
+ ['camp','start','emcall'].forEach(x=>$(x)&&$(x).classList.remove('on'));
+ $('emer').classList.add('on');$('emres').style.display='none';$('emplay').style.display='';
+ $('emtitle').textContent='🚨 '+sc.title;$('emwho').textContent=CAST[sc.who].name;$('emintro').textContent=sc.intro;
+ drawFace($('emface').getContext('2d'),CAST[sc.who].d,96);
+ EM.started=false;$('emer').classList.remove('run');$('emstart').style.display='';emLog('Прочитайте ситуацию. Время пойдёт, когда нажмёте «Начать».');emRender();
+ clearInterval(EM.int);EM.int=setInterval(emTick,100);sfx('warn');
+}
+function emLog(t,k){if(!EM) return;EM.log.unshift({t:EM.t,x:t,k:k||''});EM.log=EM.log.slice(0,40);}
+function emTime(t){if(EM.sc.unit==='мин'){const m=Math.floor(t),s=Math.floor((t-m)*60);return m+':'+String(s).padStart(2,'0');}const h=Math.floor(t);return h+' ч '+String(Math.floor((t-h)*60)).padStart(2,'0')+' мин';}
+function emAdvance(d){const sc=EM.sc;const steps=Math.max(1,Math.ceil(d/0.05));for(let i=0;i<steps&&!EM.done;i++){const dd=d/steps;EM.t+=dd;sc.tick(EM,dd);emCheck();}}
+function emCheck(){
+ const sc=EM.sc;if(EM.done) return;
+ const lose=sc.lose&&sc.lose(EM);if(lose){emEnd(false,lose);return;}
+ if(sc.win&&sc.win(EM)){emEnd(true,'Пациент пришёл в себя, давление '+mmHg(EM.v)+'.');return;}
+ if(EM.t>=sc.tmax){emEnd(true,sc.end?sc.end(EM):'Время вышло.');}
+}
+function emTick(){if(!EM||EM.done||!EM.started) return;emAdvance(EM.sc.spd*0.1);
+ const crit=EM.sc.show.some(x=>x[2](EM));EM.beepT-=0.1;if(EM.beepT<=0){EM.beepT=crit?0.9:1.6;if(crit) sfx('warn');}
+ emRender();}
+function emDo(a){
+ if(!EM||EM.done) return;if(!EM.started) emBegin();const sc=EM.sc;
+ if(a.req&&!EM.used[a.req]&&!EM.f[a.req]){emLog('Сначала нужно: '+sc.acts.find(q=>q.id===a.req).t.toLowerCase(),'bad');emRender();return;}
+ if(a.cd){if(EM.cd[a.id]!=null&&EM.t<EM.cd[a.id]){emLog('Повтор возможен через '+emTime(EM.cd[a.id]-EM.t),'');emRender();return;}EM.cd[a.id]=EM.t+a.cd;}
+ else if(EM.used[a.id]&&a.k!=='neutral'){return;}
+ EM.used[a.id]=(EM.used[a.id]|0)+1;if(EM.first[a.id]==null) EM.first[a.id]=EM.t;
+ if(a.k==='bad'){EM.bad++;sfx('bad');}else if(a.k==='key') sfx('good');else sfx('click');
+ if(a.fx) a.fx(EM);
+ emLog(a.t,a.k);
+ emAdvance(a.dur||0.1);
+ const fb=typeof a.fb==='function'?a.fb(EM):a.fb;if(fb&&!EM.done) emLog('→ '+fb,a.k==='bad'?'bad':a.k==='neutral'?'warn':'ok');
+ emRender();
+}
+function emRender(){
+ if(!EM) return;const sc=EM.sc;
+ $('emclock').textContent='⏱ '+emTime(EM.t);
+ $('emmon').innerHTML=sc.show.map(x=>'<div class="emv'+(x[2](EM)?' crit':'')+'"><small>'+x[0]+'</small><b>'+x[1](EM)+'</b></div>').join('')+(sc.skin?'<div class="emv wide"><small>Кожа</small><b>'+sc.skin+'</b></div>':'');
+ if(!EM.btnBuilt){EM.btnBuilt=1;const box=$('emacts');box.innerHTML='';
+  const order=sc.acts.map((a,i)=>({a,r:((i*7919+sc.id.length*31)%97)})).sort((x,y)=>x.r-y.r).map(x=>x.a);
+  for(const a of order){const b=document.createElement('button');b.className='emb';b.textContent=a.t;b.dataset.id=a.id;b.onclick=()=>emDo(a);box.appendChild(b);}}
+ $('emacts').querySelectorAll('.emb').forEach(b=>{const a=sc.acts.find(q=>q.id===b.dataset.id);const used=EM.used[a.id];
+  b.classList.toggle('used',!!used&&!a.cd&&a.k!=='neutral');b.disabled=EM.done||(!!used&&!a.cd&&a.k!=='neutral');
+  if(a.cd&&EM.cd[a.id]!=null&&EM.t<EM.cd[a.id]){b.textContent=a.t+' (повтор через '+emTime(EM.cd[a.id]-EM.t)+')';}else b.textContent=a.t;});
+ $('emlog').innerHTML=EM.log.slice(0,EM.started?3:2).map(l=>'<div class="eml '+l.k+'"><span>'+emTime(l.t)+'</span> '+esc(l.x)+'</div>').join('');
+}
+function emEnd(ok,txt){
+ if(!EM||EM.done) return;EM.done=true;clearInterval(EM.int);const sc=EM.sc;
+ const st=ok?sc.stars(EM):0;sfx(ok?'level':'bad');
+ const prev=EMR[sc.id]||{};const firstWin=ok&&!prev.done;
+ const xp=ok?Math.round(250*sc.diff*st/3*(firstWin?1:0.25)*(EM.surprise?1.5:1)):0,coins=ok?Math.round(60*sc.diff*st/3*(firstWin?1:0.25)*(EM.surprise?1.5:1)):0;
+ if(ok){EMR[sc.id]={done:true,stars:Math.max(prev.stars|0,st),n:(prev.n|0)+1};emSave();CAB.coins+=coins;cabDirty();saveCab();addProfileXP(xp);syncNow(true);}
+ $('emplay').style.display='none';$('emres').style.display='';
+ const missed=sc.acts.filter(a=>a.k==='key'&&!EM.used[a.id]).map(a=>a.t);
+ const bads=sc.acts.filter(a=>a.k==='bad'&&EM.used[a.id]);const neut=sc.acts.filter(a=>a.k==='neutral'&&EM.used[a.id]);
+ let h='<div class="serif" style="font-size:22px;color:'+(ok?(st>=2?'#9fe0b0':'#ffd58a'):'#ff9aa8')+'">'+(ok?(st>=2?'Пациент спасён':'Пациент выжил, но помощь запоздала'):'Пациента не удалось стабилизировать')+'</div><div style="font-size:26px;margin:4px 0">'+(ok?'★'.repeat(st)+'☆'.repeat(3-st):'')+'</div>';
+ h+='<div class="emdx">'+esc(txt)+'</div><div class="emdx"><b>Диагноз:</b> '+sc.dx+'</div>';
+ if(ok) h+='<div class="cabhint">+'+xp+' опыта, +'+coins+' ₽'+(EM.surprise?' (внештатный вызов, награда ×1,5)':'')+(firstWin?'':' (повторное прохождение)')+'</div>';
+ if(bads.length) h+='<div class="csub">Ошибки</div>'+bads.map(a=>'<div class="emerr">✖ '+a.t+'<br><small>'+(typeof a.fb==='function'?a.fb(EM):a.fb)+'</small></div>').join('');
+ if(neut.length) h+='<div class="csub">Потеря времени</div>'+neut.map(a=>'<div class="emwarn">⚠ '+a.t+'<br><small>'+a.fb+'</small></div>').join('');
+ if(missed.length) h+='<div class="csub">Что не сделано</div>'+missed.map(t=>'<div class="emwarn">○ '+t+'</div>').join('');
+ h+='<div class="csub">Правильный алгоритм</div><ol class="emideal">'+sc.ideal.map(t=>'<li>'+t+'</li>').join('')+'</ol>';
+ h+='<div class="cabhint">'+sc.note+'</div><div class="emsrc">Источник: '+sc.src+'</div>';
+ h+='<div class="csub">Ваши действия</div><div class="emtl">'+EM.log.slice().reverse().filter(l=>!l.x.startsWith('→')).map(l=>'<div class="eml '+l.k+'"><span>'+emTime(l.t)+'</span> '+esc(l.x)+'</div>').join('')+'</div>';
+ $('emresbody').innerHTML=h;
+}
+function emClose(){if(EM){clearInterval(EM.int);}EM=null;$('emer').classList.remove('on');if(S){S.paused=false;S.hudT=0;}else{$('start').classList.add('on');}}
+function emBegin(){if(!EM||EM.started) return;EM.started=true;$('emstart').style.display='none';$('emer').classList.add('run');EM.log=[];emLog('Вы у пациента. Время пошло.');emRender();sfx('warn');}
+$('emstart').onclick=()=>emBegin();
+$('emagain').onclick=()=>{const id=EM&&EM.sc.id;if(id) emOpen(id);};
+$('emexit').onclick=emClose;
+$('emquit').onclick=()=>{if(EM&&!EM.done) emEnd(false,'Вы покинули пациента.');};
+/* список в сюжетах */
+function emCampBlock(box){
+ const d=document.createElement('div');d.className='cline2';
+ d.innerHTML='<div class="cln">🚨 Неотложные состояния</div><div class="cld">Внештатные ситуации на приёме. Время идёт по-настоящему, каждое действие отнимает минуты. Ошибки разбираются в конце.</div>';
+ EMER.slice().sort((a,b)=>a.diff-b.diff).forEach(sc=>{const r=EMR[sc.id];const b=document.createElement('button');b.className='clb'+(r&&r.done?' done':'');
+  b.innerHTML='<span>'+sc.title+'<br><small class="cdf d'+sc.diff+'">'+'●'.repeat(sc.diff)+'○'.repeat(4-sc.diff)+' '+DIFF[sc.diff]+'</small></span><span class="cls">'+(r&&r.done?starsStr(r.stars):'Начать')+'</span>';
+  b.onclick=()=>{$('camp').classList.remove('on');emOpen(sc.id);};d.appendChild(b);});
+ box.appendChild(d);
+}
+/* внештатный вызов во время свободной игры */
+function emMaybeCall(dt){
+ if(!S||S.mode!=='free'||S.coop||S.dcase||S.tut>=0||S.paused||DLG||S.p.lvl<4||S.p.dead>0) return;
+ if(S.emT==null) S.emT=420+Math.random()*300;S.emT-=dt;if(S.emT>0) return;S.emT=900+Math.random()*600;
+ const pool=EMER.filter(e=>!(EMR[e.id]&&EMR[e.id].stars>=3));const sc=(pool.length?pool:EMER)[Math.floor(Math.random()*(pool.length?pool.length:EMER.length))];
+ S.paused=true;S.emCallId=sc.id;$('emcalltxt').textContent=sc.intro.split('. ').slice(0,2).join('. ')+'.';$('emcall').classList.add('on');sfx('warn');setTimeout(()=>sfx('warn'),400);
+}
+$('emgo').onclick=()=>{$('emcall').classList.remove('on');if(S&&S.emCallId) emOpen(S.emCallId,{surprise:true});};
+$('emlater').onclick=()=>{$('emcall').classList.remove('on');if(S){S.paused=false;S.emT=150;}};
+
 function startStory(cid,resume){
  const ch=typeof cid==='string'?CH[cid]:cid;
  startGame({story:true});
@@ -3968,7 +4254,7 @@ function loop(ts){
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={emOpen:(i,o)=>emOpen(i,o),emDo:id=>{const a=EM&&EM.sc.acts.find(q=>q.id===id);if(a) emDo(a);},get EM(){return EM;},emAdvance:d=>emAdvance(d),EMER,startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
