@@ -503,6 +503,21 @@ input,#nm{font-family:'Golos Text',sans-serif}
 .big.tutb::after{content:'';position:absolute;right:-30px;top:50%;width:96px;height:96px;transform:translateY(-50%);border-radius:50%;border:2px dashed rgba(255,255,255,.35)}
 .linkb{display:block;margin:12px auto 0;background:none;border:none;color:var(--muted);font-family:'Golos Text',sans-serif;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .linkb:hover{color:var(--txt)}
+#ntc{background:rgba(10,7,22,.5);-webkit-backdrop-filter:none;backdrop-filter:none;z-index:24}
+.ntcard{width:min(420px,100%);padding:18px 18px 14px;border-radius:20px;border-width:1.5px;animation:ntin .22s ease-out}
+@keyframes ntin{from{transform:translateY(10px) scale(.97);opacity:0}}
+.ntk{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+#ntico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;background:rgba(61,201,183,.16);border:1px solid rgba(61,201,183,.5)}
+#ntlab{font-family:'Unbounded','Golos Text',sans-serif;font-weight:600;font-size:14px;color:#8ff5e6}
+#ntcnt{margin-left:auto;font-size:12px;color:var(--muted);background:rgba(255,255,255,.06);border-radius:999px;padding:3px 9px}
+#ntcnt:empty{display:none}
+#nttxt{font-size:16px;line-height:1.45;color:var(--txt);margin-bottom:6px}
+.nthint{font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px}
+@media (pointer:coarse){.nthint{display:none}}
+#ntc.k_hint .ntcard{border-color:rgba(61,201,183,.55)}
+#ntc.k_boss .ntcard{border-color:rgba(240,122,165,.7)}#ntc.k_boss #ntico{background:rgba(240,122,165,.18);border-color:rgba(240,122,165,.6)}#ntc.k_boss #ntlab{color:#ffb3cf}
+#ntc.k_bad .ntcard{border-color:rgba(255,92,117,.65)}#ntc.k_bad #ntico{background:rgba(255,92,117,.16);border-color:rgba(255,92,117,.6)}#ntc.k_bad #ntlab{color:#ff9aab}
+#ntc.k_good .ntcard{border-color:rgba(242,179,91,.6)}#ntc.k_good #ntico{background:rgba(242,179,91,.16);border-color:rgba(242,179,91,.6)}#ntc.k_good #ntlab{color:#ffd59a}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
 </style>
 </head>
@@ -710,6 +725,7 @@ input,#nm{font-family:'Golos Text',sans-serif}
   <button class="big" id="skclose" style="margin-top:8px">Готово</button>
  </div>
 </div>
+<div id="ntc" class="ov" role="dialog" aria-live="assertive"><div class="ntcard panel"><div class="ntk"><span id="ntico"></span><span id="ntlab"></span><span id="ntcnt"></span></div><div id="nttxt"></div><button id="ntok" class="big">Понятно</button><div class="nthint">Игра на паузе. Пробел или Enter, чтобы продолжить</div></div></div>
 <div id="dlg" class="ov">
  <div class="card panel dlgc">
   <div class="dlgtop"><canvas id="dlgface" width="200" height="200"></canvas><div><div id="dlgname" class="serif"></div><div id="dlgrole"></div></div></div>
@@ -835,6 +851,7 @@ input,#nm{font-family:'Golos Text',sans-serif}
   <button class="big sec" id="m_push">🔔 Включить напоминания</button>
   <div id="m_pushmsg" class="cabhint" style="text-align:center"></div>
   <button class="big sec" id="m_help">? Справка</button>
+  <button class="big sec" id="m_ntc">📌 Пауза на подсказках</button>
   <button class="big sec" id="m_snd">🔊 Звук</button>
   <button class="big sec" id="m_close" style="display:none">Вернуться в игру</button>
  </div>
@@ -1265,9 +1282,43 @@ $('eqbtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagati
 const recent={};
 function toast(msg,kind){
  const now=performance.now();if(recent[msg]&&now-recent[msg]<2500) return;recent[msg]=now;
+ if(ntcWorthy(msg,kind)){S.ntcSeen.add(msg);S.nq.push({msg,kind:kind||'hint'});if(S.ntcOn){$('ntcnt').textContent='ещё '+S.nq.length;$('ntok').textContent='Дальше';}return;}
  const box=$('toasts');const d=document.createElement('div');d.className='toast '+(kind||'');d.textContent=msg;box.appendChild(d);
  while(box.children.length>4) box.removeChild(box.firstChild);
- setTimeout(()=>{d.style.opacity='0';setTimeout(()=>d.remove(),550);},kind==='boss'?4200:3300);
+ const ms=Math.min(9000,2600+String(msg).length*45)+(kind==='boss'?900:0);
+ setTimeout(()=>{d.style.opacity='0';setTimeout(()=>d.remove(),550);},ms);
+}
+/* важные уведомления ставят игру на паузу */
+let NTC_ON=true;try{NTC_ON=localStorage.getItem('dq_ntc')!=='0';}catch(_){}
+const NTC_SKIP=/Слишком далеко|Сначала выполните|онсилиум|скопирован|закончился|Ячейка аптечки|откроется на|нужно оборудование|Глава сохранена|отключился|покинул|Вы вышли|с того же места|Цели в панели|Геймпад|С возвращением|Опыт из кабинета|^Ординатор |^Уровень \d|первая попытка/;
+const NTC_GOOD=/^(Новый навык|Открыт препарат|Открыто комбо|Новая кнопка|Новое звание)|теперь в кабинете/;
+function ntcWorthy(msg,kind){
+ if(!NTC_ON||!S||S.coop||S.tut>=0||!$('hud').classList.contains('on')) return false;
+ if(!S.ntcSeen){S.ntcSeen=new Set();S.nq=[];}
+ msg=String(msg);if(S.ntcSeen.has(msg)||NTC_SKIP.test(msg)) return false;
+ if(kind==='hint'||kind==='boss'||kind==='bad') return true;
+ return NTC_GOOD.test(msg);
+}
+const NTC_KIND={hint:['💡','Подсказка'],boss:['⚠️','Внимание'],bad:['🩹','Осложнение'],good:['✨','Новое']};
+function ntcTick(){
+ if(!S||S.ntcOn||!S.nq||!S.nq.length) return;
+ if(S.coop){S.nq.length=0;return;}
+ if(S.paused||DLG||quizOpen||!$('hud').classList.contains('on')||$('start').classList.contains('on')) return;
+ ntcShow();
+}
+function ntcShow(){
+ const n=S.nq.shift();if(!n) return;
+ S.ntcOn=true;S.paused=true;S.ntcT=performance.now();
+ const k=NTC_KIND[n.kind]||NTC_KIND.hint;const c=$('ntc');
+ c.className='ov on k_'+n.kind;$('ntico').textContent=k[0];$('ntlab').textContent=k[1];
+ $('nttxt').textContent=n.msg;$('ntcnt').textContent=S.nq.length?'ещё '+S.nq.length:'';
+ $('ntok').textContent=S.nq.length?'Дальше':'Понятно';
+ qFocus=0;sfx&&sfx(n.kind==='good'?'good':'click');
+}
+function ntcClose(force){
+ if(!S||!S.ntcOn) return;if(!force&&performance.now()-S.ntcT<350) return;
+ if(S.nq.length){ntcShow();return;}
+ S.ntcOn=false;S.paused=false;S.hudT=0;$('ntc').classList.remove('on');
 }
 function hint(type,sid){
  const h=HINTS[type];if(!h) return;const msg=h[sid]||h.def;if(!msg) return;
@@ -1776,6 +1827,12 @@ $('m_close').onclick=closeMenu;
 $('m_close2').onclick=closeMenu;
 $('m_cab').onclick=()=>{$('gmenu').classList.remove('on');openCab();};
 $('m_help').onclick=()=>{$('gmenu').classList.remove('on');toggleHelp();};
+$('m_ntc').onclick=()=>{NTC_ON=!NTC_ON;try{localStorage.setItem('dq_ntc',NTC_ON?'1':'0');}catch(_){}renderNtcBtn();};
+function renderNtcBtn(){$('m_ntc').textContent=NTC_ON?'📌 Пауза на подсказках: включена':'📌 Пауза на подсказках: выключена';}
+renderNtcBtn();
+$('ntok').onclick=e=>{e.stopPropagation();ntcClose(true);};
+$('ntc').addEventListener('pointerdown',e=>{if(e.target===$('ntc')) ntcClose(false);});
+window.addEventListener('keydown',e=>{if(!S||!S.ntcOn) return;const k=e.key;if(k===' '||k==='Enter'||k==='Escape'){e.preventDefault();e.stopImmediatePropagation();ntcClose(false);}},true);
 $('m_snd').onclick=()=>{audioInit();setSound(!SND.on);$('m_snd').textContent=SND.on?'🔊 Звук: включён':'🔇 Звук: выключен';};
 $('m_exit').onclick=()=>{$('gmenu').classList.remove('on');if(S&&S.coop){coopLeave();return;}if(S&&S.dcase){finishDaily(true);return;}if(S&&S.mode==='story'){const ok=saveResume();saveCab();exitToCamp();if(ok) toast('Глава сохранена. Продолжить можно в списке сюжетов','good');return;}saveGame();saveCab();$('hud').classList.remove('on');S=null;
  const sv=loadSave();const b=$('cont');if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);}$('start').classList.add('on');};
@@ -3647,7 +3704,7 @@ function pollPad(dt){
   if(!pad.greeted&&S){pad.greeted=true;toast('Геймпад подключён. ✕ □ △ ○: заклинания, L1/R1: панель заклинаний, крестовина: баффы, нажатие левого стика: страница баффов, Create: выбрать процедуру, R3: выполнить, R2: рывок, L2: декспантенол','good');S.hudT=0;}}
  pad.navT-=dt;
  const navY=(B(12)||pad.ly<-0.6)?-1:((B(13)||pad.ly>0.6)?1:0);
- const ovs=['rate','gmenu','cab','dlg','res','camp'].filter(id=>$(id).classList.contains('on'));
+ const ovs=['ntc','rate','gmenu','cab','dlg','res','camp'].filter(id=>$(id).classList.contains('on'));
  if(ovs.length){
   pad.lx=pad.ly=0;const bs=Array.prototype.slice.call($(ovs[0]).querySelectorAll('button:not(:disabled)'));
   if(navY&&pad.navT<=0&&bs.length){pad.navT=0.22;qFocus=(qFocus+navY+bs.length)%bs.length;bs.forEach((b,i)=>b.classList.toggle('focus',i===qFocus));}
@@ -4579,7 +4636,7 @@ function continueGame(sv){
  toast('С возвращением! Уровень '+p.lvl+': '+rankTitle(p.lvl),'good');
 }
 window.addEventListener('pagehide',()=>{saveGame();saveCab();syncNow(true,true);});
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){saveGame();saveCab();syncNow(true,true);if(S&&!S.coop&&!S.paused&&!DLG&&!quizOpen&&$('hud').classList.contains('on')) openMenu();}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){saveGame();saveCab();syncNow(true,true);if(S&&!S.coop&&!S.paused&&!S.ntcOn&&!DLG&&!quizOpen&&$('hud').classList.contains('on')) openMenu();}});
 (function(){
  const sv=loadSave();const b=$('cont');
  if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);$('free').querySelector('b').textContent='Новая свободная игра';}
@@ -4616,12 +4673,13 @@ function loop(ts){
  const dt=Math.min(0.05,last?(ts-last)/1000:0.016);last=ts;
  pollPad(dt);
  if(S) musicTick();
+ ntcTick();
  if(S&&(!S.paused||S.coop)) update(dt);
  render();
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={startTut:()=>startGame({story:false,tutorial:true}),tutAdv:()=>tutAdvance(),emOpen:(i,o)=>emOpen(i,o),emDo:id=>{const a=EM&&emActs().find(q=>q.id===id);if(a) emDo(a);},get EM(){return EM;},emAdvance:d=>emAdvance(d),EMER,startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={toast:(m,k)=>toast(m,k),startTut:()=>startGame({story:false,tutorial:true}),tutAdv:()=>tutAdvance(),emOpen:(i,o)=>emOpen(i,o),emDo:id=>{const a=EM&&emActs().find(q=>q.id===id);if(a) emDo(a);},get EM(){return EM;},emAdvance:d=>emAdvance(d),EMER,startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
