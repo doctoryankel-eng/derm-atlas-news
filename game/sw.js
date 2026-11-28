@@ -1,5 +1,5 @@
 // Офлайн-режим и уведомления ДермаКвеста. При обновлении игры меняйте номер версии в CACHE.
-const CACHE = 'dermaquest-v23';
+const CACHE = 'dermaquest-v24';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', e => {

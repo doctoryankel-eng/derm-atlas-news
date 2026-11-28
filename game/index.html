@@ -493,6 +493,16 @@ input,#nm{font-family:'Golos Text',sans-serif}
  .title{font-size:27px}
  .lens{width:176px;height:176px}
 }
+#tutstart{display:none}
+.needtut #tutstart{display:block}
+.needtut #tutagain{display:none}
+.needtut #go{background:rgba(255,255,255,.04);border:1px solid var(--line);box-shadow:none;color:var(--txt)}
+.big.tutb{background:linear-gradient(135deg,#e0628f,#a83d6e);text-align:left;padding:14px 16px;position:relative;overflow:hidden}
+.big.tutb .tbt{font-size:17px;display:block}
+.big.tutb small{display:block;font-family:'Golos Text',sans-serif;font-weight:400;font-size:12.5px;color:#ffe3ee;margin-top:3px;line-height:1.3}
+.big.tutb::after{content:'';position:absolute;right:-30px;top:50%;width:96px;height:96px;transform:translateY(-50%);border-radius:50%;border:2px dashed rgba(255,255,255,.35)}
+.linkb{display:block;margin:12px auto 0;background:none;border:none;color:var(--muted);font-family:'Golos Text',sans-serif;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.linkb:hover{color:var(--txt)}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
 </style>
 </head>
@@ -544,6 +554,7 @@ input,#nm{font-family:'Golos Text',sans-serif}
   <div class="seg2"><div class="seg" role="group" aria-label="Пол"><button class="opt on" data-g="boy">Мальчик</button><button class="opt" data-g="girl">Девочка</button></div><div class="seg" role="group" aria-label="Возраст"><button class="opt" data-a="teen">Подросток</button><button class="opt on" data-a="adult">Взрослый</button></div></div>
   <div class="perk" id="perk"></div>
   <button id="cont" class="big"></button>
+  <button id="tutstart" class="big tutb"><span class="tbt">Обучение</span><small>Пять минут: ходьба, заклинания, баффы и процедуры. Начните с него</small></button>
   <button id="go" class="big">Сюжет</button>
   <button id="dailystart" class="big daily"></button>
   <div class="tiles">
@@ -553,6 +564,7 @@ input,#nm{font-family:'Golos Text',sans-serif}
    <button id="ratestart" class="tile"><span class="ti">🏆</span><b>Рейтинг</b><small>Лиги и случай дня</small></button>
   </div>
   <div id="install">Чтобы игра жила на айфоне как приложение: нажмите «Поделиться» внизу Safari, затем «На экран Домой». Игра будет открываться на весь экран и работать без интернета.</div>
+  <button id="tutagain" class="linkb">Пройти обучение заново</button>
   <div class="foot">Игровая модель упрощает клинические рекомендации: дозы, схемы и показания в реальной практике сложнее.<br>Геймпад: ✕ начать, □ пол, △ возраст.</div>
  </div>
 </div>
@@ -1028,8 +1040,9 @@ function startGame(opt){opt=(opt&&opt.story!==undefined)?opt:{};
  if(!(opt&&opt.story)&&CAB.pendXP>0){const px=CAB.pendXP;CAB.pendXP=0;saveCab();setTimeout(()=>{if(S){gainXP(px);toast('Опыт из кабинета врача: +'+px,'good');}},1500);}
  $('joy').classList.add('on');
  let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
+ if(opt.tutorial) S.tutMode=true;
  if(opt.story){}
- else if(!tutDone) tutStart();
+ else if(!tutDone||opt.tutorial) tutStart();
  else{toast('Ходите джойстиком слева внизу. Заклинания справа внизу, баффы в колонке справа, ✎ меняет ячейки местами','hint');
   setTimeout(()=>toast('Бензоилпероксид бьёт точечно, адапален и азелаиновая кислота накрывают группу. Ищите комбо'),2400);}
 }
@@ -2076,7 +2089,7 @@ let LOBBY=null;
 async function openCoop(code){
  $('coop').classList.add('on');$('cpmsg').textContent='';if(code) $('cpcode').value=code;
  let tutDone=false;try{tutDone=localStorage.getItem(TUT_KEY)==='1';}catch(_){}
- if(!tutDone){$('cplist').innerHTML='<div class="cabhint">Сначала пройдите обучение в свободной игре или в первой главе сюжета.</div>';return;}
+ if(!tutDone){$('cplist').innerHTML='<div class="cabhint">Сначала пройдите обучение: кнопка «Обучение» на главном экране.</div>';return;}
  if(!netOn()){$('cplist').innerHTML='<div class="cabhint">Нет связи с сервером.</div>';return;}
  $('cplist').innerHTML='<div class="cabhint">Ищем открытые консилиумы...</div>';
  try{await rtConnect();}catch(_){$('cplist').innerHTML='<div class="cabhint">Не удалось подключиться к серверу консилиумов.</div>';return;}
@@ -2399,7 +2412,9 @@ function tutApply(st){
 let tutBlockT=0;
 function tutBlock(){const n=Date.now();if(n-tutBlockT<1500) return;tutBlockT=n;toast('Сначала выполните текущий шаг обучения','hint');}
 function tutStart(){S.tut=0;S.tutMoved=0;S.tutCast={};S.tutKills0=S.kills;S.tutShow=new Set();S.seen={};PAGE=0;$('hud').classList.add('tutOn');tutApply(TUT[0]);renderTut();buildSlots();}
-function tutFinish(){if(S&&S.tutShow) S.tutShow.add('all');if(S){S.tut=-1;S.tutTarget=null;S.tutOk=false;}if(S) S.hudT=0;try{localStorage.setItem(TUT_KEY,'1');}catch(_){}$('hud').classList.remove('tutOn');tutHL(null);$('tut').style.display='none';}
+function tutFinish(){if(S&&S.tutShow) S.tutShow.add('all');if(S){S.tut=-1;S.tutTarget=null;S.tutOk=false;}if(S) S.hudT=0;try{localStorage.setItem(TUT_KEY,'1');}catch(_){}$('hud').classList.remove('tutOn');tutHL(null);$('tut').style.display='none';refreshTutBtn();}
+function refreshTutBtn(){let d=false;try{d=localStorage.getItem(TUT_KEY)==='1';}catch(_){}const st=$('start');if(st) st.classList.toggle('needtut',!d);}
+function tutModeEnd(){dialog([{who:'prof',t:'Обучение пройдено, коллега. Ходить, лечить, накладывать баффы и проводить процедуры вы умеете.'},{who:'prof',t:'Дальше сюжет: начнём с комедонального акне, а к последним главам дойдём до узловых форм и системной терапии.'}],()=>{if(S){S.paused=false;$('hud').classList.remove('on');$('joy').classList.remove('on');}S=null;refreshTutBtn();$('start').classList.add('on');});}
 function tutHL(id){
  const els=['joy','tl','tr','slotdash','slot0','slot1','slot2','slot3','buffs','proc','kit'];
  let target=null;if(id){if(els.includes(id)) target=id;else for(const x of ['slot0','slot1','slot2','slot3']){const e=$(x);if(e&&e.dataset&&e.dataset.id===id) target=x;}}
@@ -2410,7 +2425,7 @@ function renderTut(){
  $('tut').style.display='block';$('tutstep').textContent='Обучение · шаг '+(S.tut+1)+' из '+TUT.length+(st.p?' · '+st.p():'');$('tuttxt').textContent=st.t;
  $('tut').classList.remove('ok');$('tutnext').textContent='Начать игру';$('tutnext').style.display=st.last?'':'none';$('tutskip').style.display='none';tutHL(st.hl);
 }
-function tutAdvance(){if(!S||S.tut<0) return;sfx('good');S.tut++;if(S.tut<TUT.length){tutApply(TUT[S.tut]);buildSlots();}if(S.tut>=TUT.length){tutFinish();toast('Обучение пройдено. Справка всегда под кнопкой ?','good');}else renderTut();}
+function tutAdvance(){if(!S||S.tut<0) return;sfx('good');S.tut++;if(S.tut<TUT.length){tutApply(TUT[S.tut]);buildSlots();}if(S.tut>=TUT.length){tutFinish();if(S.tutMode){setTimeout(()=>{if(S&&S.tutMode) tutModeEnd();},900);}else toast('Обучение пройдено. Справка всегда под кнопкой ?','good');}else renderTut();}
 function tutTick(){if(!S||S.tut<0||S.tutOk) return;const st=TUT[S.tut];if(st.done&&st.done()){S.tutOk=true;const cur=S.tut,s0=S;sfx('level');$('tut').classList.add('ok');$('tutstep').textContent='✓ Шаг '+(cur+1)+' выполнен';$('tuttxt').textContent=cur+1<TUT.length-1?'Отлично! Следующий шаг...':'Отлично!';tutHL(null);if(S.tutTarget) burst(S.tutTarget.x,S.tutTarget.y,'#ffe07a',24,160,true);S.tutTarget=null;setTimeout(()=>{if(S!==s0||S.tut!==cur) return;S.tutOk=false;tutAdvance();},1100);}else if(st.p) $('tutstep').textContent='Обучение · шаг '+(S.tut+1)+' из '+TUT.length+' · '+st.p();}
 $('tutnext').onclick=e=>{e.stopPropagation();if(S&&S.tut>=0&&TUT[S.tut].last) tutAdvance();};
 $('tutskip').onclick=e=>{e.stopPropagation();tutFinish();};
@@ -4545,7 +4560,7 @@ perkText();
 /* ---------- сохранение прогресса ---------- */
 const SAVE_KEY='dq_save_v1';
 function saveGame(){
- if(!S||S.mode==='story') return;const p=S.p;
+ if(!S||S.mode==='story'||S.tutMode) return;const p=S.p;
  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,name:p.name,gender:p.gender,age:p.age,lvl:p.lvl,xp:p.xp,un:p.un,bep:p.bep,primary:S.primary,
   bossKills:S.bossKills,zk:S.zk,scars:S.scars,scarsFixed:S.scarsFixed,combos:S.combos,warn:S.warn,zdone:S.zdone,kills:S.kills,res:S.res,cum:S.cum,dry:S.dry,sp:S.sp,rank:S.rank,eq:S.eq,picks:S.picks,var:S.var,smooth:S.smooth.filter(q=>q.k==='smooth').map(q=>({x:q.x,y:q.y,r:q.r,zone:q.zone}))}));}catch(_){}
 }
@@ -4567,7 +4582,8 @@ window.addEventListener('pagehide',()=>{saveGame();saveCab();syncNow(true,true);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){saveGame();saveCab();syncNow(true,true);if(S&&!S.coop&&!S.paused&&!DLG&&!quizOpen&&$('hud').classList.contains('on')) openMenu();}});
 (function(){
  const sv=loadSave();const b=$('cont');
- if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);$('free').textContent='Новая свободная игра';}
+ if(sv&&b){b.style.display='block';b.textContent='Продолжить: '+sv.name+', уровень '+sv.lvl;b.onclick=()=>continueGame(sv);$('free').querySelector('b').textContent='Новая свободная игра';}
+ refreshTutBtn();
  // подсказка по установке на айфоне
  const ios=typeof navigator!=='undefined'&&/iPhone|iPad|iPod/.test(navigator.userAgent||'');
  const standalone=(typeof navigator!=='undefined'&&navigator.standalone)||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches);
@@ -4587,6 +4603,8 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 })();
 $('go').onclick=()=>beforePlay(()=>{$('start').classList.remove('on');openCamp();});
 $('free').onclick=()=>beforePlay(()=>startGame());
+$('tutstart').onclick=()=>beforePlay(()=>startGame({story:false,tutorial:true}));
+$('tutagain').onclick=()=>beforePlay(()=>startGame({story:false,tutorial:true}));
 $('nm').addEventListener('keydown',e=>{if(e.key==='Enter') beforePlay(()=>startGame());});
 const pv=$('prev'),pg=pv.getContext('2d');let pvT=0;
 function drawPreview(){pvT+=1/60;pg.setTransform(1,0,0,1,0,0);pg.clearRect(0,0,pv.width,pv.height);pg.save();pg.translate(150,262);pg.scale(2.75,2.75);
@@ -4603,7 +4621,7 @@ function loop(ts){
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={emOpen:(i,o)=>emOpen(i,o),emDo:id=>{const a=EM&&emActs().find(q=>q.id===id);if(a) emDo(a);},get EM(){return EM;},emAdvance:d=>emAdvance(d),EMER,startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={startTut:()=>startGame({story:false,tutorial:true}),tutAdv:()=>tutAdvance(),emOpen:(i,o)=>emOpen(i,o),emDo:id=>{const a=EM&&emActs().find(q=>q.id===id);if(a) emDo(a);},get EM(){return EM;},emAdvance:d=>emAdvance(d),EMER,startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
