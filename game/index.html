@@ -211,6 +211,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 @keyframes ibounce{50%{transform:translate(-50%,8px)}}
 .cabc{max-width:640px}
 .emc{max-width:620px}
+#emer.visit .emintro{font-size:13.5px}#emer.visit .emclock{font-size:14px;font-family:inherit}#emer.visit .emv b{font-size:14px;font-family:inherit}
 #emer.run .emintro{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;margin:4px 0}
 #emer.run .emhead #emface{width:48px;height:48px}
 #emer.run .emmon{grid-template-columns:repeat(4,1fr);padding:6px;gap:4px}#emer.run .emv b{font-size:14px}#emer.run .emv.wide{display:none}
@@ -469,7 +470,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
   <ul>
    <li>★ Прокачка под портретом (клавиша K, кнопка PS на геймпаде): очки навыков за уровень и босса тратятся на ранги заклинаний. Ранг усиливает урон, площадь, радиус ауры или длительность и ускоряет перезарядку</li>
    <li>⏸ Пауза (кнопка вверху слева, Esc, P или Options на геймпаде): продолжить, сохранить и выйти, кабинет врача, рейтинг, справка, звук. Глава сюжета сохраняется с того же места, продолжить её можно в списке сюжетов. Если свернуть игру, она сама встаёт на паузу. В кабинете врача посевы и анализы в реальном времени, оранжерея лекарственных растений, ступка для кремов, склад с аптечкой и улучшения. Ежедневный утренний обход даёт награду, серия дней увеличивает её</li>
-   <li>🚨 Неотложные состояния: тренажёр внештатных ситуаций в списке сюжетов. Анафилаксия, обморок, токсичность метотрексата, герпетическая экзема, ТЭН. Время идёт, каждое действие отнимает минуты, в конце разбор с правильным алгоритмом. В свободной игре с 4 уровня иногда приходит срочный вызов в процедурный</li>
+   <li>🩺 Клинические ситуации в списке сюжетов: курс изотретиноина, метотрексат и печёночные пробы, дупилумаб и конъюнктивит, новые жалобы на ингибиторе ИЛ-17, отмена гормональной мази при периоральном дерматите, ошибка с ежедневным метотрексатом, герпетическая экзема. Пациент приходит на визиты, у каждого решения есть последствия, в конце разбор. В свободной игре с 4 уровня иногда приходит пациент на внеплановый приём</li>
    <li>👔 Гардероб в кабинете врача: халат, хирургический костюм, джинсы и футболка, спортивный костюм, костюм лектора, лохмотья и чумной доктор. Головные уборы: шапочка, ободок, кепка, ушанка, фуражка, шляпа чумного доктора. Многое можно перекрасить. Одежду видят коллеги в консилиуме и в рейтинге</li>
    <li>👥 Ординаторская в кабинете врача: с 5 уровня можно взять первого ординатора, с 15, 30 и 50 ещё по одному. Ординаторы ходят с вами в свободной игре, лечат высыпания по своей специализации и растут в уровнях</li>
    <li>Аптечка над джойстиком: кремы из кабинета берутся с собой на приём (клавиша F, L2 на геймпаде для первой ячейки)</li>
@@ -662,6 +663,7 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
    <div id="emlog" class="emlog"></div>
    <div class="csub">Ваши действия</div>
    <div id="emacts" class="emacts"></div>
+   <button class="big" id="emnext" style="display:none;margin-top:8px">Завершить визит ▶</button>
    <button class="big sec" id="emquit" style="margin-top:8px;font-size:13px">Сдаться и посмотреть разбор</button>
   </div>
   <div id="emres" style="display:none">
@@ -673,10 +675,10 @@ input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,25
 </div>
 <div id="emcall" class="ov">
  <div class="card panel" style="max-width:420px;text-align:center;border-color:#ff6a7a">
-  <div class="serif emflash" style="font-size:24px;color:#ff9aa8">🚨 Срочный вызов в процедурный!</div>
+  <div class="serif emflash" style="font-size:24px;color:#ff9aa8">🩺 Пациент на внеплановом приёме</div>
   <div id="emcalltxt" style="margin:10px 0;line-height:1.45"></div>
-  <div class="cabhint">Внештатная ситуация: награда ×1,5</div>
-  <button class="big" id="emgo">Бежать</button>
+  <div class="cabhint">Внеплановый приём: награда ×1,5</div>
+  <button class="big" id="emgo">Принять</button>
   <button class="big sec" id="emlater">Через пару минут</button>
  </div>
 </div>
@@ -2102,7 +2104,7 @@ function profStats(){
  const st=cabSt();let stars=0,ch=0;for(const k in STORY){if(STORY[k]&&STORY[k].done){ch++;stars+=STORY[k].stars|0;}}
  const kills=p?S.kills:(sv?sv.kills|0:0),boss=p?S.bossKills:(sv?sv.bossKills|0:0),combos=Object.keys((p?S.combos:(sv&&sv.combos))||{}).length;
  const eq=Object.keys((p?S.eq:(sv&&sv.eq))||{}).length;let up=0;for(const k in CAB.up) up+=CAB.up[k]|0;
- return {lvl,xp:xpTotal(lvl,xp),title:rankTitle(lvl),stats:{kills,boss,combos,eq,stars,ch,coins:CAB.coins|0,up,streak:(CAB.daily&&CAB.daily.streak)|0,cult:st.cult|0,harvest:st.harvest|0,brewed:st.brewed|0,sec:Math.round(st.sec)|0,sessions:st.sessions|0,days:st.days|0,plat:platform(),wd:myWD(),em:Object.values(EMR).reduce((a,r)=>a+(r.stars|0),0),team:teamArr().length,teamMax:teamArr().reduce((a,r)=>Math.max(a,r.lvl),0),scars:p?Math.max(0,S.scars-S.scarsFixed):(sv?Math.max(0,(sv.scars|0)-(sv.scarsFixed|0)):0)}};
+ return {lvl,xp:xpTotal(lvl,xp),title:rankTitle(lvl),stats:{kills,boss,combos,eq,stars,ch,coins:CAB.coins|0,up,streak:(CAB.daily&&CAB.daily.streak)|0,cult:st.cult|0,harvest:st.harvest|0,brewed:st.brewed|0,sec:Math.round(st.sec)|0,sessions:st.sessions|0,days:st.days|0,plat:platform(),wd:myWD(),em:EMSHOW.reduce((a,id)=>a+((EMR[id]&&EMR[id].stars)|0),0),team:teamArr().length,teamMax:teamArr().reduce((a,r)=>Math.max(a,r.lvl),0),scars:p?Math.max(0,S.scars-S.scarsFixed):(sv?Math.max(0,(sv.scars|0)-(sv.scarsFixed|0)):0)}};
 }
 let syncAt=0,syncBusy=false;
 async function ensureReg(name){
@@ -2161,7 +2163,7 @@ function renderRate(){
 function showPlayer(id){
  const r=RATE.rows.find(q=>q.id===id);if(!r) return;const st=r.stats||{};
  const rows=RATE.rows.slice().sort((a,b)=>b.xp_total-a.xp_total);const pl=rows.findIndex(q=>q.id===id)+1;
- const cells=[['Место по опыту',pl],['Уровень',r.lvl],['Опыт всего',r.xp_total],['Вылечено высыпаний',st.kills|0],['Побеждено боссов',st.boss|0],['Найдено комбо',(st.combos|0)+' из 3'],['Глав сюжета',(st.ch|0)+', звёзд '+(st.stars|0)],['Оборудование',st.eq|0],['Посевов собрано',st.cult|0],['Кремов сварено',st.brewed|0],['Урожаев',st.harvest|0],['Улучшений кабинета',st.up|0],['Неотложные состояния',(st.em|0)+' ★ из 15'],['Ординаторов',(st.team|0)+(st.teamMax?' (макс. ур. '+st.teamMax+')':'')],['Серия обходов',(st.streak|0)+' дн.'],['Время в игре',hrs(st.sec)],['В игре с',new Date(r.created_at).toLocaleDateString('ru-RU')],['Был в игре',ago(r.last_seen)]];
+ const cells=[['Место по опыту',pl],['Уровень',r.lvl],['Опыт всего',r.xp_total],['Вылечено высыпаний',st.kills|0],['Побеждено боссов',st.boss|0],['Найдено комбо',(st.combos|0)+' из 3'],['Глав сюжета',(st.ch|0)+', звёзд '+(st.stars|0)],['Оборудование',st.eq|0],['Посевов собрано',st.cult|0],['Кремов сварено',st.brewed|0],['Урожаев',st.harvest|0],['Улучшений кабинета',st.up|0],['Клинические ситуации',(st.em|0)+' ★'],['Ординаторов',(st.team|0)+(st.teamMax?' (макс. ур. '+st.teamMax+')':'')],['Серия обходов',(st.streak|0)+' дн.'],['Время в игре',hrs(st.sec)],['В игре с',new Date(r.created_at).toLocaleDateString('ru-RU')],['Был в игре',ago(r.last_seen)]];
  $('rlist').style.display='none';const pr=$('rprof');pr.style.display='block';
  pr.innerHTML='<div class="rph"><canvas id="rpc" width="120" height="140"></canvas><div><div class="serif" style="font-size:20px;color:var(--gold)">'+esc(r.name)+'</div><div style="color:var(--muted);font-size:13px">'+esc(r.title||'')+' · уровень '+r.lvl+'</div></div></div><div class="rgrid">'+cells.map(c=>'<div><small>'+c[0]+'</small><b>'+esc(c[1])+'</b></div>').join('')+'</div><button class="big sec" id="rback">← К рейтингу</button>';
  const c=$('rpc').getContext('2d');c.save();c.translate(60,128);c.scale(1.15,1.15);drawHero(c,0,0,{gender:r.gender==='girl'?'girl':'boy',age:r.age==='teen'?'teen':'adult',dir:1,walk:0,moving:false,t:1,hurt:0,lvl:tierOf(r.lvl),grow:1,wd:(r.stats||{}).wd||null});c.restore();
@@ -4020,97 +4022,315 @@ const EMER=[
   note:'Ламотриджин, аллопуринол, карбамазепин, сульфаниламиды: частые виновники ТЭН и синдрома Стивенса-Джонсона, обычно в первые 8 недель приёма. Чем раньше отменён препарат, тем лучше прогноз.',
   src:'British Association of Dermatologists: UK guidelines for the management of SJS/TEN in adults (2016)'},
 ];
+/* ---------- клинические ситуации из практики лечения: визиты по неделям ---------- */
+CAST.kira={name:'Кира, 22 года',role:'Пациентка с узловатым акне',d:{skin:'#f2c8ac',hair:'#2e1f18',long:true,acne:1,coat:'#7a5a9a'}};
+CAST.katya={name:'Катя, 26 лет',role:'Пациентка с атопическим дерматитом',d:{skin:'#f4cfb4',hair:'#a3743c',long:true,red:1,coat:'#4a8a8a'}};
+CAST.igor={name:'Игорь, 45 лет',role:'Пациент с псориазом на генно-инженерной терапии',d:{skin:'#e6b896',hair:'#4a3a30',beard:true,plaque:1,coat:'#3a4a6a'}};
+CAST.vera={name:'Вера, 29 лет',role:'Пациентка с высыпаниями вокруг рта',d:{skin:'#f3cbb0',hair:'#c99a5a',long:true,red:1,acne:1,coat:'#9a6a5a'}};
+const VSC=[
+ {id:'iso',mode:'visits',diff:2,title:'Курс изотретиноина',who:'kira',
+  dx:'Тяжёлое узловатое акне на изотретиноине: старт, обострение, липиды, настроение',
+  stages:[
+   {when:'Визит 1 · старт',text:'Кире 22 года, узловатое акне на лице и спине, рубцы начинают формироваться. Наружная терапия и доксициклин не помогли. Вы решили назначить изотретиноин.',
+    show:[['Вес','58 кг'],['Узлы','12'],['Беременность','?']],
+    acts:[
+     {id:'preg',t:'Тест на беременность и разговор о надёжной контрацепции',k:'key',fb:'Тест отрицательный. Контрацепция на весь курс и месяц после окончания, тест каждый месяц.'},
+     {id:'labs',t:'Исходные анализы: липиды, АЛТ, АСТ',k:'key',fb:'Триглицериды 1,4 ммоль/л, АЛТ в норме.'},
+     {id:'low',t:'Стартовая доза около 0,25 мг/кг с постепенным повышением',k:'key',fb:'При тяжёлом узловатом акне низкий старт снижает риск обострения в первые недели.'},
+     {id:'lips',t:'Бальзам для губ и эмолент с первого дня',k:'ok',fb:'Хейлит будет почти у всех, его проще предупредить.'},
+     {id:'full',t:'Сразу полная доза 1 мг/кг, чтобы быстрее',k:'bad',fx:s=>{s.f.flare2=1;},fb:'Полная доза с первого дня при большом количестве узлов повышает риск выраженного обострения.'},
+     {id:'doxy',t:'Оставить доксициклин вместе с изотретиноином',k:'bad',fb:'Тетрациклины с изотретиноином не сочетают: риск доброкачественной внутричерепной гипертензии.'},
+     {id:'wax',t:'Разрешить восковую депиляцию лица на курсе',k:'bad',fb:'На изотретиноине кожа истончается, восковая депиляция может снять эпидермис.'},
+    ]},
+   {when:'Визит 2 · 4-я неделя',text:s=>(s.f.flare2?'На полной дозе на третьей неделе резко прибавилось узлов, несколько вскрылись с корками.':'На третьей неделе появилось несколько новых болезненных узлов на подбородке.')+' Кира испугалась и хочет бросить курс.',
+    show:[['Узлы',s=>s.f.flare2?'19':'14'],['Губы','сухие, трещины']],
+    acts:[
+     {id:'explain',t:'Объяснить, что ранние обострения бывают и курс продолжаем',k:'key',fb:'Кира соглашается продолжить.'},
+     {id:'reduce',t:'Временно снизить дозу на 2-4 недели',k:'key',fb:'Доза снижена, через месяц вернёмся к целевой.'},
+     {id:'pred',t:'Короткий курс системного преднизолона',k:s=>s.f.flare2?'ok':'neutral',fb:s=>s.f.flare2?'При выраженном изотретиноиновом обострении короткий курс преднизолона уместен.':'При умеренном обострении обычно хватает снижения дозы, системный стероид не обязателен.'},
+     {id:'stop',t:'Отменить изотретиноин',k:'bad',fb:'Обострение в первый месяц не показание к отмене. Отмена вернёт исходную картину и отложит лечение.'},
+     {id:'doxy2',t:'Добавить доксициклин против воспаления',k:'bad',fb:'Сочетание с тетрациклинами противопоказано: риск внутричерепной гипертензии.'},
+     {id:'dexp',t:'Крем с декспантенолом на губы несколько раз в день',k:'ok',fb:'Трещины на губах заживают.'},
+    ]},
+   {when:'Визит 3 · 8-я неделя',text:'Узлов стало заметно меньше. В контрольных анализах триглицериды 4,1 ммоль/л, АЛТ 1,6 верхней границы нормы. Кира признаётся, что по выходным пьёт вино и ест много сладкого.',
+    show:[['Триглицериды','4,1 ммоль/л',1],['АЛТ','1,6 ВГН',1],['Узлы','5']],
+    acts:[
+     {id:'cont',t:'Продолжить курс, при необходимости немного снизить дозу',k:'key',fb:'При триглицеридах ниже 5,6 ммоль/л и АЛТ ниже трёх норм курс обычно продолжают.'},
+     {id:'diet',t:'Отказ от алкоголя, меньше быстрых углеводов',k:'key',fb:'Кира обещает пересмотреть выходные.'},
+     {id:'recheck',t:'Повторить липиды и АЛТ через 2-4 недели',k:'key',fb:'Контроль назначен.'},
+     {id:'stop3',t:'Отменить изотретиноин из-за анализов',k:'bad',fb:'Такие сдвиги не требуют отмены. Отмену обсуждают при триглицеридах выше 5,6 ммоль/л или АЛТ выше трёх норм.'},
+     {id:'fen',t:'Сразу назначить фенофибрат',k:'neutral',fb:'При 4,1 ммоль/л обычно хватает диеты, отказа от алкоголя и коррекции дозы.'},
+     {id:'ignore',t:'Анализы в пределах терпимого, больше не контролировать',k:'bad',fb:'Без контроля можно пропустить рост триглицеридов и риск панкреатита.'},
+    ]},
+   {when:'Визит 4 · 12-я неделя',text:'Кожа почти чистая. Мама Киры пишет, что дочь стала замкнутой, плохо спит, отказалась от встреч с подругами.',
+    show:[['Узлы','1'],['Настроение','снижено',1]],
+    acts:[
+     {id:'ask',t:'Отдельно и подробно расспросить о настроении, сне, интересах',k:'key',fb:'Кира рассказывает, что две недели ничего не радует и трудно вставать.'},
+     {id:'psy',t:'Направить к психиатру и обсудить отмену или паузу',k:'key',fb:'Психиатр подтвердил депрессивный эпизод. Курс приостановлен, Кира получает лечение.'},
+     {id:'fam',t:'Попросить близких сообщать о любых изменениях поведения',k:'ok',fb:'Мама на связи.'},
+     {id:'teen',t:'Списать на усталость, продолжить без изменений',k:'bad',fx:s=>{s.f.crit=1;},fb:'Изменения настроения на изотретиноине требуют оценки и при необходимости помощи психиатра. Это нельзя пропускать.'},
+     {id:'more',t:'Увеличить дозу, чтобы быстрее закончить курс',k:'bad',fb:'При признаках депрессии дозу не увеличивают, вопрос о продолжении решают вместе с психиатром.'},
+    ]},
+  ],
+  ideal:['Старт: тест на беременность и контрацепция, исходные липиды и АЛТ, низкая стартовая доза при тяжёлом узловатом акне','Без тетрациклинов и восковой депиляции на курсе','Обострение в первый месяц: продолжить, временно снизить дозу, при выраженном обострении короткий курс преднизолона','Триглицериды до 5,6 ммоль/л и АЛТ до трёх норм: продолжить, диета, отказ от алкоголя, контроль через 2-4 недели','Изменения настроения: подробно расспросить, направить к психиатру, обсудить паузу или отмену'],
+  note:'Изотретиноин остаётся самым эффективным средством при тяжёлом акне. Большинство побочных эффектов предсказуемы и управляются дозой, уходом и контролем.',
+  src:'Клинические рекомендации РФ «Акне вульгарные»; AAD Guidelines of care for the management of acne vulgaris (2024)'},
+ {id:'mtxl',mode:'visits',diff:2,title:'Метотрексат и печёночные пробы',who:'sergey',
+  dx:'Псориаз на метотрексате: старт, повышение трансаминаз, вакцинация',
+  stages:[
+   {when:'Визит 1 · старт',text:'Сергею 35 лет, PASI 18, наружная терапия и фототерапия не дали стойкого эффекта. Вы назначаете метотрексат 15 мг в неделю.',
+    show:[['PASI','18',1],['Алкоголь','по выходным']],
+    acts:[
+     {id:'labs',t:'Исходно: общий анализ крови, креатинин, АЛТ, АСТ, маркеры гепатитов B и C',k:'key',fb:'Анализы в норме, гепатиты отрицательные.'},
+     {id:'fol',t:'Фолиевая кислота в дни без метотрексата',k:'key',fb:'Фолиевая кислота снижает частоту побочных эффектов.'},
+     {id:'day',t:'Один день в неделю, отмечен на рецепте и в телефоне',k:'key',fb:'Сергей выбрал понедельник.'},
+     {id:'alc',t:'Обсудить отказ от алкоголя',k:'ok',fb:'Сергей обещает сократить.'},
+     {id:'daily',t:'Расписать по 2,5 мг каждый день для удобства',k:'bad',fx:s=>{s.f.crit=1;},fb:'Ежедневный приём метотрексата приводит к тяжёлой токсичности. При псориазе препарат принимают один раз в неделю.'},
+     {id:'nsaid',t:'Разрешить ибупрофен ежедневно от болей в спине',k:'neutral',fb:'Регулярные НПВС могут повышать уровень метотрексата. Обезболивание лучше обсудить и контролировать.'},
+    ]},
+   {when:'Визит 2 · 6-я неделя',text:'PASI снизился до 9. В анализах АЛТ 2,4 верхней границы нормы. Сергей признаётся, что фолиевую кислоту часто забывает, а по пятницам выпивает.',
+    show:[['PASI','9'],['АЛТ','2,4 ВГН',1]],
+    acts:[
+     {id:'red',t:'Снизить дозу метотрексата',k:'key',fb:'Доза снижена до 10 мг в неделю.'},
+     {id:'alc2',t:'Полный отказ от алкоголя на время лечения',k:'key',fb:'Сергей соглашается.'},
+     {id:'fol2',t:'Проверить приём фолиевой кислоты, напоминание в телефоне',k:'key',fb:'Напоминание поставлено.'},
+     {id:'re',t:'Повторить печёночные пробы через 2-3 недели',k:'key',fb:'Контроль назначен.'},
+     {id:'stopf',t:'Навсегда отменить метотрексат',k:'bad',fb:'АЛТ до трёх норм обычно корректируют дозой и образом жизни. Отмену рассматривают при стойком повышении выше трёх норм.'},
+     {id:'same',t:'Продолжить в той же дозе без контроля',k:'bad',fb:'Повышение трансаминаз требует коррекции и повторного контроля.'},
+     {id:'hep',t:'Назначить гепатопротектор и продолжить как есть',k:'neutral',fb:'Доказательной пользы гепатопротекторов при метотрексатной гепатотоксичности нет, причину нужно устранять.'},
+    ]},
+   {when:'Визит 3 · 12-я неделя',text:'АЛТ нормализовалась, PASI 4. Сергей летит в Африку и спрашивает про прививку от жёлтой лихорадки и про грипп.',
+    show:[['PASI','4'],['АЛТ','норма']],
+    acts:[
+     {id:'live',t:'Живые вакцины, включая жёлтую лихорадку, на метотрексате противопоказаны',k:'key',fb:'Сергей обсудит с инфекционистом маршрут и возможность отказа от поездки в эндемичную зону.'},
+     {id:'flu',t:'Инактивированную вакцину от гриппа можно',k:'ok',fb:'Сергей привьётся от гриппа.'},
+     {id:'cont3',t:'Продолжить поддерживающую дозу с регулярным контролем',k:'key',fb:'Контроль анализов раз в 2-3 месяца.'},
+     {id:'yf',t:'Прививку от жёлтой лихорадки можно, раз анализы в норме',k:'bad',fx:s=>{s.f.crit=1;},fb:'Живые аттенуированные вакцины на фоне иммуносупрессии могут вызвать тяжёлую вакциноассоциированную инфекцию.'},
+    ]},
+  ],
+  ideal:['Старт: ОАК, креатинин, печёночные ферменты, гепатиты B и C, фолиевая кислота, один день в неделю','Повышение АЛТ до трёх норм: снизить дозу, отказ от алкоголя, фолиевая кислота, контроль через 2-3 недели','Отмена при стойком повышении выше трёх норм','Живые вакцины на метотрексате противопоказаны, инактивированные можно'],
+  note:'Самые частые причины роста трансаминаз на метотрексате: алкоголь, пропуски фолиевой кислоты, ожирение и стеатоз. Их стоит обсуждать ещё до старта.',
+  src:'Клинические рекомендации РФ «Псориаз»; British Association of Dermatologists: рекомендации по метотрексату'},
+ {id:'dupi',mode:'visits',diff:2,title:'Дупилумаб и красные глаза',who:'katya',
+  dx:'Атопический дерматит на дупилумабе: старт, конъюнктивит, обострение на лице',
+  stages:[
+   {when:'Визит 1 · старт',text:'Кате 26 лет, тяжёлый атопический дерматит, EASI 28. Топические стероиды и циклоспорин не дали стойкого эффекта. Вы назначаете дупилумаб.',
+    show:[['EASI','28',1],['Зуд','8 из 10',1]],
+    acts:[
+     {id:'conj',t:'Предупредить о возможном конъюнктивите',k:'key',fb:'Катя знает, что при покраснении глаз нужно прийти, а не бросать уколы.'},
+     {id:'emo',t:'Эмоленты и наружная терапия при обострениях продолжаются',k:'key',fb:'Базовый уход остаётся.'},
+     {id:'vac',t:'Обсудить: живые вакцины на дупилумабе не вводят',k:'ok',fb:'Катя уточнит прививочный календарь.'},
+     {id:'mlabs',t:'Ежемесячно сдавать общий и биохимический анализ крови',k:'neutral',fb:'Рутинный лабораторный мониторинг на дупилумабе не требуется.'},
+     {id:'stopemo',t:'Эмоленты больше не нужны',k:'bad',fb:'Эмоленты остаются основой ухода при любой системной терапии.'},
+    ]},
+   {when:'Визит 2 · 8-я неделя',text:'EASI 9, зуд почти ушёл. Но две недели красные зудящие глаза, слезотечение, слизистое отделяемое по утрам.',
+    show:[['EASI','9'],['Глаза','конъюнктивит',1]],
+    acts:[
+     {id:'oph',t:'Направить к офтальмологу',k:'key',fb:'Офтальмолог подтвердил конъюнктивит, назначил лечение.'},
+     {id:'keep',t:'Продолжить дупилумаб',k:'key',fb:'В большинстве случаев конъюнктивит лечат, не прерывая терапию.'},
+     {id:'tears',t:'Слезозаменители без консерванта',k:'ok',fb:'Глазам стало легче.'},
+     {id:'stopd',t:'Отменить дупилумаб из-за глаз',k:'bad',fb:'Отмена вернёт тяжёлый дерматит. Конъюнктивит обычно хорошо поддаётся лечению у офтальмолога.'},
+     {id:'longeye',t:'Самостоятельно назначить стероидные капли надолго',k:'bad',fb:'Длительные стероидные капли без контроля офтальмолога опасны глаукомой и катарактой.'},
+    ]},
+   {when:'Визит 3 · 16-я неделя',text:'Тело почти чистое, глаза спокойные. Но лицо и шея стали красными, шелушатся, жжение. Катя давно мажет лицо жирным кремом.',
+    show:[['EASI','5'],['Лицо','эритема, шелушение',1]],
+    acts:[
+     {id:'diff',t:'Подумать о малассезия-ассоциированном дерматите и контактной реакции',k:'key',fb:'На коже лица и шеи много малассезий, крем с маслами мог усилить их рост.'},
+     {id:'azole',t:'Наружный кетоконазол на лицо и шею',k:'ok',fb:'Через три недели краснота заметно меньше.'},
+     {id:'tacro',t:'Такролимус мазь на лицо при обострении',k:'ok',fb:'Ингибиторы кальциневрина подходят для лица без риска атрофии.'},
+     {id:'potent',t:'Сильный топический стероид на лицо надолго',k:'bad',fb:'Длительный сильный стероид на лице вызывает атрофию, телеангиэктазии и стероидный дерматит.'},
+     {id:'stopd3',t:'Отменить дупилумаб как неэффективный',k:'bad',fb:'На теле эффект отличный. Покраснение лица у части пациентов связано с малассезией и лечится отдельно.'},
+    ]},
+  ],
+  ideal:['Старт: предупредить о конъюнктивите, эмоленты и наружная терапия продолжаются, рутинные анализы не нужны, без живых вакцин','Конъюнктивит: офтальмолог, слезозаменители, дупилумаб обычно продолжают','Покраснение лица на фоне дупилумаба: оценить малассезию и контактный дерматит, кетоконазол, ингибиторы кальциневрина, без длительных сильных стероидов'],
+  note:'Конъюнктивит и покраснение лица: два самых частых повода, из-за которых дупилумаб бросают зря.',
+  src:'Клинические рекомендации РФ «Атопический дерматит»; инструкция по медицинскому применению дупилумаба; ETFAD: рекомендации по глазным осложнениям дупилумаба'},
+ {id:'il17',mode:'visits',diff:3,title:'Новые жалобы на ингибиторе ИЛ-17',who:'igor',
+  dx:'Псориаз на нетакимабе: скрининг, кандидоз, воспалительное заболевание кишечника',
+  stages:[
+   {when:'Визит 1 · перед стартом',text:'Игорю 45 лет, PASI 24, метотрексат не помог. Вы планируете нетакимаб.',
+    show:[['PASI','24',1]],
+    acts:[
+     {id:'tb',t:'Скрининг туберкулёза: Диаскинтест или квантифероновый тест, рентген лёгких',k:'key',fb:'Скрининг отрицательный.'},
+     {id:'hep',t:'Маркеры гепатитов B и C, ВИЧ',k:'key',fb:'Всё отрицательно.'},
+     {id:'gut',t:'Спросить о хронической диарее, крови в стуле, болезни Крона в семье',k:'key',fb:'Жалоб нет, у отца язвенный колит.'},
+     {id:'cand',t:'Предупредить о риске кандидоза',k:'ok',fb:'Игорь знает, на что обратить внимание.'},
+     {id:'nobase',t:'Начать сразу, анализы потом',k:'bad',fb:'Без скрининга туберкулёза генно-инженерную терапию не начинают.'},
+    ]},
+   {when:'Визит 2 · 3-й месяц',text:'PASI 2, Игорь доволен. Неделю белый налёт на языке и жжение во рту.',
+    show:[['PASI','2'],['Слизистая','налёт, жжение',1]],
+    acts:[
+     {id:'antif',t:'Противогрибковая терапия, продолжить нетакимаб',k:'key',fb:'Через неделю налёт ушёл.'},
+     {id:'smear',t:'Подтвердить микроскопией соскоба',k:'ok',fb:'Псевдомицелий кандид.'},
+     {id:'stopc',t:'Отменить нетакимаб из-за кандидоза',k:'bad',fb:'Кандидоз слизистых на ингибиторах ИЛ-17 обычно лёгкий и лечится, не прерывая терапию.'},
+    ]},
+   {when:'Визит 3 · 6-й месяц',text:'Кожа чистая. Три недели жидкий стул до 6 раз в день, иногда с кровью, боли в животе, похудел на 4 кг.',
+    show:[['PASI','1'],['Стул','6 раз в день, кровь',1],['Вес','-4 кг',1]],
+    acts:[
+     {id:'gi',t:'Срочно к гастроэнтерологу, исключить воспалительное заболевание кишечника',k:'key',fb:'Колоноскопия: картина болезни Крона.'},
+     {id:'stop17',t:'Отменить ингибитор ИЛ-17',k:'key',fb:'Ингибиторы ИЛ-17 могут провоцировать дебют и обострение воспалительных заболеваний кишечника.'},
+     {id:'sw',t:'Перейти на препарат, который работает и при болезни Крона: устекинумаб, ингибиторы ИЛ-23 или ФНО-альфа',k:'key',fb:'Вместе с гастроэнтерологом выбран препарат для кожи и кишечника.'},
+     {id:'lop',t:'Лоперамид и продолжить нетакимаб',k:'bad',fx:s=>{s.f.crit=1;},fb:'Симптоматическое лечение маскирует болезнь Крона, а ингибитор ИЛ-17 может её усилить.'},
+     {id:'abx',t:'Курс антибиотиков от кишечной инфекции и продолжить',k:'neutral',fb:'Инфекцию исключают, но три недели крови в стуле и похудание требуют обследования кишечника.'},
+    ]},
+  ],
+  ideal:['До старта: скрининг туберкулёза, гепатиты, ВИЧ, расспрос о симптомах и семейном анамнезе воспалительных заболеваний кишечника','Кандидоз слизистых: противогрибковая терапия, ингибитор ИЛ-17 обычно продолжают','Симптомы воспалительного заболевания кишечника: гастроэнтеролог, отмена ингибитора ИЛ-17, переход на устекинумаб, ингибитор ИЛ-23 или ФНО-альфа'],
+  note:'Выбор генно-инженерного препарата при псориазе зависит от сопутствующих болезней: артрита, воспалительных заболеваний кишечника, увеита.',
+  src:'Клинические рекомендации РФ «Псориаз»; инструкция по медицинскому применению нетакимаба; EuroGuiDerm guideline on systemic treatment of psoriasis'},
+ {id:'perio',mode:'visits',diff:1,title:'Высыпания вокруг рта после гормональной мази',who:'vera',
+  dx:'Стероид-индуцированный периоральный дерматит',
+  stages:[
+   {when:'Визит 1',text:'Вере 29 лет. Два месяца назад косметолог посоветовал мазь с мометазоном от покраснения у носа. Сначала стало лучше, теперь вокруг рта и носа мелкие папулы и пустулы, жжение, стоит перестать мазать, и становится хуже.',
+    show:[['Папулы','около 30',1],['Стероид','2 месяца']],
+    acts:[
+     {id:'stop',t:'Отменить топический стероид',k:'key',fb:'Вера согласна, хотя боится ухудшения.'},
+     {id:'warn',t:'Предупредить о временном обострении после отмены',k:'key',fb:'Вера готова потерпеть пару недель.'},
+     {id:'metr',t:'Метронидазол или азелаиновая кислота наружно',k:'key',fb:'Назначено.'},
+     {id:'care',t:'Убрать жирные кремы и тональные средства, мягкое очищение',k:'ok',fb:'Уход упрощён.'},
+     {id:'strong',t:'Перейти на более сильный стероид',k:'bad',fb:'Стероиды и вызвали периоральный дерматит. Более сильный усилит зависимость и обострение при отмене.'},
+     {id:'ada',t:'Адапален на зону вокруг рта',k:'bad',fb:'Ретиноиды раздражают кожу при периоральном дерматите и усиливают жжение.'},
+    ]},
+   {when:'Визит 2 · 2-я неделя',text:'После отмены мази лицо покраснело, папул стало больше, жжение. Вера в слезах и хочет вернуть мазь.',
+    show:[['Папулы','около 50',1],['Жжение','сильное',1]],
+    acts:[
+     {id:'support',t:'Поддержать: это ожидаемое обострение после отмены, оно пройдёт',k:'key',fb:'Вера решает потерпеть.'},
+     {id:'doxy',t:'Доксициклин внутрь на 6-8 недель',k:'ok',fb:'При распространённом процессе системный тетрациклин ускоряет улучшение.'},
+     {id:'pime',t:'Пимекролимус крем на короткий срок',k:'ok',fb:'Ингибиторы кальциневрина помогают пережить обострение после отмены стероида.'},
+     {id:'back',t:'Вернуть мометазон, раз стало хуже',k:'bad',fx:s=>{s.f.crit=1;},fb:'Возврат стероида снова замаскирует процесс и продлит зависимость.'},
+    ]},
+   {when:'Визит 3 · 8-я неделя',text:'Кожа почти чистая, осталась лёгкая сухость. Вера спрашивает, чем мазать дальше и можно ли снова гормональный крем «на всякий случай».',
+    show:[['Папулы','2'],['Кожа','спокойная']],
+    acts:[
+     {id:'min',t:'Минимальный щадящий уход, лёгкий эмолент',k:'key',fb:'Вера оставила одно очищающее средство и лёгкий крем.'},
+     {id:'nost',t:'Объяснить: топические стероиды на лицо без назначения врача не наносить',k:'key',fb:'Вера рассказала об этом своему косметологу.'},
+     {id:'again',t:'Мометазон на ночь раз в неделю для профилактики',k:'bad',fb:'Любые стероиды на лицо после периорального дерматита провоцируют рецидив.'},
+    ]},
+  ],
+  ideal:['Отменить топический стероид, предупредить об обострении после отмены','Метронидазол или азелаиновая кислота наружно, при распространённом процессе доксициклин внутрь 6-8 недель','Убрать жирные кремы и тональные средства','Обострение после отмены: поддержать, при необходимости коротко пимекролимус, стероид не возвращать','После разрешения: минимальный уход, без стероидов на лицо'],
+  note:'Самая частая история: «гормональная мазь от покраснения» от косметолога или из интернета. Помогает быстро, а при отмене каждый раз хуже.',
+  src:'Клинические рекомендации РФ «Розацеа» (раздел о периоральном дерматите); DermNet: Periorificial dermatitis'},
+];
+VSC.forEach(v=>EMER.push(v));
+const EMSHOW=['perio','iso','mtxl','dupi','il17','mtx','eh'];
 const EMID={};EMER.forEach(e=>EMID[e.id]=e);
 let EM=null;
+function emIsV(){return EM&&EM.sc.mode==='visits';}
+function emStage(){return EM.sc.stages[EM.si];}
+function emActs(){return emIsV()?emStage().acts:EM.sc.acts;}
+function emK(a){return typeof a.k==='function'?a.k(EM):a.k;}
+function emKey(a){return (emIsV()?EM.si+':':'')+a.id;}
 function emOpen(id,opt){
  const sc=EMID[id];if(!sc) return;opt=opt||{};
  if(S) S.paused=true;
- EM={sc,t:0,v:JSON.parse(JSON.stringify(sc.v)),f:{},used:{},cd:{},first:{},adr:[],log:[],bad:0,done:false,surprise:!!opt.surprise,beepT:0};
+ EM={sc,t:0,v:JSON.parse(JSON.stringify(sc.v||{})),f:{},used:{},cd:{},first:{},adr:[],log:[],bad:0,done:false,surprise:!!opt.surprise,beepT:0,si:0,missed:[],bads:[],neut:[],outcome:''};
  ['camp','start','emcall'].forEach(x=>$(x)&&$(x).classList.remove('on'));
  $('emer').classList.add('on');$('emres').style.display='none';$('emplay').style.display='';
- $('emtitle').textContent='🚨 '+sc.title;$('emwho').textContent=CAST[sc.who].name;$('emintro').textContent=sc.intro;
+ $('emtitle').textContent=(sc.mode==='visits'?'🩺 ':'🚨 ')+sc.title;$('emwho').textContent=CAST[sc.who].name;
  drawFace($('emface').getContext('2d'),CAST[sc.who].d,96);
+ clearInterval(EM.int);
+ if(sc.mode==='visits'){EM.started=true;$('emer').classList.remove('run');$('emer').classList.add('visit');$('emstart').style.display='none';$('emnext').style.display='';$('emquit').textContent='Закончить и посмотреть разбор';emStageOpen();sfx('click');return;}
+ $('emer').classList.remove('visit');$('emnext').style.display='none';$('emquit').textContent='Сдаться и посмотреть разбор';
+ $('emintro').textContent=sc.intro;
  EM.started=false;$('emer').classList.remove('run');$('emstart').style.display='';emLog('Прочитайте ситуацию. Время пойдёт, когда нажмёте «Начать».');emRender();
- clearInterval(EM.int);EM.int=setInterval(emTick,100);sfx('warn');
+ EM.int=setInterval(emTick,100);sfx('warn');
+}
+function emStageOpen(){const st=emStage();const tx=typeof st.text==='function'?st.text(EM):st.text;$('emintro').textContent=(EM.outcome?EM.outcome+' ':'')+tx;EM.log=[];EM.btnBuilt=0;
+ $('emnext').textContent=EM.si<EM.sc.stages.length-1?'Завершить визит ▶':'Завершить лечение ▶';emRender();}
+function emNext(){
+ if(!emIsV()||EM.done) return;const st=emStage();
+ for(const a of st.acts) if(emK(a)==='key'&&!EM.used[emKey(a)]) EM.missed.push(st.when+': '+a.t);
+ const miss=st.acts.filter(a=>emK(a)==='key'&&!EM.used[emKey(a)]);
+ EM.outcome=miss.length?'Итог прошлого визита: не всё учтено, это повлияло на течение.':'Итог прошлого визита: всё сделано по делу.';
+ if(EM.si>=EM.sc.stages.length-1){emEnd(true,EM.f.crit?'Лечение закончено, но одна из ошибок могла дорого стоить пациенту.':(EM.bad?'Лечение закончено с ошибками.':'Лечение закончено, пациент доволен результатом.'));return;}
+ EM.si++;sfx('click');emStageOpen();
 }
 function emLog(t,k){if(!EM) return;EM.log.unshift({t:EM.t,x:t,k:k||''});EM.log=EM.log.slice(0,40);}
-function emTime(t){if(EM.sc.unit==='мин'){const m=Math.floor(t),s=Math.floor((t-m)*60);return m+':'+String(s).padStart(2,'0');}const h=Math.floor(t);return h+' ч '+String(Math.floor((t-h)*60)).padStart(2,'0')+' мин';}
-function emAdvance(d){const sc=EM.sc;const steps=Math.max(1,Math.ceil(d/0.05));for(let i=0;i<steps&&!EM.done;i++){const dd=d/steps;EM.t+=dd;sc.tick(EM,dd);emCheck();}}
+function emTime(t){if(emIsV()) return emStage().when;if(EM.sc.unit==='мин'){const m=Math.floor(t),s=Math.floor((t-m)*60);return m+':'+String(s).padStart(2,'0');}const h=Math.floor(t);return h+' ч '+String(Math.floor((t-h)*60)).padStart(2,'0')+' мин';}
+function emAdvance(d){if(emIsV()) return;const sc=EM.sc;const steps=Math.max(1,Math.ceil(d/0.05));for(let i=0;i<steps&&!EM.done;i++){const dd=d/steps;EM.t+=dd;sc.tick(EM,dd);emCheck();}}
 function emCheck(){
- const sc=EM.sc;if(EM.done) return;
+ const sc=EM.sc;if(EM.done||emIsV()) return;
  const lose=sc.lose&&sc.lose(EM);if(lose){emEnd(false,lose);return;}
  if(sc.win&&sc.win(EM)){emEnd(true,'Пациент пришёл в себя, давление '+mmHg(EM.v)+'.');return;}
  if(EM.t>=sc.tmax){emEnd(true,sc.end?sc.end(EM):'Время вышло.');}
 }
-function emTick(){if(!EM||EM.done||!EM.started) return;emAdvance(EM.sc.spd*0.1);
+function emTick(){if(!EM||EM.done||!EM.started||emIsV()) return;emAdvance(EM.sc.spd*0.1);
  const crit=EM.sc.show.some(x=>x[2](EM));EM.beepT-=0.1;if(EM.beepT<=0){EM.beepT=crit?0.9:1.6;if(crit) sfx('warn');}
  emRender();}
 function emDo(a){
- if(!EM||EM.done) return;if(!EM.started) emBegin();const sc=EM.sc;
- if(a.req&&!EM.used[a.req]&&!EM.f[a.req]){emLog('Сначала нужно: '+sc.acts.find(q=>q.id===a.req).t.toLowerCase(),'bad');emRender();return;}
- if(a.cd){if(EM.cd[a.id]!=null&&EM.t<EM.cd[a.id]){emLog('Повтор возможен через '+emTime(EM.cd[a.id]-EM.t),'');emRender();return;}EM.cd[a.id]=EM.t+a.cd;}
- else if(EM.used[a.id]&&a.k!=='neutral'){return;}
- EM.used[a.id]=(EM.used[a.id]|0)+1;if(EM.first[a.id]==null) EM.first[a.id]=EM.t;
- if(a.k==='bad'){EM.bad++;sfx('bad');}else if(a.k==='key') sfx('good');else sfx('click');
+ if(!EM||EM.done) return;if(!EM.started) emBegin();const sc=EM.sc;const key=emKey(a),k=emK(a);
+ if(a.req&&!EM.used[a.req]&&!EM.f[a.req]){emLog('Сначала нужно: '+emActs().find(q=>q.id===a.req).t.toLowerCase(),'bad');emRender();return;}
+ if(a.cd){if(EM.cd[key]!=null&&EM.t<EM.cd[key]){emLog('Повтор возможен через '+emTime(EM.cd[key]-EM.t),'');emRender();return;}EM.cd[key]=EM.t+a.cd;}
+ else if(EM.used[key]&&(k!=='neutral'||emIsV())){return;}
+ EM.used[key]=(EM.used[key]|0)+1;if(EM.first[a.id]==null) EM.first[a.id]=EM.t;
+ const fb=typeof a.fb==='function'?a.fb(EM):a.fb;
+ if(k==='bad'){EM.bad++;sfx('bad');EM.bads.push({t:a.t,fb,w:emIsV()?emStage().when:''});}else if(k==='key') sfx('good');else sfx('click');
+ if(k==='neutral') EM.neut.push({t:a.t,fb,w:emIsV()?emStage().when:''});
  if(a.fx) a.fx(EM);
- emLog(a.t,a.k);
+ emLog(a.t,k);
  emAdvance(a.dur||0.1);
- const fb=typeof a.fb==='function'?a.fb(EM):a.fb;if(fb&&!EM.done) emLog('→ '+fb,a.k==='bad'?'bad':a.k==='neutral'?'warn':'ok');
+ if(fb&&!EM.done) emLog('→ '+fb,k==='bad'?'bad':k==='neutral'?'warn':'ok');
  emRender();
 }
 function emRender(){
- if(!EM) return;const sc=EM.sc;
- $('emclock').textContent='⏱ '+emTime(EM.t);
- $('emmon').innerHTML=sc.show.map(x=>'<div class="emv'+(x[2](EM)?' crit':'')+'"><small>'+x[0]+'</small><b>'+x[1](EM)+'</b></div>').join('')+(sc.skin?'<div class="emv wide"><small>Кожа</small><b>'+sc.skin+'</b></div>':'');
+ if(!EM) return;const sc=EM.sc,V=emIsV();
+ $('emclock').textContent=V?'📅 '+emStage().when+' (из '+sc.stages.length+')':'⏱ '+emTime(EM.t);
+ if(V){const sh=emStage().show||[];$('emmon').innerHTML=sh.map(x=>'<div class="emv'+(x[2]?' crit':'')+'"><small>'+x[0]+'</small><b>'+(typeof x[1]==='function'?x[1](EM):x[1])+'</b></div>').join('');}
+ else $('emmon').innerHTML=sc.show.map(x=>'<div class="emv'+(x[2](EM)?' crit':'')+'"><small>'+x[0]+'</small><b>'+x[1](EM)+'</b></div>').join('')+(sc.skin?'<div class="emv wide"><small>Кожа</small><b>'+sc.skin+'</b></div>':'');
+ const acts=emActs();
  if(!EM.btnBuilt){EM.btnBuilt=1;const box=$('emacts');box.innerHTML='';
-  const order=sc.acts.map((a,i)=>({a,r:((i*7919+sc.id.length*31)%97)})).sort((x,y)=>x.r-y.r).map(x=>x.a);
+  const order=acts.map((a,i)=>({a,r:((i*7919+sc.id.length*31+EM.si*13)%97)})).sort((x,y)=>x.r-y.r).map(x=>x.a);
   for(const a of order){const b=document.createElement('button');b.className='emb';b.textContent=a.t;b.dataset.id=a.id;b.onclick=()=>emDo(a);box.appendChild(b);}}
- $('emacts').querySelectorAll('.emb').forEach(b=>{const a=sc.acts.find(q=>q.id===b.dataset.id);const used=EM.used[a.id];
-  b.classList.toggle('used',!!used&&!a.cd&&a.k!=='neutral');b.disabled=EM.done||(!!used&&!a.cd&&a.k!=='neutral');
-  if(a.cd&&EM.cd[a.id]!=null&&EM.t<EM.cd[a.id]){b.textContent=a.t+' (повтор через '+emTime(EM.cd[a.id]-EM.t)+')';}else b.textContent=a.t;});
- $('emlog').innerHTML=EM.log.slice(0,EM.started?3:2).map(l=>'<div class="eml '+l.k+'"><span>'+emTime(l.t)+'</span> '+esc(l.x)+'</div>').join('');
+ $('emacts').querySelectorAll('.emb').forEach(b=>{const a=acts.find(q=>q.id===b.dataset.id);if(!a) return;const key=emKey(a),used=EM.used[key],k=emK(a);const lock=!!used&&!a.cd&&(k!=='neutral'||V);
+  b.classList.toggle('used',lock);b.disabled=EM.done||lock;
+  if(a.cd&&EM.cd[key]!=null&&EM.t<EM.cd[key]){b.textContent=a.t+' (повтор через '+emTime(EM.cd[key]-EM.t)+')';}else b.textContent=a.t;});
+ $('emlog').innerHTML=EM.log.slice(0,V?4:(EM.started?3:2)).map(l=>'<div class="eml '+l.k+'">'+(V?'':'<span>'+emTime(l.t)+'</span> ')+esc(l.x)+'</div>').join('');
 }
 function emEnd(ok,txt){
- if(!EM||EM.done) return;EM.done=true;clearInterval(EM.int);const sc=EM.sc;
- const st=ok?sc.stars(EM):0;sfx(ok?'level':'bad');
+ if(!EM||EM.done) return;EM.done=true;clearInterval(EM.int);const sc=EM.sc,V=emIsV();
+ if(V&&EM.si<sc.stages.length){for(let i=EM.si;i<sc.stages.length;i++){const st=sc.stages[i];if(i>EM.si||!EM.missed.some(m=>m.startsWith(st.when))) for(const a of st.acts) if(emK(a)==='key'&&!EM.used[i+':'+a.id]&&!EM.missed.includes(st.when+': '+a.t)) EM.missed.push(st.when+': '+a.t);}}
+ let st=0;if(ok){if(V){st=Math.max(1,3-EM.bad-Math.floor(EM.missed.length/2));if(EM.f.crit) st=1;}else st=sc.stars(EM);}
+ sfx(ok?'level':'bad');
  const prev=EMR[sc.id]||{};const firstWin=ok&&!prev.done;
  const xp=ok?Math.round(250*sc.diff*st/3*(firstWin?1:0.25)*(EM.surprise?1.5:1)):0,coins=ok?Math.round(60*sc.diff*st/3*(firstWin?1:0.25)*(EM.surprise?1.5:1)):0;
  if(ok){EMR[sc.id]={done:true,stars:Math.max(prev.stars|0,st),n:(prev.n|0)+1};emSave();CAB.coins+=coins;cabDirty();saveCab();addProfileXP(xp);syncNow(true);}
  $('emplay').style.display='none';$('emres').style.display='';
- const missed=sc.acts.filter(a=>a.k==='key'&&!EM.used[a.id]).map(a=>a.t);
- const bads=sc.acts.filter(a=>a.k==='bad'&&EM.used[a.id]);const neut=sc.acts.filter(a=>a.k==='neutral'&&EM.used[a.id]);
- let h='<div class="serif" style="font-size:22px;color:'+(ok?(st>=2?'#9fe0b0':'#ffd58a'):'#ff9aa8')+'">'+(ok?(st>=2?'Пациент спасён':'Пациент выжил, но помощь запоздала'):'Пациента не удалось стабилизировать')+'</div><div style="font-size:26px;margin:4px 0">'+(ok?'★'.repeat(st)+'☆'.repeat(3-st):'')+'</div>';
- h+='<div class="emdx">'+esc(txt)+'</div><div class="emdx"><b>Диагноз:</b> '+sc.dx+'</div>';
- if(ok) h+='<div class="cabhint">+'+xp+' опыта, +'+coins+' ₽'+(EM.surprise?' (внештатный вызов, награда ×1,5)':'')+(firstWin?'':' (повторное прохождение)')+'</div>';
- if(bads.length) h+='<div class="csub">Ошибки</div>'+bads.map(a=>'<div class="emerr">✖ '+a.t+'<br><small>'+(typeof a.fb==='function'?a.fb(EM):a.fb)+'</small></div>').join('');
- if(neut.length) h+='<div class="csub">Потеря времени</div>'+neut.map(a=>'<div class="emwarn">⚠ '+a.t+'<br><small>'+a.fb+'</small></div>').join('');
+ const missed=V?EM.missed:sc.acts.filter(a=>a.k==='key'&&!EM.used[a.id]).map(a=>a.t);
+ const head=V?(st>=3?'Отличное ведение пациента':st===2?'Хорошо, но есть что улучшить':'Пациенту пришлось тяжело'):(ok?(st>=2?'Пациент спасён':'Пациент выжил, но помощь запоздала'):'Пациента не удалось стабилизировать');
+ const col=V?(st>=3?'#9fe0b0':st===2?'#ffe07a':'#ffb06a'):(ok?(st>=2?'#9fe0b0':'#ffd58a'):'#ff9aa8');
+ let h='<div class="serif" style="font-size:22px;color:'+col+'">'+head+'</div><div style="font-size:26px;margin:4px 0">'+(ok?'★'.repeat(st)+'☆'.repeat(3-st):'')+'</div>';
+ h+='<div class="emdx">'+esc(txt)+'</div><div class="emdx"><b>'+(V?'Ситуация':'Диагноз')+':</b> '+sc.dx+'</div>';
+ if(ok) h+='<div class="cabhint">+'+xp+' опыта, +'+coins+' ₽'+(EM.surprise?' (внеплановый приём, награда ×1,5)':'')+(firstWin?'':' (повторное прохождение)')+'</div>';
+ if(EM.bads.length) h+='<div class="csub">Ошибки</div>'+EM.bads.map(b=>'<div class="emerr">✖ '+(b.w?b.w+': ':'')+b.t+'<br><small>'+b.fb+'</small></div>').join('');
+ if(EM.neut.length) h+='<div class="csub">'+(V?'Спорные решения':'Потеря времени')+'</div>'+EM.neut.map(b=>'<div class="emwarn">⚠ '+(b.w?b.w+': ':'')+b.t+'<br><small>'+b.fb+'</small></div>').join('');
  if(missed.length) h+='<div class="csub">Что не сделано</div>'+missed.map(t=>'<div class="emwarn">○ '+t+'</div>').join('');
- h+='<div class="csub">Правильный алгоритм</div><ol class="emideal">'+sc.ideal.map(t=>'<li>'+t+'</li>').join('')+'</ol>';
+ h+='<div class="csub">Правильная тактика</div><ol class="emideal">'+sc.ideal.map(t=>'<li>'+t+'</li>').join('')+'</ol>';
  h+='<div class="cabhint">'+sc.note+'</div><div class="emsrc">Источник: '+sc.src+'</div>';
- h+='<div class="csub">Ваши действия</div><div class="emtl">'+EM.log.slice().reverse().filter(l=>!l.x.startsWith('→')).map(l=>'<div class="eml '+l.k+'"><span>'+emTime(l.t)+'</span> '+esc(l.x)+'</div>').join('')+'</div>';
+ if(!V) h+='<div class="csub">Ваши действия</div><div class="emtl">'+EM.log.slice().reverse().filter(l=>!l.x.startsWith('→')).map(l=>'<div class="eml '+l.k+'"><span>'+emTime(l.t)+'</span> '+esc(l.x)+'</div>').join('')+'</div>';
  $('emresbody').innerHTML=h;
 }
 function emClose(){if(EM){clearInterval(EM.int);}EM=null;$('emer').classList.remove('on');if(S){S.paused=false;S.hudT=0;}else{$('start').classList.add('on');}}
 function emBegin(){if(!EM||EM.started) return;EM.started=true;$('emstart').style.display='none';$('emer').classList.add('run');EM.log=[];emLog('Вы у пациента. Время пошло.');emRender();sfx('warn');}
 $('emstart').onclick=()=>emBegin();
+$('emnext').onclick=()=>emNext();
 $('emagain').onclick=()=>{const id=EM&&EM.sc.id;if(id) emOpen(id);};
 $('emexit').onclick=emClose;
-$('emquit').onclick=()=>{if(EM&&!EM.done) emEnd(false,'Вы покинули пациента.');};
+$('emquit').onclick=()=>{if(EM&&!EM.done) emEnd(!emIsV()?false:true,emIsV()?'Лечение прервано досрочно.':'Вы покинули пациента.');};
 /* список в сюжетах */
 function emCampBlock(box){
  const d=document.createElement('div');d.className='cline2';
- d.innerHTML='<div class="cln">🚨 Неотложные состояния</div><div class="cld">Внештатные ситуации на приёме. Время идёт по-настоящему, каждое действие отнимает минуты. Ошибки разбираются в конце.</div>';
- EMER.slice().sort((a,b)=>a.diff-b.diff).forEach(sc=>{const r=EMR[sc.id];const b=document.createElement('button');b.className='clb'+(r&&r.done?' done':'');
-  b.innerHTML='<span>'+sc.title+'<br><small class="cdf d'+sc.diff+'">'+'●'.repeat(sc.diff)+'○'.repeat(4-sc.diff)+' '+DIFF[sc.diff]+'</small></span><span class="cls">'+(r&&r.done?starsStr(r.stars):'Начать')+'</span>';
+ d.innerHTML='<div class="cln">🩺 Клинические ситуации</div><div class="cld">Развилки и осложнения в лечении: изотретиноин, метотрексат, дупилумаб, ингибиторы ИЛ-17, отмена стероидов. Пациент приходит на визиты, у каждого решения есть последствия, в конце разбор.</div>';
+ EMSHOW.map(id=>EMID[id]).filter(Boolean).sort((a,b)=>a.diff-b.diff).forEach(sc=>{const r=EMR[sc.id];const b=document.createElement('button');b.className='clb'+(r&&r.done?' done':'');
+  b.innerHTML='<span>'+sc.title+'<br><small class="cdf d'+sc.diff+'">'+'●'.repeat(sc.diff)+'○'.repeat(4-sc.diff)+' '+DIFF[sc.diff]+(sc.mode==='visits'?' · '+sc.stages.length+' визита':' · счёт на часы')+'</small></span><span class="cls">'+(r&&r.done?starsStr(r.stars):'Начать')+'</span>';
   b.onclick=()=>{$('camp').classList.remove('on');emOpen(sc.id);};d.appendChild(b);});
  box.appendChild(d);
 }
-/* внештатный вызов во время свободной игры */
+/* внеплановый пациент во время свободной игры */
 function emMaybeCall(dt){
  if(!S||S.mode!=='free'||S.coop||S.dcase||S.tut>=0||S.paused||DLG||S.p.lvl<4||S.p.dead>0) return;
  if(S.emT==null) S.emT=420+Math.random()*300;S.emT-=dt;if(S.emT>0) return;S.emT=900+Math.random()*600;
- const pool=EMER.filter(e=>!(EMR[e.id]&&EMR[e.id].stars>=3));const sc=(pool.length?pool:EMER)[Math.floor(Math.random()*(pool.length?pool.length:EMER.length))];
- S.paused=true;S.emCallId=sc.id;$('emcalltxt').textContent=sc.intro.split('. ').slice(0,2).join('. ')+'.';$('emcall').classList.add('on');sfx('warn');setTimeout(()=>sfx('warn'),400);
+ const list=EMSHOW.map(id=>EMID[id]).filter(Boolean);const pool=list.filter(e=>!(EMR[e.id]&&EMR[e.id].stars>=3));const src=pool.length?pool:list;const sc=src[Math.floor(Math.random()*src.length)];
+ S.paused=true;S.emCallId=sc.id;const tx=sc.mode==='visits'?(typeof sc.stages[0].text==='function'?sc.stages[0].text({f:{}}):sc.stages[0].text):sc.intro;
+ $('emcalltxt').textContent=tx.split('. ').slice(0,2).join('. ')+'.';$('emcall').classList.add('on');sfx('warn');
 }
 $('emgo').onclick=()=>{$('emcall').classList.remove('on');if(S&&S.emCallId) emOpen(S.emCallId,{surprise:true});};
 $('emlater').onclick=()=>{$('emcall').classList.remove('on');if(S){S.paused=false;S.emT=150;}};
@@ -4254,7 +4474,7 @@ function loop(ts){
  if($('start').classList.contains('on')) drawPreview();
 }
 requestAnimationFrame(loop);
-window.DQ={emOpen:(i,o)=>emOpen(i,o),emDo:id=>{const a=EM&&EM.sc.acts.find(q=>q.id===id);if(a) emDo(a);},get EM(){return EM;},emAdvance:d=>emAdvance(d),EMER,startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
+window.DQ={emOpen:(i,o)=>emOpen(i,o),emDo:id=>{const a=EM&&emActs().find(q=>q.id===id);if(a) emDo(a);},get EM(){return EM;},emAdvance:d=>emAdvance(d),EMER,startCoop:(r,c)=>startCoop(r,c),coopLeave:()=>coopLeave(),get RTS(){return RT;},startDaily:()=>startDaily(),finishDaily:e=>finishDaily(e),dInfo:()=>dInfo(),dScore:()=>dScore(),get PROF(){return PROF;},profStats:()=>profStats(),openRate:()=>openRate(),NET,get CAB(){return CAB;},cabAct:(a,i,id)=>cabAct(a,i,id),useKit:i=>useKit(i),tierOf:l=>tierOf(l),rankTitle:l=>rankTitle(l),need:l=>need(l),openCab:()=>openCab(),closeCab:()=>closeCab(),addProfileXP:n=>addProfileXP(n),renderCab:()=>renderCab(),cabTab:t=>cabTab(t),startStory:c=>startStory(c),nextLine:()=>nextLine(),pick:i=>pickChoice(DLG.lines[DLG.i].ch[i]),get DLG(){return DLG;},CH,useAbility,drawHero,saveGame:()=>saveGame(),loadSave:()=>loadSave(),continueGame:sv=>continueGame(sv),get S(){return S;},startGame,update,render,tryCast,openQuiz,useBep,killMob,gainXP,hitMob,SK};
 })();
 
 </script>
